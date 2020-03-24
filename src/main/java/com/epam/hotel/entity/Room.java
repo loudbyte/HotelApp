@@ -1,4 +1,4 @@
-package entity;
+package com.epam.hotel.entity;
 
 import java.math.BigDecimal;
 
@@ -66,5 +66,17 @@ public class Room {
 
     public void setAvailability(boolean availability) {
         this.availability = availability;
+    }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", roomNumber=" + roomNumber +
+                ", capacity=" + capacity +
+                ", grade=" + grade +
+                ", cost=" + cost +
+                ", availability=" + availability +
+                '}';
     }
 }

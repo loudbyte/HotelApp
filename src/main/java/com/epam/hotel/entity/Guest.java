@@ -1,5 +1,6 @@
-package entity;
+package com.epam.hotel.entity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Guest {
@@ -7,11 +8,12 @@ public class Guest {
     private int id;
     private String firstName;
     private String lastName;
-    private Date birthday;
+    private String birthday;
     private String phone;
     private String email;
 
-    public Guest(int id, String firstName, String lastName, Date birthday, String phone, String email) {
+    public Guest(int id, String firstName, String lastName, String birthday, String phone, String email) {
+
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -44,11 +46,11 @@ public class Guest {
         this.lastName = lastName;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
@@ -66,5 +68,17 @@ public class Guest {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Guest{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
