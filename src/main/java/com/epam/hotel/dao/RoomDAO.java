@@ -1,52 +1,65 @@
 package com.epam.hotel.dao;
 
-import com.epam.hotel.dao.interfaces.RoomDAOInterface;
+import com.epam.hotel.dao.connection.ConnectionPool;
+import com.epam.hotel.dao.connection.ConnectionPoolException;
+import com.epam.hotel.dao.daoapi.RoomDAOInterface;
 import com.epam.hotel.entity.Room;
 
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RoomDAO implements RoomDAOInterface {
 
-    private String[] properties = DBProperty.setProperties();
-    private String url = properties[0];
-    private String username = properties[1];
-    private String password = properties[2];
+    private ConnectionPool connectionPool = null;
+    private Connection connection = null;
+    private PreparedStatement preparedStatement = null;
+    private ResultSet resultSet;
 
-    public List<Room> getRooms() {
+    private final String GET_ALL_ROOMS = "SELECT * FROM rooms";
+    private final String ADD_ROOM = "INSERT INTO rooms (\"roomNumber\", \"capacity\", \"grade\", \"cost\", \"availability\") " +
+            "VALUES ( ?, ?, ?, ?, ?)";
 
-        List<Room> room = new ArrayList<>();
+    public RoomDAO() throws ConnectionPoolException {
+        connectionPool = new ConnectionPool();
+        connectionPool.initPoolData();
+        connection = connectionPool.takeConnection();
+    }
 
+    public List<Room> getAllRooms() {
 
-        try (Connection con = DriverManager.getConnection(url, username, password);
-             Statement stmt = con.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM rooms")) {
+        List<Room> rooms = new ArrayList<>();
 
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                int roomNumber = rs.getInt("roomNumber");
-                int capacity = rs.getInt("capacity");
-                int grade = rs.getInt("grade");
-                BigDecimal cost = rs.getBigDecimal("cost");
-                boolean availability = rs.getBoolean("availability");
-                room.add(new Room(id, roomNumber, capacity, grade, cost, availability));
+        try {
+            preparedStatement = connection.prepareStatement(GET_ALL_ROOMS);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int roomNumber = resultSet.getInt("roomNumber");
+                int capacity = resultSet.getInt("capacity");
+                int grade = resultSet.getInt("grade");
+                BigDecimal cost = resultSet.getBigDecimal("cost");
+                boolean availability = resultSet.getBoolean("availability");
+                rooms.add(new Room(id, roomNumber, capacity, grade, cost, availability));
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            connectionPool.dispose();
         }
 
-        return room;
+        return rooms;
     }
 
     public void setRoom(Room room) {
 
-        try (Connection con = DriverManager.getConnection(url, username, password);
-             PreparedStatement preparedStatement =
-                     con.prepareStatement(
-                             "INSERT INTO rooms (\"roomNumber\", \"capacity\", \"grade\", \"cost\", \"availability\") " +
-                                     "VALUES ( ?, ?, ?, ?, ?)");) {
+        try {
+            preparedStatement = connection.prepareStatement(ADD_ROOM);
 
             preparedStatement.setInt(1, room.getRoomNumber());
             preparedStatement.setInt(2, room.getCapacity());
@@ -58,22 +71,9 @@ public class RoomDAO implements RoomDAOInterface {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            connectionPool.dispose();
         }
     }
-
-    public static void main(String[] args) {
-//        BigDecimal cost = new BigDecimal(666);
-//        Room room = new Room(6, 1, 888, 8, cost, true);
-//        RoomDAO roomDAO = new RoomDAO();
-//        roomDAO.setRoom(room);
-
-        RoomDAO dao = new RoomDAO();
-
-        for (Room r : dao.getRooms()) {
-            System.out.println(r);
-        }
-
-    }
-
 }
 

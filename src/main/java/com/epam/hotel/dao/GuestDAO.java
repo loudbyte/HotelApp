@@ -1,8 +1,9 @@
 package com.epam.hotel.dao;
 
-import com.epam.hotel.dao.interfaces.GuestDAOInterface;
+import com.epam.hotel.dao.connection.ConnectionPool;
+import com.epam.hotel.dao.connection.ConnectionPoolException;
+import com.epam.hotel.dao.daoapi.GuestDAOInterface;
 import com.epam.hotel.entity.Guest;
-import com.epam.hotel.entity.Room;
 
 import java.sql.*;
 import java.text.ParseException;
@@ -12,85 +13,70 @@ import java.util.List;
 
 public class GuestDAO implements GuestDAOInterface {
 
-    private String[] properties = DBProperty.setProperties();
-    private String url = properties[0];
-    private String username = properties[1];
-    private String password = properties[2];
+    private ConnectionPool connectionPool = null;
+    private Connection connection = null;
+    private PreparedStatement preparedStatement = null;
+    private ResultSet resultSet;
 
-    public List<Guest> getGuests() {
+    private final String GET_ALL_GUESTS = "SELECT * FROM guests";
+    private final String ADD_GUEST = "INSERT INTO guests (\"firstName\", \"lastName\", \"birthday\", \"phone\", \"email\") " +
+            "VALUES ( ?, ?, ?, ?, ?)";
 
-        List<Guest> guest = new ArrayList<>();
+    public GuestDAO() throws ConnectionPoolException {
+        connectionPool = new ConnectionPool();
+        connectionPool.initPoolData();
+        connection = connectionPool.takeConnection();
+    }
 
-        try (Connection con = DriverManager.getConnection(url, username, password);
-             Statement stmt = con.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM guests")) {
+    public List<Guest> getAllGuests() {
 
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String firstName = rs.getString("firstName");
-                String lastName = rs.getString("lastName");
-                String birthday = String.valueOf(rs.getDate("birthday"));
-                String phone = rs.getString("phone");
-                String email = rs.getString("email");
+        List<Guest> guests = new ArrayList<>();
 
-                guest.add(new Guest(id, firstName, lastName, birthday, phone, email));
+        try {
+            preparedStatement = connection.prepareStatement(GET_ALL_GUESTS);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String firstName = resultSet.getString("firstName");
+                String lastName = resultSet.getString("lastName");
+                String birthday = String.valueOf(resultSet.getDate("birthday"));
+                String phone = resultSet.getString("phone");
+                String email = resultSet.getString("email");
+
+                guests.add(new Guest(id, firstName, lastName, birthday, phone, email));
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            connectionPool.dispose();
         }
 
-        return guest;
+        return guests;
     }
 
     public void setGuest(Guest guest) {
 
 
-        try (Connection con = DriverManager.getConnection(url, username, password);) {
+        try {
+            preparedStatement = connection.prepareStatement(ADD_GUEST);
 
-            try {
-                PreparedStatement preparedStatement =
-                        con.prepareStatement(
-                                "INSERT INTO guests (\"firstName\", \"lastName\", \"birthday\", \"phone\", \"email\") " +
-                                        "VALUES ( ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date myDate = format.parse(guest.getBirthday());
+            Date sqlDate = new Date(myDate.getTime());
 
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date myDate = format.parse(guest.getBirthday());
-                Date sqlDate = new Date(myDate.getTime());
+            preparedStatement.setString(1, guest.getFirstName());
+            preparedStatement.setString(2, guest.getLastName());
+            preparedStatement.setDate(3, sqlDate);
+            preparedStatement.setString(4, guest.getPhone());
+            preparedStatement.setString(5, guest.getEmail());
 
-                preparedStatement.setString(1, guest.getFirstName());
-                preparedStatement.setString(2, guest.getLastName());
-                preparedStatement.setDate(3, sqlDate);
-                preparedStatement.setString(4, guest.getPhone());
-                preparedStatement.setString(5, guest.getEmail());
+            preparedStatement.executeUpdate();
 
-                preparedStatement.executeUpdate();
-
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        } catch (SQLException e) {
+        } catch (SQLException | ParseException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } finally {
+            connectionPool.dispose();
         }
-    }
-
-    public static void main(String[] args) {
-//        Guest guest = new Guest(1, "CHECK2", "Iridov", "1994-02-15", "+77056648787", "artem@mail.ru");
-//        GuestDAO guestDAO = new GuestDAO();
-//        guestDAO.setGuest(guest);
-//        System.out.println(guest.getId());
-
-        GuestDAO dao = new GuestDAO();
-
-        for (Guest g : dao.getGuests()) {
-            System.out.println(g);
-        }
-
-
-
     }
 }
