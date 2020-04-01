@@ -1,4 +1,4 @@
-package com.epam.hotel.dao.connection;
+package com.epam.hotel.dao.connectionpool;
 
 import java.util.ResourceBundle;
 

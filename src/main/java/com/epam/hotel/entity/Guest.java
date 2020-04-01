@@ -1,8 +1,7 @@
 package com.epam.hotel.entity;
 
-public class Guest {
+public class Guest extends BaseEntity{
 
-    private int id;
     private String firstName;
     private String lastName;
     private String birthday;
@@ -17,14 +16,6 @@ public class Guest {
         this.birthday = birthday;
         this.phone = phone;
         this.email = email;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getFirstName() {

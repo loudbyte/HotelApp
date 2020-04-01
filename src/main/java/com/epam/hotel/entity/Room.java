@@ -2,30 +2,23 @@ package com.epam.hotel.entity;
 
 import java.math.BigDecimal;
 
-public class Room {
+public class Room extends BaseEntity{
 
-    private int id;
     private int roomNumber;
     private int capacity;
     private int grade;
+    private int imageId;
     private BigDecimal cost;
     private boolean availability;
 
-    public Room(int id, int roomNumber, int capacity, int grade, BigDecimal cost, boolean availability) {
+    public Room(int id, int roomNumber, int capacity, int grade, int imageId, BigDecimal cost, boolean availability) {
         this.id = id;
         this.roomNumber = roomNumber;
         this.capacity = capacity;
         this.grade = grade;
+        this.imageId = imageId;
         this.cost = cost;
         this.availability = availability;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getRoomNumber() {
@@ -55,6 +48,13 @@ public class Room {
     public BigDecimal getCost() {
         return cost;
     }
+    public int getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(int imageId) {
+        this.imageId = imageId;
+    }
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
@@ -75,6 +75,7 @@ public class Room {
                 ", roomNumber=" + roomNumber +
                 ", capacity=" + capacity +
                 ", grade=" + grade +
+                ", imageId=" + imageId +
                 ", cost=" + cost +
                 ", availability=" + availability +
                 '}';

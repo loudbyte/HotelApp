@@ -1,34 +1,22 @@
-package com.epam.hotel.dao;
+package com.epam.hotel.dao.daoimpl;
 
-import com.epam.hotel.dao.connection.ConnectionPool;
-import com.epam.hotel.dao.connection.ConnectionPoolException;
-import com.epam.hotel.dao.daoapi.GuestDAOInterface;
+import com.epam.hotel.dao.daocommon.GuestDAOInterface;
 import com.epam.hotel.entity.Guest;
 
-import java.sql.*;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuestDAO implements GuestDAOInterface {
-
-    private ConnectionPool connectionPool = null;
-    private Connection connection = null;
-    private PreparedStatement preparedStatement = null;
-    private ResultSet resultSet;
+public class GuestDAO extends BaseDao implements GuestDAOInterface {
 
     private final String GET_ALL_GUESTS = "SELECT * FROM guests";
-    private final String ADD_GUEST = "INSERT INTO guests (\"firstName\", \"lastName\", \"birthday\", \"phone\", \"email\") " +
+    private final String ADD_GUEST = "INSERT INTO guests (first_name, last_name, birthday, phone, email) " +
             "VALUES ( ?, ?, ?, ?, ?)";
 
-    public GuestDAO() throws ConnectionPoolException {
-        connectionPool = new ConnectionPool();
-        connectionPool.initPoolData();
-        connection = connectionPool.takeConnection();
-    }
-
-    public List<Guest> getAllGuests() {
+    public List<Guest> getAll() {
 
         List<Guest> guests = new ArrayList<>();
 
@@ -38,8 +26,8 @@ public class GuestDAO implements GuestDAOInterface {
 
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
-                String firstName = resultSet.getString("firstName");
-                String lastName = resultSet.getString("lastName");
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
                 String birthday = String.valueOf(resultSet.getDate("birthday"));
                 String phone = resultSet.getString("phone");
                 String email = resultSet.getString("email");
@@ -49,14 +37,13 @@ public class GuestDAO implements GuestDAOInterface {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            connectionPool.dispose();
+            connectionPool.releaseConnection(connection);
         }
 
         return guests;
     }
 
     public void setGuest(Guest guest) {
-
 
         try {
             preparedStatement = connection.prepareStatement(ADD_GUEST);
@@ -76,7 +63,7 @@ public class GuestDAO implements GuestDAOInterface {
         } catch (SQLException | ParseException e) {
             e.printStackTrace();
         } finally {
-            connectionPool.dispose();
+            connectionPool.releaseConnection(connection);
         }
     }
 }
