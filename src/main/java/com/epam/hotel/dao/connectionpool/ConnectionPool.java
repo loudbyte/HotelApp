@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class ConnectionPool implements ConnectionInterface{
+public class ConnectionPool {
 
     private String driverName;
     private String url;
