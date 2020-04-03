@@ -2,8 +2,10 @@ package com.epam.hotel.dao.daocommon;
 
 import com.epam.hotel.entity.Guest;
 
-public interface GuestDAOInterface extends BaseDAOInterface {
+public interface GuestDAOInterface extends BaseDAOInterface<Guest> {
 
-    void setGuest(Guest guest);
+    Guest getByFirstName(String guestFirstName);
+
+    Guest getByLastName(String guestLastName);
 
 }

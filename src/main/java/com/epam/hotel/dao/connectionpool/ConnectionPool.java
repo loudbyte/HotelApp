@@ -15,6 +15,8 @@ public class ConnectionPool implements ConnectionInterface{
     private int poolSize;
 
     private BlockingQueue<Connection> connectionsQueue;
+    private static volatile ConnectionPool instance;
+
 
     private ConnectionPool() {
         DBResourceManager dbResourceManager = DBResourceManager.getInstance();
@@ -40,8 +42,6 @@ public class ConnectionPool implements ConnectionInterface{
             e.printStackTrace();
         }
     }
-
-    private static volatile ConnectionPool instance;
 
     public static ConnectionPool getInstance() {
 

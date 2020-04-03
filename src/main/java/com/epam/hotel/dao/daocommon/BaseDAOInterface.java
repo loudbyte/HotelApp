@@ -4,8 +4,12 @@ import com.epam.hotel.entity.BaseEntity;
 
 import java.util.List;
 
-public interface BaseDAOInterface {
+public interface BaseDAOInterface<T extends BaseEntity> {
 
-    List<? extends BaseEntity> getAll();
+    List<T> getAll();
+
+    void create(T е);
+
+    T getById(int id);
 
 }
