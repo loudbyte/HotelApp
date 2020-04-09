@@ -1,4 +1,4 @@
-package com.epam.hotel.dao.connectionpool;
+package com.epam.hotel.connectionpool;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,17 +17,17 @@ public class ConnectionPool {
     private BlockingQueue<Connection> connectionsQueue;
     private static volatile ConnectionPool instance;
 
-
     private ConnectionPool() {
+
         DBResourceManager dbResourceManager = DBResourceManager.getInstance();
 
-        this.driverName = dbResourceManager.getValue(DataBaseParameter.DATA_BASE_DRIVER);
-        this.url = dbResourceManager.getValue(DataBaseParameter.DATA_BASE_URL);
-        this.userName = dbResourceManager.getValue(DataBaseParameter.DATA_BASE_USERNAME);
-        this.password = dbResourceManager.getValue(DataBaseParameter.DATA_BASE_PASSWORD);
+        this.driverName = dbResourceManager.getValue(DBResourceManager.DATA_BASE_DRIVER);
+        this.url = dbResourceManager.getValue(DBResourceManager.DATA_BASE_URL);
+        this.userName = dbResourceManager.getValue(DBResourceManager.DATA_BASE_USERNAME);
+        this.password = dbResourceManager.getValue(DBResourceManager.DATA_BASE_PASSWORD);
 
         try {
-            this.poolSize = Integer.parseInt(dbResourceManager.getValue(DataBaseParameter.DATA_BASE_POLL_SIZE));
+            this.poolSize = Integer.parseInt(dbResourceManager.getValue(DBResourceManager.DATA_BASE_POLL_SIZE));
         } catch (NumberFormatException e) {
             poolSize = 5;
         }
@@ -79,8 +79,3 @@ public class ConnectionPool {
         }
     }
 }
-
-
-
-
-
