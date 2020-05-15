@@ -1,19 +1,19 @@
 package com.epam.hotel.dao;
 
-import com.epam.hotel.entity.BaseEntity;
+import com.epam.hotel.entity.BaseEntityMarker;
 
 import java.util.List;
 
-public interface BaseDAO<T extends BaseEntity> {
+public interface BaseDAO<T extends BaseEntityMarker> {
 
-    void create(T entity);
+    long create(T entity);
 
     List<T> getAll();
 
-    T getById(int id);
+    T getOneById(long id);
 
-    void updateOneById(int id, T entity);
+    void updateOneById(long id, T entity);
 
-    void deleteOneById(int id);
+    void deleteOneById(long id);
 
 }

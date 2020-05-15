@@ -1,27 +1,25 @@
 package com.epam.hotel.entity;
 
+public class Person implements BaseEntityMarker {
 
-public class Person implements BaseEntity {
-
-    private int id;
+    private long id;
     private String firstName;
     private String lastName;
     private String birthday;
     private String phone;
     private String email;
-    private String login;
+    private String iin;
     private String password;
     private boolean isAdmin;
     private boolean isBan;
 
-    public Person(int id, String firstName, String lastName, String birthday, String phone, String email, String login, String password, boolean isAdmin, boolean isBan) {
-        this.id = id;
+    public Person(String firstName, String lastName, String birthday, String phone, String email, String iin, String password, boolean isAdmin, boolean isBan) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
         this.phone = phone;
         this.email = email;
-        this.login = login;
+        this.iin = iin;
         this.password = password;
         this.isAdmin = isAdmin;
         this.isBan = isBan;
@@ -30,11 +28,11 @@ public class Person implements BaseEntity {
     public Person() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -78,14 +76,6 @@ public class Person implements BaseEntity {
         this.email = email;
     }
 
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -110,6 +100,14 @@ public class Person implements BaseEntity {
         isBan = ban;
     }
 
+    public String getIin() {
+        return iin;
+    }
+
+    public void setIin(String iin) {
+        this.iin = iin;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
@@ -119,9 +117,10 @@ public class Person implements BaseEntity {
                 ", birthday='" + birthday + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
-                ", login='" + login + '\'' +
+                ", iin='" + iin + '\'' +
                 ", password='" + password + '\'' +
                 ", isAdmin=" + isAdmin +
+                ", isBan=" + isBan +
                 '}';
     }
 }

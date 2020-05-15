@@ -2,30 +2,28 @@ package com.epam.hotel.entity;
 
 import java.math.BigDecimal;
 
-public class Service implements BaseEntity{
-    private int id;
+public class Facility implements BaseEntityMarker {
 
+    private long id;
     private String name;
     private BigDecimal price;
     private String description;
-    private int servicePackageId;
 
-    public Service(int id, String name, BigDecimal price, String description, int servicePackageId) {
+    public Facility(long id, String name, BigDecimal price, String description) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
-        this.servicePackageId = servicePackageId;
     }
 
-    public Service() {
+    public Facility() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -53,22 +51,13 @@ public class Service implements BaseEntity{
         this.description = description;
     }
 
-    public int getServicePackageId() {
-        return servicePackageId;
-    }
-
-    public void setServicePackageId(int servicePackageId) {
-        this.servicePackageId = servicePackageId;
-    }
-
     @Override
     public String toString() {
-        return "Service{" +
+        return "Facility{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", description='" + description + '\'' +
-                ", servicePackageId=" + servicePackageId +
                 '}';
     }
 }

@@ -1,11 +1,11 @@
 package com.epam.hotel.entity;
 
-public class RoomImage implements BaseEntity {
-    private int id;
+public class RoomImage implements BaseEntityMarker {
+    private long id;
     private byte[] image;
-    private int roomId;
+    private long roomId;
 
-    public RoomImage(int id, byte[] image, int room_id) {
+    public RoomImage(long id, byte[] image, long room_id) {
         this.id = id;
         this.image = image;
         this.roomId = room_id;
@@ -14,11 +14,11 @@ public class RoomImage implements BaseEntity {
     public RoomImage() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -30,11 +30,11 @@ public class RoomImage implements BaseEntity {
         this.image = image;
     }
 
-    public int getRoomId() {
+    public long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(int roomId) {
+    public void setRoomId(long roomId) {
         this.roomId = roomId;
     }
 

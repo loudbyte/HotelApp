@@ -8,4 +8,10 @@ public interface PersonDAO extends BaseDAO<Person> {
 
     Person getByLastName(String guestLastName);
 
+    Person getOneByEmail(String email);
+
+    Person getOneByPassword(String password);
+
+    public Person getOneByPasswordAndEmail(String email, String password);
+
 }
