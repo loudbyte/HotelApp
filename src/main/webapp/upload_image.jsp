@@ -48,16 +48,14 @@
                         </li>
                         <c:forEach items="${room.imageList}" var="image">
                             <li>
-                                <div class="">
                                 <p>
                                     Фото ID: ${image.id}<br/>
                                     Отметьте чтобы заменить фото
                                     <input type="radio" value="${image.id}" name="room_image_id_radio"><br/>
                                     <input type="hidden" name="room_image_radio" value="${image.id}">
                                 <img width="200" height="200" src="${imageEncoder.encode(image.image)}"/><br/>
-                                    <a href="${pageContext.request.contextPath}/controller/delete_room_image?image_id=${image.id}" type="button" style="width: 200px" class="btn btn-warning">Удалить комнату</a>
+                                    <a href="${pageContext.request.contextPath}/controller/delete_room_image?image_id=${image.id}" type="button" style="width: 200px" class="btn btn-warning">Удалить фото</a>
                                 </p>
-
                             </li>
                         </c:forEach>
                     </ul>

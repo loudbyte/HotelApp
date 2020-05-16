@@ -38,7 +38,7 @@
                                             <input type="hidden" name="start_date" value="${orderDetail.startDate}">
                                             <input type="hidden" name="end_date" value="${orderDetail.endDate}">
                                             <input type="hidden" name="room_id" value="${orderDetail.roomId}">
-                                            <input type="hidden" name="order_main_id" value="${orderDetail.orderMainid}">
+                                            <input type="hidden" name="order_main_id" value="${orderDetail.orderMainId}">
                                             <input type="hidden" name="order_facility_detail_id" value="${orderDetail.orderFacilityDetailId}">
                                             <button type="submit"
                                                     class="btn btn-sm  btn-warning">Редактировать</button>

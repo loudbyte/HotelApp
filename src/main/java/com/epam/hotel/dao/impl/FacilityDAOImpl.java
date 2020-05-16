@@ -4,6 +4,7 @@ import com.epam.hotel.connectionpool.ConnectionPool;
 import com.epam.hotel.dao.FacilityDAO;
 import com.epam.hotel.entity.Facility;
 import com.epam.hotel.entity.FacilityPackageRelation;
+import com.epam.hotel.entity.OrderFacilityDetail;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -11,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.epam.hotel.dao.impl.Constant.*;
@@ -21,8 +23,8 @@ public class FacilityDAOImpl implements FacilityDAO {
     private static final String GET_ALL_FACILITIES = "SELECT * FROM facility";
     private static final String GET_ONE_BY_ID = "SELECT * FROM facility WHERE id = ?";
     private static final String GET_ONE_BY_NAME = "SELECT * FROM facility WHERE name = ?";
-    private static final String CREATE_FACILITY = "INSERT INTO facility (id, name, price, description)" +
-            "VALUES ( ?, ?, ?, ?)";
+    private static final String CREATE_FACILITY = "INSERT INTO facility (name, price, description)" +
+            "VALUES (?, ?, ?)";
     private static final String DELETE_ONE_BY_ID = "DELETE FROM facility WHERE id = ?";
     private static final String UPDATE_ONE_BY_ID = "UPDATE facility " +
             "SET id = ?, name = ?, price = ?, description = ?" +
@@ -43,12 +45,11 @@ public class FacilityDAOImpl implements FacilityDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FACILITY);
              PreparedStatement preparedStatementGetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_FACILITY_SEQ);) {
 
-            preparedStatement.setLong(1, facility.getId());
-            preparedStatement.setString(2, facility.getName());
-            preparedStatement.setBigDecimal(3, facility.getPrice());
-            preparedStatement.setString(4, facility.getDescription());
+            preparedStatement.setString(1, facility.getName());
+            preparedStatement.setBigDecimal(2, facility.getPrice());
+            preparedStatement.setString(3, facility.getDescription());
             preparedStatement.executeUpdate();
-            ResultSet resultSetGetSeq = preparedStatement.executeQuery();
+            ResultSet resultSetGetSeq = preparedStatementGetSeq.executeQuery();
 
             if (resultSetGetSeq.next())
                 id = resultSetGetSeq.getLong(1);
@@ -84,7 +85,7 @@ public class FacilityDAOImpl implements FacilityDAO {
     public List<Facility> getAll() {
         connection = connectionPool.getConnection();
 
-        List<Facility> facilities = new ArrayList<>();
+        List<Facility> facilityList = new ArrayList<>();
 
         Facility facility = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_FACILITIES)) {
@@ -95,7 +96,7 @@ public class FacilityDAOImpl implements FacilityDAO {
                 facility.setName(resultSet.getString(NAME));
                 facility.setPrice(resultSet.getBigDecimal(PRICE));
                 facility.setDescription(resultSet.getString(DESCRIPTION));
-                facilities.add(facility);
+                facilityList.add(facility);
             }
 
         } catch (SQLException e) {
@@ -104,7 +105,8 @@ public class FacilityDAOImpl implements FacilityDAO {
             connectionPool.releaseConnection(connection);
         }
 
-        return facilities;
+        facilityList.sort(Comparator.comparing(Facility::getId));
+        return facilityList;
     }
 
     @Override
@@ -186,6 +188,7 @@ public class FacilityDAOImpl implements FacilityDAO {
         } finally {
             connectionPool.releaseConnection(connection);
         }
+        facilityList.sort(Comparator.comparing(Facility::getId));
         return facilityList;
     }
 

@@ -16,6 +16,12 @@ public class Facility implements BaseEntityMarker {
         this.description = description;
     }
 
+    public Facility(String name, BigDecimal price, String description) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+    }
+
     public Facility() {
     }
 

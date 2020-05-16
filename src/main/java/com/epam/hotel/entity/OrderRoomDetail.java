@@ -5,7 +5,7 @@ public class OrderRoomDetail implements BaseEntityMarker {
     private long id;
     private long roomId;
     private long orderFacilityDetailId;
-    private long orderMainid;
+    private long orderMainId;
     private String startDate;
     private String endDate;
 
@@ -16,7 +16,7 @@ public class OrderRoomDetail implements BaseEntityMarker {
         this.id = id;
         this.roomId = roomId;
         this.orderFacilityDetailId = orderFacilityDetailId;
-        this.orderMainid = orderMainid;
+        this.orderMainId = orderMainid;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -45,12 +45,12 @@ public class OrderRoomDetail implements BaseEntityMarker {
         this.orderFacilityDetailId = orderFacilityDetailId;
     }
 
-    public long getOrderMainid() {
-        return orderMainid;
+    public long getOrderMainId() {
+        return orderMainId;
     }
 
-    public void setOrderMainid(long orderMainid) {
-        this.orderMainid = orderMainid;
+    public void setOrderMainId(long orderMainId) {
+        this.orderMainId = orderMainId;
     }
 
     public String getStartDate() {
@@ -75,7 +75,7 @@ public class OrderRoomDetail implements BaseEntityMarker {
                 "id=" + id +
                 ", roomId=" + roomId +
                 ", orderFacilityDetailId=" + orderFacilityDetailId +
-                ", orderMainid=" + orderMainid +
+                ", orderMainid=" + orderMainId +
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
                 '}';

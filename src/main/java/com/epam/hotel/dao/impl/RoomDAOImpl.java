@@ -2,6 +2,7 @@ package com.epam.hotel.dao.impl;
 
 import com.epam.hotel.connectionpool.ConnectionPool;
 import com.epam.hotel.dao.RoomDAO;
+import com.epam.hotel.entity.Person;
 import com.epam.hotel.entity.Room;
 import com.epam.hotel.entity.RoomImage;
 import org.apache.log4j.Logger;
@@ -11,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.epam.hotel.dao.impl.Constant.*;
@@ -89,7 +91,7 @@ public class RoomDAOImpl implements RoomDAO {
         } finally {
             connectionPool.releaseConnection(connection);
         }
-
+        imageList.sort(Comparator.comparing(RoomImage::getId));
         return imageList;
     }
 
@@ -139,7 +141,7 @@ public class RoomDAOImpl implements RoomDAO {
     public List<Room> getAll() {
         connection = connectionPool.getConnection();
 
-        List<Room> rooms = new ArrayList<>();
+        List<Room> roomList = new ArrayList<>();
         Room room = null;
         List<byte[]> images = null;
 
@@ -159,7 +161,7 @@ public class RoomDAOImpl implements RoomDAO {
                 long id = room.getId();
                 room.setImageList(getRoomImageListByRoomId(id));
                 room.setImages(getRoomImagesByRoomId(id));
-                rooms.add(room);
+                roomList.add(room);
             }
 
         } catch (SQLException e) {
@@ -167,7 +169,8 @@ public class RoomDAOImpl implements RoomDAO {
         } finally {
             connectionPool.releaseConnection(connection);
         }
-        return rooms;
+        roomList.sort(Comparator.comparing(Room::getId));
+        return roomList;
     }
 
     @Override

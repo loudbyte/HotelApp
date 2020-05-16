@@ -27,19 +27,19 @@
                         <td>${orderDetail.id}</td>
                         <td>${orderDetail.facilityPackageName}</td>
                         <td>
-<%--                            <c:choose>--%>
-<%--                                <c:when test="${requestScope.order_status_id == 1}">--%>
-<%--                                    <form action="${pageContext.request.contextPath}/controller/delete_order_detail" method="post">--%>
-<%--                                        <input type="hidden" name="order_detail_id" value="${orderDetail.id}">--%>
-<%--                                        <button type="submit"--%>
-<%--                                                class="btn btn-sm  btn-danger">Удалить</button>--%>
-<%--                                    </form>--%>
-<%--                                </c:when>--%>
-<%--                                <c:otherwise>--%>
-<%--                                    <button title="Нельзя удалить обрабатываемый заказ." type="button" class="btn btn-sm btn-dark">Удалить</button>--%>
-<%--                                </c:otherwise>--%>
-
-<%--                            </c:choose>--%>
+                            <form action="${pageContext.request.contextPath}/edit_package.jsp" method="post">
+                                <input type="hidden" name="package_id" value="${orderDetail.id}">
+                                <input type="hidden" name="package_name" value="${orderDetail.facilityPackageName}">
+                                <button type="submit"
+                                        class="btn btn-sm  btn-warning">Редактировать</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="${pageContext.request.contextPath}/controller/delete_package" method="post">
+                                <input type="hidden" name="package_id" value="${orderDetail.id}">
+                                <button type="submit"
+                                        class="btn btn-sm btn-danger">Удалить</button>
+                            </form>
                         </td>
                     </tr>
                 </c:forEach>
@@ -49,6 +49,12 @@
         <div class="col">
             <c:if test="${sessionScope.role == 'ADMIN'}">
                 <jsp:include page="admin_right_panel.jsp" />
+                <p>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a href="${pageContext.request.contextPath}/create_package.jsp" type="button"
+                       class="btn btn-dark">Новый пакет</a>
+                </div>
+                </p>
             </c:if>
         </div>
     </div>

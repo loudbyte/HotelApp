@@ -7,6 +7,10 @@ public class OrderFacilityDetail implements BaseEntityMarker {
     public OrderFacilityDetail() {
     }
 
+    public OrderFacilityDetail(String facilityPackage) {
+        this.facilityPackageName = facilityPackage;
+    }
+
     public OrderFacilityDetail(long id, String facilityPackage) {
         this.id = id;
         this.facilityPackageName = facilityPackage;

@@ -24,7 +24,7 @@
                                placeholder="1 - New, 2 - In progress, 3 - Done, 4 - Cancelled, 4 -Denial">
                     </div>
                     <div class="form-group col-md-5">
-                        <label for="date">Статус заказа</label>
+                        <label for="date">Дата заказа</label>
                         <input type="text" class="form-control" id="date" name="date" value="${requestScope.date}">
                     </div>
                 </div>

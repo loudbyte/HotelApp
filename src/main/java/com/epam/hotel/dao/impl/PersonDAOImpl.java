@@ -2,6 +2,7 @@ package com.epam.hotel.dao.impl;
 
 import com.epam.hotel.connectionpool.ConnectionPool;
 import com.epam.hotel.dao.PersonDAO;
+import com.epam.hotel.entity.OrderRoomDetail;
 import com.epam.hotel.entity.Person;
 import com.epam.hotel.password.HashPassword;
 import org.apache.log4j.Logger;
@@ -10,6 +11,7 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.epam.hotel.dao.impl.Constant.*;
@@ -129,6 +131,7 @@ public class PersonDAOImpl implements PersonDAO {
         } finally {
             connectionPool.releaseConnection(connection);
         }
+        personList.sort(Comparator.comparing(Person::getId));
         return personList;
     }
 

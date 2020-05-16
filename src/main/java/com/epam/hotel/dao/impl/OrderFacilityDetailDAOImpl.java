@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.epam.hotel.dao.impl.Constant.*;
@@ -21,15 +22,15 @@ public class OrderFacilityDetailDAOImpl implements OrderFacilityDetailDAO {
 
     private static final String GET_ALL_ORDERS = "SELECT * FROM order_facility_detail";
     private static final String GET_ONE_BY_ID = "SELECT * FROM order_facility_detail WHERE id = ?";
-    private static final String GET_ONE_FACILITY_PACKAGE_RELATION_BY_PACKAGE_ID = "SELECT * FROM facility_package_relation WHERE package_id = ?";
+    private static final String GET_ONE_FACILITY_PACKAGE_RELATION_LIST_BY_PACKAGE_ID = "SELECT * FROM facility_package_relation WHERE package_id = ?";
     private static final String CREATE_ORDER_FACILITY_DETAIL = "INSERT INTO order_facility_detail (facility_package_name) VALUES (?)";
     private static final String UPDATE_ONE_BY_ID = "UPDATE order_facility_detail SET facility_package_name = ? WHERE id = ?";
     private static final String DELETE_ONE_BY_ID = "DELETE FROM order_facility_detail WHERE id = ?";
     private static final String CREATE_FACILITY_PACKAGE_RELATION = "INSERT INTO facility_package_relation (facility_id, package_id) " +
             "VALUES (?, ?)";
-
-    private static final String GET_ALL_FACILITY_PACKAGES_BY_FACILITY_PACKAGE_ID = "SELECT * FROM facility_package_view WHERE order_facility_detail_id = ?";
-    private static final String GET_ALL_FACILITY_PACKAGES = "SELECT * FROM facility_package_view";
+    private static final String UPDATE_FACILITY_PACKAGE_RELATION_BY_ID = "UPDATE facility_package_relation " +
+            "SET facility_id= ? WHERE facility_id = ? AND package_id =?)";
+    private static final String DELETE_FACILITY_PACKAGE_RELATION_BY_PACKAGE_ID = "DELETE FROM facility_package_relation WHERE package_id =?";
 
     private static final String GET_LAST_VALUE_FROM_ORDER_FACILITY_DETAIL_SEQ = "select last_value FROM order_facility_detail_id_seq";
 
@@ -85,7 +86,9 @@ public class OrderFacilityDetailDAOImpl implements OrderFacilityDetailDAO {
             connectionPool.releaseConnection(connection);
         }
 
+        orderFacilityDetailList.sort(Comparator.comparing(OrderFacilityDetail::getId));
         return orderFacilityDetailList;
+
     }
 
     @Override
@@ -118,10 +121,11 @@ public class OrderFacilityDetailDAOImpl implements OrderFacilityDetailDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ONE_BY_ID)) {
 
             preparedStatement.setString(1, orderFacilityDetail.getFacilityPackageName());
+            preparedStatement.setLong(2, orderFacilityDetail.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in OrderFacilityDetailDAOimpl updateOneById", e);
+            LOGGER.error("SQLException in OrderFacilityDetailDAOImpl updateOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -137,7 +141,7 @@ public class OrderFacilityDetailDAOImpl implements OrderFacilityDetailDAO {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in OrderFacilityDetailDAOimpl deleteOneById", e);
+            LOGGER.error("SQLException in OrderFacilityDetailDAOImpl deleteOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -151,82 +155,62 @@ public class OrderFacilityDetailDAOImpl implements OrderFacilityDetailDAO {
             preparedStatement.setLong(2, packageId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOimpl createFacilityPackageRelation", e);
+            LOGGER.error("SQLException in OrderFacilityDetailDAOImpl createFacilityPackageRelation", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
     }
 
-    public FacilityPackageRelation getFacilityPackageRelationByPackageId(long packageId) {
+    public void updateFacilityPackageRelationByPackageId(long newFacilityId, long facilityId, long packageId) {
         connection = connectionPool.getConnection();
 
-        FacilityPackageRelation facilityPackageRelation = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_FACILITY_PACKAGE_RELATION_BY_ID)) {
+            preparedStatement.setLong(1, newFacilityId);
+            preparedStatement.setLong(2, facilityId);
+            preparedStatement.setLong(3, packageId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("SQLException in FacilityDAOImpl updateFacilityPackageRelationByPackageId", e);
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
+    }
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ONE_FACILITY_PACKAGE_RELATION_BY_PACKAGE_ID)) {
-            facilityPackageRelation = new FacilityPackageRelation();
+    public void deleteFacilityPackageRelationByPackageId(long packageId) {
+        connection = connectionPool.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_FACILITY_PACKAGE_RELATION_BY_PACKAGE_ID)) {
             preparedStatement.setLong(1, packageId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOimpl createFacilityPackageRelation", e);
+            LOGGER.error("SQLException in FacilityDAOImpl updateFacilityPackageRelationByPackageId", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
-
-        return facilityPackageRelation;
     }
 
-//    public List<FacilityPackage> getByFacilityPackageId(long facilityPackageId) {
-//        connection = connectionPool.getConnection();
-//
-//        List<FacilityPackage> facilityPackageList = null;
-//        FacilityPackage facilityPackage = null;
-//        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_FACILITY_PACKAGES_BY_FACILITY_PACKAGE_ID)) {
-//            preparedStatement.setLong(1, facilityPackageId);
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//            facilityPackageList = new ArrayList<>();
-//
-//            while (resultSet.next()) {
-//                facilityPackageList.add(getFacilityPackage(resultSet));
-//            }
-//        } catch (SQLException e) {
-//            LOGGER.error("SQLException in FacilityPackageViewDAOImpl getByFacilityPackageId", e);
-//        } finally {
-//            connectionPool.releaseConnection(connection);
-//        }
-//        return facilityPackageList;
-//    }
+    public List<FacilityPackageRelation> getFacilityPackageRelationByPackageId(long packageId) {
+        connection = connectionPool.getConnection();
 
+        List<FacilityPackageRelation> facilityPackageRelationList = null;
 
-//    public List<FacilityPackage> getAllFacilityPackages() {
-//        connection = connectionPool.getConnection();
-//
-//        List<FacilityPackage> facilityPackageList = null;
-//        FacilityPackage facilityPackage = null;
-//        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_FACILITY_PACKAGES)) {
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//            facilityPackageList = new ArrayList<>();
-//
-//            while (resultSet.next()) {
-//                facilityPackageList.add(getFacilityPackage(resultSet));
-//            }
-//        } catch (SQLException e) {
-//            LOGGER.error("SQLException in FacilityPackageViewDAOImpl getByFacilityPackageId", e);
-//        } finally {
-//            connectionPool.releaseConnection(connection);
-//        }
-//        return facilityPackageList;
-//    }
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ONE_FACILITY_PACKAGE_RELATION_LIST_BY_PACKAGE_ID)) {
 
-
-//    private FacilityPackage getFacilityPackage(ResultSet resultSet) throws SQLException {
-//        FacilityPackage facilityPackage = new FacilityPackage();
-//
-//        facilityPackage.setOrderFacilityDetailId(resultSet.getLong(ORDER_FACILITY_DETAIL_ID));
-//        facilityPackage.setFacilityPackageName(resultSet.getString(FACILITY_PACKAGE_NAME));
-//        FacilityDAOImpl facilityDAO = new FacilityDAOImpl();
-//        List<Facility> facilityList = facilityDAO.getAll();
-//
-//        facilityPackage.setFacilityList();
-//        return facilityPackage;
-//    }
+            ResultSet resultSet = preparedStatement.executeQuery();
+            facilityPackageRelationList = new ArrayList<>();
+            preparedStatement.setLong(1, packageId);
+            while (resultSet.next()){
+                FacilityPackageRelation facilityPackageRelation = new FacilityPackageRelation();
+                facilityPackageRelation.setFacilityId(resultSet.getLong(FACILITY_ID));
+                facilityPackageRelation.setFacilityId(resultSet.getLong(PACKAGE_ID));
+                facilityPackageRelationList.add(facilityPackageRelation);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("SQLException in FacilityDAOimpl getFacilityPackageRelationByPackageId", e);
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
+        Comparator.comparing(FacilityPackageRelation::getFacilityId);
+        return facilityPackageRelationList;
+    }
 }

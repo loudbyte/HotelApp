@@ -54,6 +54,12 @@ public class ActionFactory {
         actions.put("/edit_order", new EditOrderAction());
         actions.put("/edit_order_detail_button", new EditOrderDetailButtonAction());
         actions.put("/edit_order_detail", new EditOrderDetailAction());
+        actions.put("/delete_package", new DeletePackageAction());
+        actions.put("/edit_package", new EditPackageAction());
+        actions.put("/create_package", new CreatePackageAction());
+        actions.put("/delete_facility", new DeleteFacilityAction());
+        actions.put("/edit_facility", new EditFacilityAction());
+        actions.put("/create_facility", new CreateFacilityAction());
 
     }
 

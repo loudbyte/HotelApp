@@ -2,6 +2,7 @@ package com.epam.hotel.dao.impl;
 
 import com.epam.hotel.connectionpool.ConnectionPool;
 import com.epam.hotel.dao.RoomImageDAO;
+import com.epam.hotel.entity.Room;
 import com.epam.hotel.entity.RoomImage;
 import org.apache.log4j.Logger;
 
@@ -10,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.epam.hotel.dao.impl.Constant.*;
@@ -80,6 +82,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
         } finally {
             connectionPool.releaseConnection(connection);
         }
+        roomImageList.sort(Comparator.comparing(RoomImage::getId));
         return roomImageList;
     }
 
@@ -87,7 +90,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
     public List<RoomImage> getAll() {
         connection = connectionPool.getConnection();
 
-        List<RoomImage> roomImage = new ArrayList<>();
+        List<RoomImage> roomImageList = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_ROOM_IMAGES_BY_ROOM_ID);
              ResultSet resultSet = preparedStatement.executeQuery();) {
@@ -97,14 +100,15 @@ public class RoomImageDAOImpl implements RoomImageDAO {
                 byte[] image = resultSet.getBytes(IMAGE);
                 long roomId = resultSet.getLong(ROOM_ID);
 
-                roomImage.add(new RoomImage(id, image, roomId));
+                roomImageList.add(new RoomImage(id, image, roomId));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             connectionPool.releaseConnection(connection);
         }
-        return roomImage;
+        roomImageList.sort(Comparator.comparing(RoomImage::getId));
+        return roomImageList;
     }
 
     @Override

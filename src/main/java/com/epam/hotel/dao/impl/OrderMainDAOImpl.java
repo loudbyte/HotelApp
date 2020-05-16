@@ -2,6 +2,7 @@ package com.epam.hotel.dao.impl;
 
 import com.epam.hotel.connectionpool.ConnectionPool;
 import com.epam.hotel.dao.OrderMainDAO;
+import com.epam.hotel.entity.Facility;
 import com.epam.hotel.entity.OrderMain;
 import org.apache.log4j.Logger;
 
@@ -9,6 +10,7 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.epam.hotel.dao.impl.Constant.*;
@@ -94,6 +96,7 @@ public class OrderMainDAOImpl implements OrderMainDAO {
             connectionPool.releaseConnection(connection);
         }
 
+        orderMainList.sort(Comparator.comparing(OrderMain::getId));
         return orderMainList;
     }
 
@@ -124,7 +127,7 @@ public class OrderMainDAOImpl implements OrderMainDAO {
         } finally {
             connectionPool.releaseConnection(connection);
         }
-
+        orderMainList.sort(Comparator.comparing(OrderMain::getId));
         return orderMainList;
     }
 

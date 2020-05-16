@@ -22,6 +22,9 @@ public class Constant {
     public static final String SHOW_ORDER_DETAIL_URL = "/show_order_detail.jsp";
     public static final String EDIT_ORDER_URL = "/edit_order.jsp";
     public static final String EDIT_ORDER_DETAIL_URL = "/edit_order_detail.jsp";
+    public static final String SHOW_PACKAGE_ADMIN_LIST_URL = "/show_package_admin_list.jsp";
+    public static final String SHOW_FACILITY_ADMIN_LIST_URL = "/show_facility_admin_list.jsp";
+    public static final String EDIT_PACKAGE_URL = "/edit_package.jsp";
 
     public static final int DELUX = 1;
     public static final int SUITE = 2;

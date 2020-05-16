@@ -48,7 +48,7 @@ public class CreateOrderAction implements Action {
 
         orderRoomDetail.setRoomId(roomId);
         orderRoomDetail.setOrderFacilityDetailId(detailId);
-        orderRoomDetail.setOrderMainid(orderMain.getId());
+        orderRoomDetail.setOrderMainId(orderMain.getId());
         orderRoomDetail.setStartDate(request.getParameter("start_date"));
         orderRoomDetail.setEndDate(request.getParameter("end_date"));
         orderRoomDetail.setId(orderRoomDetailDAO.create(orderRoomDetail));

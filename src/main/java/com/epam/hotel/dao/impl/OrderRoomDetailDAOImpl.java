@@ -9,6 +9,7 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.epam.hotel.dao.impl.Constant.*;
@@ -49,7 +50,7 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
 
             preparedStatement.setLong(1, orderRoomDetail.getRoomId());
             preparedStatement.setLong(2, orderRoomDetail.getOrderFacilityDetailId());
-            preparedStatement.setLong(3, orderRoomDetail.getOrderMainid());
+            preparedStatement.setLong(3, orderRoomDetail.getOrderMainId());
             preparedStatement.setDate(4, sqlStartDate);
             preparedStatement.setDate(5, sqlEndDate);
             preparedStatement.executeUpdate();
@@ -70,22 +71,22 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
     public List<OrderRoomDetail> getAll() {
         connection = connectionPool.getConnection();
 
-        List<OrderRoomDetail> orderMainDetailList = null;
+        List<OrderRoomDetail> orderRoomDetailList = null;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_ORDER_ROOM_DETAILS);
              ResultSet resultSet = preparedStatement.executeQuery()) {
-            orderMainDetailList = new ArrayList<>();
+            orderRoomDetailList = new ArrayList<>();
 
             while (resultSet.next()) {
                 OrderRoomDetail orderRoomDetail = new OrderRoomDetail();
                 orderRoomDetail.setId(resultSet.getLong(ID));
                 orderRoomDetail.setRoomId(resultSet.getLong(ROOM_ID));
                 orderRoomDetail.setOrderFacilityDetailId(resultSet.getLong(ORDER_FACILITY_DETAIL_ID));
-                orderRoomDetail.setOrderMainid(resultSet.getLong(ORDER_MAIN_ID));
+                orderRoomDetail.setOrderMainId(resultSet.getLong(ORDER_MAIN_ID));
                 orderRoomDetail.setStartDate(resultSet.getString(START_DATE));
                 orderRoomDetail.setEndDate(resultSet.getString(END_DATE));
 
-                orderMainDetailList.add(orderRoomDetail);
+                orderRoomDetailList.add(orderRoomDetail);
             }
 
         } catch (SQLException e) {
@@ -93,29 +94,29 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
         } finally {
             connectionPool.releaseConnection(connection);
         }
-
-        return orderMainDetailList;
+        orderRoomDetailList.sort(Comparator.comparing(OrderRoomDetail::getId));
+        return orderRoomDetailList;
     }
 
     public List<OrderRoomDetail> getAllByOrderId(long orderId) {
         connection = connectionPool.getConnection();
 
-        List<OrderRoomDetail> orderMainDetailList = null;
+        List<OrderRoomDetail> orderRoomDetailList = null;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_BY_ORDER_ID)) {
             preparedStatement.setLong(1, orderId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            orderMainDetailList = new ArrayList<>();
+            orderRoomDetailList = new ArrayList<>();
             while (resultSet.next()) {
                 OrderRoomDetail orderRoomDetail = new OrderRoomDetail();
                 orderRoomDetail.setId(resultSet.getLong(ID));
                 orderRoomDetail.setRoomId(resultSet.getLong(ROOM_ID));
                 orderRoomDetail.setOrderFacilityDetailId(resultSet.getLong(ORDER_FACILITY_DETAIL_ID));
-                orderRoomDetail.setOrderMainid(resultSet.getLong(ORDER_MAIN_ID));
+                orderRoomDetail.setOrderMainId(resultSet.getLong(ORDER_MAIN_ID));
                 orderRoomDetail.setStartDate(resultSet.getString(START_DATE));
                 orderRoomDetail.setEndDate(resultSet.getString(END_DATE));
-                orderMainDetailList.add(orderRoomDetail);
+                orderRoomDetailList.add(orderRoomDetail);
             }
 
         } catch (SQLException e) {
@@ -124,8 +125,8 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
         } finally {
             connectionPool.releaseConnection(connection);
         }
-
-        return orderMainDetailList;
+        orderRoomDetailList.sort(Comparator.comparing(OrderRoomDetail::getId));
+        return orderRoomDetailList;
     }
 
     @Override
@@ -142,7 +143,7 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
                 orderRoomDetail.setId(resultSet.getLong(ID));
                 orderRoomDetail.setRoomId(resultSet.getLong(ROOM_ID));
                 orderRoomDetail.setOrderFacilityDetailId(resultSet.getLong(ORDER_FACILITY_DETAIL_ID));
-                orderRoomDetail.setOrderMainid(resultSet.getLong(ORDER_MAIN_ID));
+                orderRoomDetail.setOrderMainId(resultSet.getLong(ORDER_MAIN_ID));
                 orderRoomDetail.setStartDate(resultSet.getString(START_DATE));
                 orderRoomDetail.setEndDate(resultSet.getString(END_DATE));
             }
@@ -170,7 +171,7 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
 
             preparedStatement.setLong(1, orderRoomDetail.getRoomId());
             preparedStatement.setLong(2, orderRoomDetail.getOrderFacilityDetailId());
-            preparedStatement.setLong(3, orderRoomDetail.getOrderMainid());
+            preparedStatement.setLong(3, orderRoomDetail.getOrderMainId());
             preparedStatement.setDate(4, sqlStartDate);
             preparedStatement.setDate(5, sqlEndDate);
             preparedStatement.setLong(6, id);
