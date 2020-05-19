@@ -22,7 +22,7 @@ public class CancelOrderAction implements Action {
         if (request.getSession().getAttribute("person") instanceof Person) {
             person = (Person) request.getSession().getAttribute("person");
         } else {
-            request.setAttribute("message", "Необходимо зарегестрироваться.");
+            request.setAttribute("message", "Необходимо зарегистрироваться.");
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }

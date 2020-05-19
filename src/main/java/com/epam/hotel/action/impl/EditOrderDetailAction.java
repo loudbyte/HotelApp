@@ -41,6 +41,5 @@ public class EditOrderDetailAction implements Action {
         request.setAttribute("order_facility_detail_dao", orderFacilityDetailDAO);
         request.setAttribute("order_status_id", new OrderMainDAOImpl().getOneById(orderMainId).getStatusId());
         request.getRequestDispatcher(SHOW_ORDER_DETAIL_URL).forward(request, response);
-//        new ShowOrderDetailAction().execute(request, response);
     }
 }

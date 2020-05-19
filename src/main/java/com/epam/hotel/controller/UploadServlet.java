@@ -1,9 +1,7 @@
 package com.epam.hotel.controller;
 
 import com.epam.hotel.action.impl.UploadRoomImageAction;
-import com.epam.hotel.dao.impl.RoomImageDAOImpl;
 import com.epam.hotel.validation.ImageValidation;
-import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -20,8 +18,6 @@ import static com.epam.hotel.action.impl.Constant.ERROR_URL;
 public class UploadServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = Logger.getLogger(HotelAppController.class);
-    private RoomImageDAOImpl roomImageDAO;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,8 +25,6 @@ public class UploadServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        long roomId = Long.parseLong(String.valueOf(request.getSession().getAttribute("id")));
 
         for (Part part : request.getParts()) {
 

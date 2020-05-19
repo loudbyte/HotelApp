@@ -10,7 +10,6 @@ import static com.epam.hotel.action.impl.Constant.*;
 
 public class ActionFactory {
 
-
     private static Map<String, Action> actions = new ConcurrentHashMap<>();
 
     private static ActionFactory instance = null;
@@ -50,6 +49,7 @@ public class ActionFactory {
         actions.put("/show_order_detail", new ShowOrderDetailAction());
         actions.put("/show_order_admin_list", new ShowOrderAdminListButtonAction());
         actions.put("/delete_order", new DeleteOrderAction());
+        actions.put("/delete_order_detail", new DeleteOrderDetailAction());
         actions.put("/edit_order_button", new EditOrderButtonAction());
         actions.put("/edit_order", new EditOrderAction());
         actions.put("/edit_order_detail_button", new EditOrderDetailButtonAction());
@@ -73,7 +73,7 @@ public class ActionFactory {
 
     public Action getAction(HttpServletRequest request) {
 
-        Action action = actions.get(request.getPathInfo());
+        Action action = actions.get(request.getPathInfo().toLowerCase());
 
         return action;
     }
