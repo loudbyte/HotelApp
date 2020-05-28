@@ -2,7 +2,6 @@ package com.epam.hotel.entity;
 
 public class FacilityPackageRelation implements BaseEntityMarker {
     private long packageId;
-
     private long facilityId;
 
     public FacilityPackageRelation() {

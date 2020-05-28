@@ -12,17 +12,14 @@ import java.io.IOException;
 
 public class HotelAppController extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = Logger.getLogger(HotelAppController.class);
 
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         getAction(request, response);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         getAction(request, response);
-
     }
 
     private void getAction(HttpServletRequest request, HttpServletResponse response) {
@@ -30,8 +27,8 @@ public class HotelAppController extends HttpServlet {
         try {
             Action action = ActionFactory.getInstance().getAction(request);
             action.execute(request, response);
-        } catch (Exception e) {
-            LOGGER.error("Error in HotelAppController getAction", e);
+        } catch (IOException | ServletException e) {
+            LOGGER.error("IOException | ServletException in HotelAppController getAction", e);
         }
     }
 }

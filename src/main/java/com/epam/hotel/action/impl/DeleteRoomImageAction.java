@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.Constant.UPLOAD_IMAGE_URL;
+import static com.epam.hotel.action.impl.ActionConstant.UPLOAD_IMAGE_URL;
 
 public class DeleteRoomImageAction implements Action {
     @Override
@@ -20,6 +20,5 @@ public class DeleteRoomImageAction implements Action {
         roomImageDAO.deleteOneById(imageId);
 
         request.getRequestDispatcher(UPLOAD_IMAGE_URL).forward(request, response);
-
     }
 }

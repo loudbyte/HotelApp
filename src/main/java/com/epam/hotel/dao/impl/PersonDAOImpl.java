@@ -2,9 +2,8 @@ package com.epam.hotel.dao.impl;
 
 import com.epam.hotel.connectionpool.ConnectionPool;
 import com.epam.hotel.dao.PersonDAO;
-import com.epam.hotel.entity.OrderRoomDetail;
 import com.epam.hotel.entity.Person;
-import com.epam.hotel.password.HashPassword;
+import com.epam.hotel.password.EncodePassword;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.epam.hotel.dao.impl.Constant.*;
+import static com.epam.hotel.dao.impl.DAOConstant.*;
 
 public class PersonDAOImpl implements PersonDAO {
 
@@ -38,7 +37,7 @@ public class PersonDAOImpl implements PersonDAO {
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
     private Connection connection;
 
-    private HashPassword hashPassword = new HashPassword();
+    private EncodePassword encodePassword = new EncodePassword();
 
     @Override
     public long create(Person person) {
@@ -58,7 +57,7 @@ public class PersonDAOImpl implements PersonDAO {
             preparedStatement.setString(4, person.getPhone());
             preparedStatement.setString(5, person.getEmail());
             preparedStatement.setString(6, person.getIin());
-            preparedStatement.setString(7, hashPassword.getHashPassword(person.getPassword()));
+            preparedStatement.setString(7, encodePassword.getHashPassword(person.getPassword()));
             preparedStatement.setBoolean(8, person.isAdmin());
             preparedStatement.setBoolean(9, person.isBan());
             preparedStatement.executeUpdate();
@@ -92,7 +91,7 @@ public class PersonDAOImpl implements PersonDAO {
             preparedStatement.setString(4, person.getPhone());
             preparedStatement.setString(5, person.getEmail());
             preparedStatement.setString(6, person.getIin());
-            preparedStatement.setString(7, hashPassword.getHashPassword(person.getPassword()));
+            preparedStatement.setString(7, encodePassword.getHashPassword(person.getPassword()));
             preparedStatement.setBoolean(8, person.isAdmin());
             preparedStatement.setBoolean(9, person.isBan());
 

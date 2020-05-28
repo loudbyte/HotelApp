@@ -1,13 +1,11 @@
 package com.epam.hotel.entity;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class FacilityPackage implements BaseEntityMarker{
         long orderFacilityDetailId;
         String facilityPackageName;
         List<Facility> facilityList;
-
 
         public FacilityPackage() {
         }

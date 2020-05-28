@@ -1,6 +1,5 @@
 package com.epam.hotel.controller;
 
-import com.epam.hotel.action.impl.UploadRoomImageAction;
 import com.epam.hotel.validation.ImageValidation;
 
 import javax.imageio.ImageIO;
@@ -13,11 +12,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.Constant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.ERROR_URL;
 
-public class UploadServlet extends HttpServlet {
-
-    private static final long serialVersionUID = 1L;
+public class UploadImageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,13 +33,13 @@ public class UploadServlet extends HttpServlet {
 
                 String roomImageIdRadio = String.valueOf(request.getParameter("room_image_id_radio"));
 
-                request.getSession().setAttribute("image_bytes", imageBytes);
-                request.getSession().setAttribute("room_image_id_radio", roomImageIdRadio);
+                request.setAttribute("image_bytes", imageBytes);
+                request.setAttribute("room_image_id_radio", roomImageIdRadio);
 
-                new UploadRoomImageAction().execute(request, response);
+                request.getRequestDispatcher("/controller/upload_room_image").forward(request, response);
 
             } else {
-                request.setAttribute("message", "Upload failed");
+                request.setAttribute("message", "Upload failed.");
                 request.getRequestDispatcher(ERROR_URL).forward(request, response);
             }
         }

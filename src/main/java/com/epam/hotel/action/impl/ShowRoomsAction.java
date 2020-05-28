@@ -12,7 +12,7 @@ import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.List;
 
-import static com.epam.hotel.action.impl.Constant.*;
+import static com.epam.hotel.action.impl.ActionConstant.*;
 
 public class ShowRoomsAction implements Action {
     @Override
@@ -28,15 +28,15 @@ public class ShowRoomsAction implements Action {
         for (Room room : roomList) {
             switch ((int) room.getRoomClassId()) {
                 case DELUX:
-                    if (room.getImages().size() != 0)
+                    if (room.getImageList().size() != 0 && room.getImageList().get(0).getImage() != null)
                         roomDelux = room;
                     break;
                 case SUITE:
-                    if (room.getImages().size() != 0)
+                    if (room.getImageList().size() != 0 && room.getImageList().get(0).getImage() != null)
                         roomSuite = room;
                     break;
                 case STANDARD:
-                    if (room.getImages().size() != 0)
+                    if (room.getImageList().size() != 0 && room.getImageList().get(0).getImage() != null)
                         roomStandard = room;
                     break;
             }
@@ -53,6 +53,5 @@ public class ShowRoomsAction implements Action {
         request.setAttribute("image_url_standard", urlStandard);
 
         request.getRequestDispatcher(SHOW_ROOMS_URL).forward(request, response);
-
     }
 }

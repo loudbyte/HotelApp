@@ -7,7 +7,7 @@ public class ImageEncoder {
 
         Base64.Encoder encoder = Base64.getEncoder();
 
-        String imageUrl = "data:image/png;base64," + encoder.encodeToString(bytes);
+        String imageUrl = "data:image/jpg;base64," + encoder.encodeToString(bytes);
 
         return imageUrl;
     }

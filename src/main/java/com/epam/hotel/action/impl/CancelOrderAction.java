@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.Constant.*;
+import static com.epam.hotel.action.impl.ActionConstant.*;
 
 public class CancelOrderAction implements Action {
 
@@ -27,13 +27,12 @@ public class CancelOrderAction implements Action {
             return;
         }
 
-        long orderId = Long.parseLong(request.getParameter("order_id"));
+        long orderMainId = Long.parseLong(request.getParameter("order_main_id"));
         OrderMainDAOImpl orderMainDAO = new OrderMainDAOImpl();
-        OrderMain orderMain = orderMainDAO.getOneById(orderId);
+        OrderMain orderMain = orderMainDAO.getOneById(orderMainId);
         orderMain.setStatusId(CANCELLED);
-        orderMainDAO.updateOneById(orderId, orderMain);
+        orderMainDAO.updateOneById(orderMainId, orderMain);
 
-        request.setAttribute("my_orders", new OrderMainDAOImpl().getAllByPersonId(person.getId()));
         request.getRequestDispatcher(SHOW_MY_ORDERS_URL).forward(request, response);
     }
 }

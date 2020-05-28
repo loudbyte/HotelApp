@@ -7,11 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.Constant.INDEX_URL;
+import static com.epam.hotel.action.impl.ActionConstant.CABINET_URL;
 
-public class StartPageAction implements Action {
+public class ShowCabinetAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(INDEX_URL).forward(request, response);
+        request.getRequestDispatcher(CABINET_URL).forward(request, response);
     }
 }

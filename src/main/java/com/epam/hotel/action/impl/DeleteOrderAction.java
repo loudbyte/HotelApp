@@ -13,11 +13,11 @@ public class DeleteOrderAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        long orderId = Long.parseLong(request.getParameter("order_id"));
+        long orderMainId = Long.parseLong(request.getParameter("order_main_id"));
 
         OrderMainDAOImpl orderMainDAO = new OrderMainDAOImpl();
-        orderMainDAO.deleteOneById(orderId);
+        orderMainDAO.deleteOneById(orderMainId);
 
-        new ShowOrderAdminListButtonAction().execute(request, response);
+        request.getRequestDispatcher(ActionConstant.SHOW_ORDER_ADMIN_LIST_URL).forward(request, response);
     }
 }

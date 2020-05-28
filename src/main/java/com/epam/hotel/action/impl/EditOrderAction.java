@@ -9,19 +9,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.epam.hotel.action.impl.ActionConstant.SHOW_ORDER_ADMIN_LIST_URL;
+
 public class EditOrderAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         OrderMainDAOImpl orderMainDAO = new OrderMainDAOImpl();
 
-        long orderId = Long.parseLong(request.getParameter("order_id"));
+        long orderMainId = Long.parseLong(request.getParameter("order_main_id"));
         long personId = Long.parseLong(request.getParameter("person_id"));
         long statusId = Long.parseLong(request.getParameter("status_id"));
         String date = request.getParameter("date");
 
-        orderMainDAO.updateOneById(orderId, new OrderMain(orderId, personId, statusId, date));
+        orderMainDAO.updateOneById(orderMainId, new OrderMain(orderMainId, personId, statusId, date));
 
-        new ShowOrderAdminListButtonAction().execute(request, response);
+        request.getRequestDispatcher(SHOW_ORDER_ADMIN_LIST_URL).forward(request, response);
     }
 }

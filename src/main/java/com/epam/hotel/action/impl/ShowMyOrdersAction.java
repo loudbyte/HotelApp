@@ -1,7 +1,6 @@
 package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
-import com.epam.hotel.dao.impl.OrderMainDAOImpl;
 import com.epam.hotel.entity.Person;
 
 import javax.servlet.ServletException;
@@ -9,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.Constant.ERROR_URL;
-import static com.epam.hotel.action.impl.Constant.SHOW_MY_ORDERS_URL;
+import static com.epam.hotel.action.impl.ActionConstant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.SHOW_MY_ORDERS_URL;
 
 public class ShowMyOrdersAction implements Action {
     @Override
@@ -25,8 +24,6 @@ public class ShowMyOrdersAction implements Action {
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
-
-        request.setAttribute("my_orders", new OrderMainDAOImpl().getAllByPersonId(person.getId()));
         request.getRequestDispatcher(SHOW_MY_ORDERS_URL).forward(request, response);
     }
 }

@@ -11,10 +11,10 @@
 <body>
 <div class="container">
     <jsp:include page="header.jsp"/>
-    <h3>Редактирование деталей заказа - ${requestScope.order_detail_id}</h3>
+    <h3>Редактирование деталей заказа - ${requestScope.order_room_detail_id}</h3>
     <div class="row">
         <div class="col-sm">
-            <form action="${pageContext.request.contextPath}/controller/edit_order_detail" method="post">
+            <form action="${pageContext.request.contextPath}/controller/edit_order_room_detail" method="post">
                 <div class="form-row">
                     <div class="form-group col-md-5">
                         <label for="room_id">ID комнаты</label>
@@ -38,7 +38,7 @@
                 </div>
                 <br/>
                 <input type="hidden" name="order_main_id" value="${requestScope.order_main_id}" >
-                <input type="hidden" name="order_detail_id" value="${requestScope.order_detail_id}" >
+                <input type="hidden" name="order_room_detail_id" value="${requestScope.order_room_detail_id}" >
                 <div class="form-row">
                     <button type="submit" style="width: 100px" class="btn btn-primary">Сохранить</button>
                 </div>

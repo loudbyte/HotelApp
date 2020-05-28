@@ -2,7 +2,6 @@ package com.epam.hotel.dao.impl;
 
 import com.epam.hotel.connectionpool.ConnectionPool;
 import com.epam.hotel.dao.RoomImageDAO;
-import com.epam.hotel.entity.Room;
 import com.epam.hotel.entity.RoomImage;
 import org.apache.log4j.Logger;
 
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.epam.hotel.dao.impl.Constant.*;
+import static com.epam.hotel.dao.impl.DAOConstant.*;
 
 public class RoomImageDAOImpl implements RoomImageDAO {
 

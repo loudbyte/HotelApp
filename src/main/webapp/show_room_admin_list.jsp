@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<jsp:useBean id="roomDAO" class="com.epam.hotel.dao.impl.RoomDAOImpl"/>
+<c:set var="roomList" value="${roomDAO.all}"/>
 <html>
 <head>
     <title>Комнаты</title>
@@ -27,7 +28,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="room" items="${requestScope.room_list}">
+                <c:forEach var="room" items="${roomList}">
                     <tr>
                         <td>${room.id}</td>
                         <td>${room.roomNumber}</td>
@@ -35,7 +36,7 @@
                         <td>${room.price}</td>
                         <td>${room.availability}</td>
                         <td>${room.capacity}</td>
-                        <td> ${room.images.size()} шт.</td>
+                        <td> ${room.imageList.size()} шт.</td>
                         <td>
                                 <form action="${requestScope.pageContext.request.contextPath}/controller/edit_room_button" method="post">
                                     <input type="hidden" name="id" value="${room.id}">

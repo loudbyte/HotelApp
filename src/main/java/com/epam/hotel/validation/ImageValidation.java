@@ -3,12 +3,14 @@ package com.epam.hotel.validation;
 import javax.servlet.http.Part;
 
 public class ImageValidation {
-    private boolean result = false;
-    String jpeg = "image/jpeg";
+    private static final String JPEG = "image/jpeg";
+
     public boolean isImageValid(Part part) {
-        if (part.getContentType().equals(jpeg)) {
+        boolean result = false;
+
+        if (part.getContentType().equals(JPEG))
             result = true;
-        }
+
         return result;
     }
 }

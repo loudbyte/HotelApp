@@ -22,16 +22,16 @@
             <p class="lead">
                 Вместимость: ${room.capacity} человек </br>
                 Цена в сутки: ${room.price}$ </br>
-                Номер комнаты №${room.price} </br>
+                Номер комнаты №${room.roomNumber} </br>
             </p>
-            <form action="${pageContext.request.contextPath}/controller/create_order_button" method="post">
+            <form action="${pageContext.request.contextPath}/controller/create_item_button" method="post">
                 <input type="hidden" name="room_id" value="${room.id}">
                 <div class="button-bottom"><p><button type="submit" class="btn btn-secondary" role="button">Забронировать &raquo;</button></p></div>
             </form>
         </div>
         <div class="col-md-5">
-            <c:if test="${room.images.size() > 0}">
-                <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="${imageEncoder.encode(room.images.get(0))}"/>
+            <c:if test="${room.imageList.size() > 0 && room.imageList.get(0).image != null}">
+                <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" src="${imageEncoder.encode(room.imageList.get(0).image)}"/>
             </c:if>
         </div>
     </div>

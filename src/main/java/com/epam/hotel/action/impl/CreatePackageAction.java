@@ -2,17 +2,14 @@ package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.impl.OrderFacilityDetailDAOImpl;
-import com.epam.hotel.entity.Facility;
 import com.epam.hotel.entity.OrderFacilityDetail;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import static com.epam.hotel.action.impl.Constant.SHOW_PACKAGE_ADMIN_LIST_URL;
+import static com.epam.hotel.action.impl.ActionConstant.SHOW_PACKAGE_ADMIN_LIST_URL;
 
 public class CreatePackageAction implements Action {
     @Override

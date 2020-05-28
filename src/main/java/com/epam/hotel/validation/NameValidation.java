@@ -10,17 +10,15 @@ public class NameValidation {
     private Pattern patternRu = Pattern.compile(REGEX_RU);
     private Matcher matcherEn;
     private Matcher matcherRu;
-    private boolean result;
 
     public boolean isNameValid(String name) {
+        boolean result = false;
         matcherEn = patternEn.matcher(name);
         matcherRu = patternRu.matcher(name);
 
-        if (matcherEn.find() || matcherRu.find()) {
+        if (matcherEn.find() || matcherRu.find())
             result = true;
-        } else {
-            result = false;
-        }
+
         return result;
     }
 }

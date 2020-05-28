@@ -9,7 +9,7 @@
 <body>
 <div class="container">
     <jsp:include page="header.jsp"/>
-    <h3>Редактирование заказа - ${requestScope.order_id}</h3>
+    <h3>Редактирование заказа - ${requestScope.order_main_id}</h3>
     <div class="row">
         <div class="col-sm">
             <form action="${pageContext.request.contextPath}/controller/edit_order" method="post">
@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <br/>
-                <input type="hidden" name="order_id" value="${requestScope.order_id}" >
+                <input type="hidden" name="order_main_id" value="${requestScope.order_main_id}" >
                 <div class="form-row">
                     <button type="submit" style="width: 100px" class="btn btn-primary">Сохранить</button>
                 </div>

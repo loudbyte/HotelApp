@@ -1,8 +1,6 @@
 package com.epam.hotel.filter;
 
-
-import com.epam.hotel.entity.Person;
-import com.epam.hotel.role.Role;
+import com.epam.hotel.entity.role.Role;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +10,7 @@ import java.io.IOException;
 
 public class AuthorizationFilter implements Filter {
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
+    public void init(FilterConfig filterConfig) {
     }
 
     @Override

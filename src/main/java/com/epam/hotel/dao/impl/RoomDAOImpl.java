@@ -2,7 +2,6 @@ package com.epam.hotel.dao.impl;
 
 import com.epam.hotel.connectionpool.ConnectionPool;
 import com.epam.hotel.dao.RoomDAO;
-import com.epam.hotel.entity.Person;
 import com.epam.hotel.entity.Room;
 import com.epam.hotel.entity.RoomImage;
 import org.apache.log4j.Logger;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.epam.hotel.dao.impl.Constant.*;
+import static com.epam.hotel.dao.impl.DAOConstant.*;
 
 public class RoomDAOImpl implements RoomDAO {
 
@@ -143,7 +142,6 @@ public class RoomDAOImpl implements RoomDAO {
 
         List<Room> roomList = new ArrayList<>();
         Room room = null;
-        List<byte[]> images = null;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_ROOMS);
              ResultSet resultSet = preparedStatement.executeQuery();
@@ -160,7 +158,6 @@ public class RoomDAOImpl implements RoomDAO {
                 room.setAvailability(resultSet.getBoolean(AVAILABILITY));
                 long id = room.getId();
                 room.setImageList(getRoomImageListByRoomId(id));
-                room.setImages(getRoomImagesByRoomId(id));
                 roomList.add(room);
             }
 
@@ -258,7 +255,6 @@ public class RoomDAOImpl implements RoomDAO {
             room.setAvailability(resultSet.getBoolean(AVAILABILITY));
             long id = room.getId();
             room.setImageList(getRoomImageListByRoomId(id));
-            room.setImages(getRoomImagesByRoomId(id));
         }
         return room;
     }

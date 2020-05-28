@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.Constant.*;
+import static com.epam.hotel.action.impl.ActionConstant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.SHOW_PERSON_ADMIN_LIST_URL;
 
 public class CreatePersonAction implements Action {
 
@@ -61,6 +62,6 @@ public class CreatePersonAction implements Action {
 
         person.setId(id);
 
-        new ShowPersonAdminListAction().execute(request, response);
+        request.getRequestDispatcher(SHOW_PERSON_ADMIN_LIST_URL).forward(request, response);
     }
 }

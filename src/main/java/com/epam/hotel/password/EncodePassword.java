@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class HashPassword {
+public class EncodePassword {
 
     public String getHashPassword (String input) {
 
@@ -27,5 +27,4 @@ public class HashPassword {
         }
         return hashHex;
     }
-
 }

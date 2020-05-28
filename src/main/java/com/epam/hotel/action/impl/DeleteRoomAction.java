@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.Constant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.SHOW_ROOM_ADMIN_LIST_URL;
 
 public class DeleteRoomAction implements Action {
     @Override
@@ -20,7 +21,7 @@ public class DeleteRoomAction implements Action {
         Room room = roomDAO.getOneById(id);
         if (room != null) {
             roomDAO.deleteOneById(id);
-            new ShowRoomAdminListAction().execute(request, response);
+            request.getRequestDispatcher(SHOW_ROOM_ADMIN_LIST_URL).forward(request, response);
         } else {
             request.setAttribute("message", "Комнаты не существует.");
             request.getRequestDispatcher(ERROR_URL).forward(request, response);

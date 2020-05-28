@@ -37,7 +37,7 @@
 
     <servlet>
         <servlet-name>UploadServlet</servlet-name>
-        <servlet-class>com.epam.hotel.controller.UploadServlet</servlet-class>
+        <servlet-class>com.epam.hotel.controller.UploadImageServlet</servlet-class>
         <multipart-config>
             <max-file-size>2097152</max-file-size>
             <max-request-size>10485760</max-request-size>

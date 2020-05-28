@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import static com.epam.hotel.action.impl.Constant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.SHOW_ROOM_ADMIN_LIST_URL;
 
 public class EditRoomAction implements Action {
     @Override
@@ -33,9 +34,8 @@ public class EditRoomAction implements Action {
             return;
         }
 
-        if (availability != null) {
+        if (availability != null)
             isAvailable = true;
-        }
 
         Room room = new Room();
         room.setRoomNumber(roomNumber);
@@ -46,6 +46,6 @@ public class EditRoomAction implements Action {
 
         roomDAO.updateOneById(id, room);
 
-        new ShowRoomAdminListAction().execute(request, response);
+        request.getRequestDispatcher(SHOW_ROOM_ADMIN_LIST_URL).forward(request, response);
     }
 }

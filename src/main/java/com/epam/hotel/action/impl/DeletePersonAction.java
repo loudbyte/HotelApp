@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-import static com.epam.hotel.action.impl.Constant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.SHOW_PERSON_ADMIN_LIST_URL;
 
 public class DeletePersonAction implements Action {
     @Override
@@ -27,12 +28,11 @@ public class DeletePersonAction implements Action {
             orderList = orderMainDAO.getAllByPersonId(person.getId());
             if (orderList == null || orderList.isEmpty()) {
                 personDAO.deleteOneById(id);
-                new ShowPersonAdminListAction().execute(request, response);
+                request.getRequestDispatcher(SHOW_PERSON_ADMIN_LIST_URL).forward(request, response);
                 return;
             }
             request.setAttribute("message", "Нелья удалить пользователя, так как у него есть заказы.");
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
-            return;
         } else {
             request.setAttribute("message", "Пользователя не существует.");
             request.getRequestDispatcher(ERROR_URL).forward(request, response);

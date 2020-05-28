@@ -8,7 +8,7 @@
 <body>
 <p>
 <div class="btn-group-vertical " role="group" aria-label="Basic example">
-    <a href="${requestScope.pageContext.request.contextPath}/controller/show_person_list" type="button"
+    <a href="${requestScope.pageContext.request.contextPath}/controller/show_person_admin_list" type="button"
        class="btn btn-secondary">Список пользователей</a>
 
     <a href="${requestScope.pageContext.request.contextPath}/controller/show_room_admin_list" type="button"

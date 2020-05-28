@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.Constant.INDEX_URL;
+import static com.epam.hotel.action.impl.ActionConstant.INDEX_URL;
 
 public class LogoutAction implements Action {
     @Override
@@ -17,6 +17,5 @@ public class LogoutAction implements Action {
         session.invalidate();
 
         response.sendRedirect(INDEX_URL);
-
     }
 }

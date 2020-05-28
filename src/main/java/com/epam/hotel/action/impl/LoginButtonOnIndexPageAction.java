@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.Constant.LOGIN_URL;
+import static com.epam.hotel.action.impl.ActionConstant.LOGIN_URL;
 
 public class LoginButtonOnIndexPageAction implements Action {
 

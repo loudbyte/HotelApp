@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.epam.hotel.dao.impl.Constant.*;
+import static com.epam.hotel.dao.impl.DAOConstant.*;
 
 public class OrderFacilityDetailDAOImpl implements OrderFacilityDetailDAO {
 
@@ -88,7 +88,6 @@ public class OrderFacilityDetailDAOImpl implements OrderFacilityDetailDAO {
 
         orderFacilityDetailList.sort(Comparator.comparing(OrderFacilityDetail::getId));
         return orderFacilityDetailList;
-
     }
 
     @Override

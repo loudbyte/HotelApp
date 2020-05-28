@@ -3,6 +3,7 @@ package com.epam.hotel.action.impl;
 import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.impl.OrderMainDAOImpl;
 import com.epam.hotel.dao.impl.OrderRoomDetailDAOImpl;
+import com.epam.hotel.entity.Cart;
 import com.epam.hotel.entity.OrderMain;
 import com.epam.hotel.entity.OrderRoomDetail;
 import com.epam.hotel.entity.Person;
@@ -13,9 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 
-import static com.epam.hotel.action.impl.Constant.*;
+import static com.epam.hotel.action.impl.ActionConstant.*;
 
 public class CreateOrderAction implements Action {
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -29,16 +31,17 @@ public class CreateOrderAction implements Action {
             return;
         }
 
-        long roomId = Long.parseLong(request.getParameter("room_id"));
+        Cart cart = (Cart) request.getSession().getAttribute("cart");
+
         long personId = person.getId();
-        long detailId = Long.parseLong(request.getParameter("detail_id"));
         LocalDate localDateNow = LocalDate.now();
 
+        // TODO smth with orderRoomDetail
         OrderMain orderMain = new OrderMain();
-        OrderRoomDetail orderRoomDetail = new OrderRoomDetail();
+//        OrderRoomDetail orderRoomDetail = new OrderRoomDetail();
 
         OrderMainDAOImpl orderMainDAO = new OrderMainDAOImpl();
-        OrderRoomDetailDAOImpl orderRoomDetailDAO = new OrderRoomDetailDAOImpl();
+//        OrderRoomDetailDAOImpl orderRoomDetailDAO = new OrderRoomDetailDAOImpl();
 
         orderMain.setPersonId(personId);
         orderMain.setStatusId(NEW);
@@ -46,14 +49,26 @@ public class CreateOrderAction implements Action {
 
         orderMain.setId(orderMainDAO.create(orderMain));
 
-        orderRoomDetail.setRoomId(roomId);
-        orderRoomDetail.setOrderFacilityDetailId(detailId);
-        orderRoomDetail.setOrderMainId(orderMain.getId());
-        orderRoomDetail.setStartDate(request.getParameter("start_date"));
-        orderRoomDetail.setEndDate(request.getParameter("end_date"));
-        orderRoomDetail.setId(orderRoomDetailDAO.create(orderRoomDetail));
+        OrderRoomDetailDAOImpl orderRoomDetailDAO = new OrderRoomDetailDAOImpl();
 
-        request.setAttribute("my_orders", orderMainDAO.getAllByPersonId(personId));
+        for (OrderRoomDetail detail : cart.getOrderRoomDetailMap().values()) {
+            detail.setOrderMainId(orderMain.getId());
+            orderRoomDetailDAO.create(detail);
+        }
+
+        cart.clearOrderRoomDetailMap();
+
+        request.getSession().removeAttribute("cart");
+        request.getSession().setAttribute("cart", cart);
+
+//        orderRoomDetail.setRoomId(roomId);
+//        orderRoomDetail.setOrderFacilityDetailId(detailId);
+//        orderRoomDetail.setOrderMainId(orderMain.getId());
+//        orderRoomDetail.setStartDate(request.getParameter("start_date"));
+//        orderRoomDetail.setEndDate(request.getParameter("end_date"));
+//        orderRoomDetail.setId(orderRoomDetailDAO.create(orderRoomDetail));
+//
+//        request.setAttribute("my_orders", orderMainDAO.getAllByPersonId(personId));
         request.getRequestDispatcher(SHOW_MY_ORDERS_URL).forward(request, response);
     }
 }

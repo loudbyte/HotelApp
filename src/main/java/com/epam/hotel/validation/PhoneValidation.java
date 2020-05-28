@@ -7,16 +7,14 @@ public class PhoneValidation {
     private static final String REGEX = "^\\+([0-9\\-]?){9,11}[0-9]$";
     private Pattern pattern = Pattern.compile(REGEX);
     private Matcher matcher;
-    private boolean result;
 
     public boolean isPhoneValid(String phone) {
+        boolean result = false;
         matcher = pattern.matcher(phone);
 
-        if (matcher.find()) {
+        if (matcher.find())
             result = true;
-        } else {
-            result = false;
-        }
+
         return result;
     }
 }

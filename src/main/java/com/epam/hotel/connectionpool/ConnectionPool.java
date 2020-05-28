@@ -5,8 +5,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import org.apache.log4j.Logger;
 
 public class ConnectionPool {
+
+    private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class.getName());
 
     private String driverName;
     private String url;
@@ -39,7 +42,7 @@ public class ConnectionPool {
                 connectionsQueue.add(DriverManager.getConnection(url, userName, password));
             }
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            LOGGER.error("ClassNotFoundException | SQLException in ConnectionPool", e);
         }
     }
 
@@ -61,13 +64,13 @@ public class ConnectionPool {
     public Connection getConnection() {
 
         Connection newConnection;
-
         try {
             newConnection = connectionsQueue.take();
         } catch (InterruptedException e) {
             newConnection = connectionsQueue.poll();
         }
         return newConnection;
+
     }
 
     public void releaseConnection(Connection connection) {

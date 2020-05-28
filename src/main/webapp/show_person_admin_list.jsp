@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:useBean id="personDAO" class="com.epam.hotel.dao.impl.PersonDAOImpl"/>
+<c:set var="personList" value="${personDAO.all}"/>
 <html>
 <head>
     <title>Пользователи</title>
@@ -24,7 +26,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="person" items="${requestScope.person_list}">
+                <c:forEach var="person" items="${personList}">
                     <tr>
                         <td>${person.id}</td>
                         <td>${person.firstName}</td>

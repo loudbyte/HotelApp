@@ -4,20 +4,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class IINValidation {
-    private static final String REGEX = "^[0-9]{12}$";
-    private Pattern pattern = Pattern.compile(REGEX);
+    private static final String IIN_REGEX = "^[0-9]{12}$";
+    private Pattern pattern = Pattern.compile(IIN_REGEX);
     private Matcher matcher;
-    private boolean result;
 
     public boolean isIINValid(String iin) {
-        pattern = Pattern.compile(REGEX);
+        boolean result = false;
+        pattern = Pattern.compile(IIN_REGEX);
         matcher = pattern.matcher(iin);
 
-        if (matcher.find()) {
+        if (matcher.find())
             result = true;
-        } else {
-            result = false;
-        }
+
         return result;
     }
 }

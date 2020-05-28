@@ -2,7 +2,6 @@ package com.epam.hotel.dao.impl;
 
 import com.epam.hotel.connectionpool.ConnectionPool;
 import com.epam.hotel.dao.OrderMainDAO;
-import com.epam.hotel.entity.Facility;
 import com.epam.hotel.entity.OrderMain;
 import org.apache.log4j.Logger;
 
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.epam.hotel.dao.impl.Constant.*;
+import static com.epam.hotel.dao.impl.DAOConstant.*;
 
 public class OrderMainDAOImpl implements OrderMainDAO {
 

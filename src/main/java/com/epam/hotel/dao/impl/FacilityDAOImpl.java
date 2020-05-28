@@ -3,8 +3,6 @@ package com.epam.hotel.dao.impl;
 import com.epam.hotel.connectionpool.ConnectionPool;
 import com.epam.hotel.dao.FacilityDAO;
 import com.epam.hotel.entity.Facility;
-import com.epam.hotel.entity.FacilityPackageRelation;
-import com.epam.hotel.entity.OrderFacilityDetail;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -15,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.epam.hotel.dao.impl.Constant.*;
+import static com.epam.hotel.dao.impl.DAOConstant.*;
 
 public class FacilityDAOImpl implements FacilityDAO {
 
@@ -163,7 +161,6 @@ public class FacilityDAOImpl implements FacilityDAO {
         }
     }
 
-
     public List<Facility> getFacilityListByPackageId(long packageId) {
         connection = connectionPool.getConnection();
 
@@ -202,5 +199,4 @@ public class FacilityDAOImpl implements FacilityDAO {
         }
         return facility;
     }
-
 }

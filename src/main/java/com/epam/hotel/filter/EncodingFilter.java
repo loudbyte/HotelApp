@@ -9,8 +9,7 @@ public class EncodingFilter implements Filter {
     private static final String CONTENT_TYPE = "text/html;charset=utf-8";
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
+    public void init(FilterConfig filterConfig) {
     }
 
     @Override

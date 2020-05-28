@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.Constant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.SHOW_PERSON_ADMIN_LIST_URL;
 
 public class EditPersonAction implements Action {
     @Override
@@ -68,6 +69,6 @@ public class EditPersonAction implements Action {
 
         personDAO.updateOneById(id, person);
 
-        new ShowPersonAdminListAction().execute(request, response);
+        request.getRequestDispatcher(SHOW_PERSON_ADMIN_LIST_URL).forward(request, response);
     }
 }

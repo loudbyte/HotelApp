@@ -9,7 +9,7 @@
 <html>
 <head>
     <jsp:include page="style.jsp"/>
-    <title>Create order</title>
+    <title>Create item</title>
 </head>
 <body>
 <div class="container">
@@ -20,7 +20,7 @@
     <h3>Бронирование номера ${room.roomNumber}</h3>
     <div class="row">
         <div class="col-sm">
-            <form action="${pageContext.request.contextPath}/controller/create_order" method="post">
+            <form action="${pageContext.request.contextPath}/controller/create_item" method="post">
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="start_date">Дата начала аренды</label>
@@ -54,7 +54,7 @@
                 <br/>
                 <input type="hidden" name="room_id" value="${room.id}" >
                 <div class="form-row">
-                    <button type="submit" style="width: 100px" class="btn btn-primary">Оформить заказ</button>
+                    <button type="submit" style="width: 100px" class="btn btn-primary">Добавить в корзину</button>
                 </div>
             </form>
         </div>

@@ -7,11 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.ActionConstant.REGISTRATION_URL;
+import static com.epam.hotel.action.impl.ActionConstant.SHOW_CART_URL;
 
-public class RegistrationButtonOnIndexPageAction implements Action {
+public class ShowCartAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(REGISTRATION_URL).forward(request, response);
+        request.getRequestDispatcher(SHOW_CART_URL).forward(request, response);
     }
 }

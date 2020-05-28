@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.Constant.SHOW_PACKAGE_ADMIN_LIST_URL;
+import static com.epam.hotel.action.impl.ActionConstant.SHOW_PACKAGE_ADMIN_LIST_URL;
 
 public class EditPackageAction implements Action {
     @Override

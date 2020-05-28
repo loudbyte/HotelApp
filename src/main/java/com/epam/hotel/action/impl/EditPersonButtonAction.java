@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.Constant.EDIT_PERSON_URL;
+import static com.epam.hotel.action.impl.ActionConstant.EDIT_PERSON_URL;
 
 public class EditPersonButtonAction implements Action {
     @Override

@@ -1,6 +1,6 @@
 package com.epam.hotel.dao.impl;
 
-public class Constant {
+public class DAOConstant {
     public static final String DATE_PATTERN = "yyyy-MM-dd";
     protected static final String ID = "id";
     protected static final String NAME = "name";
@@ -42,5 +42,4 @@ public class Constant {
     protected static final String FACILITY_PRICE = "facility_price";
     protected static final String PACKAGE_ID_RELATION = "package_id_relation";
     protected static final String FACILITY_ID_RELATION = "facility_id_relation";
-
 }

@@ -1,4 +1,4 @@
-package com.epam.hotel.role;
+package com.epam.hotel.entity.role;
 
 public enum Role {
     GUEST,

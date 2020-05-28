@@ -1,6 +1,6 @@
 package com.epam.hotel.action.impl;
 
-public class Constant {
+public class ActionConstant {
 
     public static final String INDEX_URL = "/index.jsp";
     protected static final String LOGIN_URL = "/login.jsp";
@@ -13,18 +13,19 @@ public class Constant {
     protected static final String EDIT_ROOM_URL = "/edit_room.jsp";
     protected static final String CREATE_ROOM_URL = "/create_room.jsp";
     protected static final String CREATE_PERSON_URL = "/create_person.jsp";
-    protected static final String CREATE_ORDER_URL = "/create_order.jsp";
+    protected static final String CREATE_ITEM_URL = "/create_item.jsp";
     protected static final String SHOW_MY_ORDERS_URL = "/show_my_orders.jsp";
     public static final String UPLOAD_IMAGE_URL = "/upload_image.jsp";
     public static final String ERROR_URL = "/error.jsp";
-    public static final String SHOW_ADMIN_ROOM_LIST_URL = "/show_room_admin_list.jsp";
+    public static final String SHOW_ROOM_ADMIN_LIST_URL = "/show_room_admin_list.jsp";
     public static final String SHOW_ORDER_ADMIN_LIST_URL = "/show_order_admin_list.jsp";
-    public static final String SHOW_ORDER_DETAIL_URL = "/show_order_detail.jsp";
+    public static final String SHOW_ORDER_ROOM_DETAIL_URL = "/show_order_room_detail.jsp";
     public static final String EDIT_ORDER_URL = "/edit_order.jsp";
-    public static final String EDIT_ORDER_DETAIL_URL = "/edit_order_detail.jsp";
+    public static final String EDIT_ORDER_ROOM_DETAIL_URL = "/edit_order_room_detail.jsp";
     public static final String SHOW_PACKAGE_ADMIN_LIST_URL = "/show_package_admin_list.jsp";
     public static final String SHOW_FACILITY_ADMIN_LIST_URL = "/show_facility_admin_list.jsp";
     public static final String EDIT_PACKAGE_URL = "/edit_package.jsp";
+    public static final String SHOW_CART_URL = "/show_cart.jsp";
 
     public static final int DELUX = 1;
     public static final int SUITE = 2;

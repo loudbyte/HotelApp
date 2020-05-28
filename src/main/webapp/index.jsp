@@ -10,7 +10,6 @@
 </head>
 <body>
 
-
 <div class="container">
 
   <jsp:include page="header.jsp"/>
@@ -20,15 +19,10 @@
     <div class="col">
       <p>
       <div class="btn-group" role="group" aria-label="Basic example">
-      <c:choose>
-        <c:when test="${sessionScope.role == 'GUEST' || sessionScope.role == null}">
-          <a href="${pageContext.request.contextPath}/controller/login_button" type="button" class="btn btn-secondary">Вход</a>
-          <a href="${pageContext.request.contextPath}/controller/registration_button" type="button" class="btn btn-secondary">Регистрация</a>
-        </c:when>
-        <c:otherwise>
-          <a href="${pageContext.request.contextPath}/controller/cabinet" type="button" class="btn btn-secondary">Кабинет</a>
-        </c:otherwise>
-      </c:choose>
+      <c:if test="${sessionScope.role == 'GUEST' || sessionScope.role == null}">
+        <a href="${pageContext.request.contextPath}/controller/login_button" type="button" class="btn btn-secondary">Вход</a>
+        <a href="${pageContext.request.contextPath}/controller/registration_button" type="button" class="btn btn-secondary">Регистрация</a>
+      </c:if>
       </div>
       </p>
       <p>

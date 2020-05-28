@@ -20,7 +20,6 @@
           enctype="multipart/form-data">
         <div class="row">
 
-
             <div class="col-md-6">
                 <p class="featurette-heading">${room.roomClassRu} номер
                     ID: ${room.id}</br>
@@ -38,7 +37,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <c:if test="${room.images.size() > 0}">
+                <c:if test="${room.imageList.size() > 0 && room.imageList.get(0).image != null}">
                     <ul>
                         <li>
                             <p>
@@ -68,5 +67,3 @@
 </div>
 </body>
 </html>
-
-

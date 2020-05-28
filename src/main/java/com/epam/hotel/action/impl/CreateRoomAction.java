@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import static com.epam.hotel.action.impl.Constant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.ERROR_URL;
+import static com.epam.hotel.action.impl.ActionConstant.SHOW_ROOM_ADMIN_LIST_URL;
 
 public class CreateRoomAction implements Action {
     @Override
@@ -23,18 +24,16 @@ public class CreateRoomAction implements Action {
         long roomClassId = Long.parseLong(request.getParameter("room_class_id"));
         BigDecimal price = BigDecimal.valueOf(Long.parseLong(request.getParameter("price")));
         String availability = request.getParameter("availability");
-        String image = request.getParameter("images");
         boolean isAvailable = false;
 
-        if (roomNumber == 0 || capacity == 0 || roomClassId == 0 || price.equals(null) ) {
+        if (roomNumber == 0 || capacity == 0 || roomClassId == 0 || price.equals(null)) {
             request.setAttribute("message", "Пустые поля.");
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
 
-        if (availability != null) {
+        if (availability != null)
             isAvailable = true;
-        }
 
         Room room = new Room();
         room.setRoomNumber(roomNumber);
@@ -45,6 +44,6 @@ public class CreateRoomAction implements Action {
 
         roomDAO.create(room);
 
-        new ShowRoomAdminListAction().execute(request, response);
+        request.getRequestDispatcher(SHOW_ROOM_ADMIN_LIST_URL).forward(request, response);
     }
 }
