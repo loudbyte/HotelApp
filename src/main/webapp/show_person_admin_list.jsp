@@ -2,6 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="personDAO" class="com.epam.hotel.dao.impl.PersonDAOImpl"/>
 <c:set var="personList" value="${personDAO.all}"/>
+
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="language"/>
 <html>
 <head>
     <title>Пользователи</title>
@@ -16,13 +21,13 @@
                 <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Имя</td>
-                    <th scope="col">Фамилия</td>
-                    <th scope="col">ИИН</td>
-                    <th scope="col">Телефон</td>
-                    <th scope="col">Имейл</td>
-                    <th scope="col"></td>
-                    <th scope="col"></td>
+                    <th scope="col"><fmt:message key="first.name"/></th>
+                    <th scope="col"><fmt:message key="last.name"/></th>
+                    <th scope="col"><fmt:message key="iin"/></th>
+                    <th scope="col"><fmt:message key="phone"/></th>
+                    <th scope="col"><fmt:message key="email"/></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -35,17 +40,17 @@
                         <td>${person.phone}</td>
                         <td>${person.email}</td>
                         <td>
-                            <form action="${requestScope.pageContext.request.contextPath}/controller/edit_person_button" method="post">
+                            <form action="${pageContext.request.contextPath}/controller/edit_person_button" method="post">
                                 <input type="hidden" name="person_id" value="${person.id}">
                                 <button type="submit"
-                                        class="btn  btn-sm btn-warning">Редактировать</button>
+                                        class="btn  btn-sm btn-warning"><fmt:message key="edit"/></button>
                             </form>
                         </td>
                         <td>
-                            <form action="${requestScope.pageContext.request.contextPath}/controller/delete_person" method="post">
+                            <form action="${pageContext.request.contextPath}/controller/delete_person" method="post">
                                 <input type="hidden" name="person_id" value="${person.id}">
                                 <button type="submit"
-                                        class="btn  btn-sm btn-danger">Удалить</button>
+                                        class="btn  btn-sm btn-danger"><fmt:message key="delete"/></button>
                             </form>
                         </td>
                     </tr>
@@ -58,8 +63,8 @@
                 <jsp:include page="admin_right_panel.jsp" />
                 <p>
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <a href="${requestScope.pageContext.request.contextPath}/create_person.jsp" type="button"
-                       class="btn btn-dark">Новый пользователь</a>
+                    <a href="${pageContext.request.contextPath}/create_person.jsp" type="button"
+                       class="btn btn-dark"><fmt:message key="new.user"/></a>
                 </div>
                 </p>
             </c:if>

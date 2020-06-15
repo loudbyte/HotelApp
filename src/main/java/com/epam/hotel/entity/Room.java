@@ -16,9 +16,6 @@ public class Room implements BaseEntityMarker {
     private boolean availability;
     private List<RoomImage> imageList;
 
-    public Room() {
-    }
-
     public long getId() {
         return id;
     }

@@ -8,12 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.epam.hotel.action.impl.ActionConstant.FACILITY_ID;
 import static com.epam.hotel.action.impl.ActionConstant.SHOW_FACILITY_ADMIN_LIST_URL;
 
 public class DeleteFacilityAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        long facilityId = Long.parseLong(request.getParameter("facility_id"));
+        long facilityId = Long.parseLong(request.getParameter(FACILITY_ID));
 
         FacilityDAOImpl facilityDAO = new FacilityDAOImpl();
         facilityDAO.deleteOneById(facilityId);

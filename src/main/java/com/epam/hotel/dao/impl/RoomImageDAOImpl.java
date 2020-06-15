@@ -20,7 +20,6 @@ public class RoomImageDAOImpl implements RoomImageDAO {
     private static final Logger LOGGER = Logger.getLogger(RoomImageDAOImpl.class);
     private static final String GET_ALL_ROOM_IMAGES_BY_ROOM_ID = "SELECT * FROM room_image";
     private static final String GET_ONE_BY_ID = "SELECT * FROM room_image WHERE id = ?";
-    private static final String GET_ALL_BY_ROOM_ID = "SELECT * FROM room_image WHERE room_id = ?";
     private static final String CREATE_ROOM_IMAGE = "INSERT INTO room_image (image, room_id)" +
             "VALUES (?, ?)";
     private static final String DELETE_ONE_BY_ID = "DELETE FROM room_image WHERE id = ?";
@@ -37,7 +36,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
     public long create(RoomImage roomImage) {
         connection = connectionPool.getConnection();
 
-        long id = -1;
+        long id = ERROR_ID;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ROOM_IMAGE);
              PreparedStatement preparedStatementGetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_ROOM_IMAGE_SEQ);) {
@@ -51,7 +50,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
                 id = resultSetGetSeq.getLong(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error("SQLException in RoomImageDAOImpl create", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -77,7 +76,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
                 roomImageList.add(roomImage);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error("SQLException in RoomImageDAOImpl geAllByRoomId", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -102,7 +101,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
                 roomImageList.add(new RoomImage(id, image, roomId));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error("SQLException in RoomImageDAOImpl getAll", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -122,7 +121,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
             roomImage = getRoomImage(roomImage, resultSet);
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOimpl getById", e);
+            LOGGER.error("SQLException in RoomImageDAOImpl getOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -142,7 +141,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOimpl updateOneById", e);
+            LOGGER.error("SQLException in RoomImageDAOImpl updateOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -156,7 +155,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomImageDAOimpl deleteOneById", e);
+            LOGGER.error("SQLException in RoomImageDAOImpl deleteOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }

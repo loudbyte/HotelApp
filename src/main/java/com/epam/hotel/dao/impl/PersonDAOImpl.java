@@ -43,7 +43,7 @@ public class PersonDAOImpl implements PersonDAO {
     public long create(Person person) {
         connection = connectionPool.getConnection();
 
-        long id = -1;
+        long id = ERROR_ID;
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_PERSON);
              PreparedStatement preparedStatementGetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_PERSON_SEQ);
         ) {
@@ -67,7 +67,7 @@ public class PersonDAOImpl implements PersonDAO {
                 id = resultSetGetSeq.getLong(1);
 
         } catch (SQLException | ParseException e) {
-            LOGGER.error("SQLException or ParseException in PersonDAOimpl create", e);
+            LOGGER.error("SQLException or ParseException in PersonDAOImpl create", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -98,7 +98,7 @@ public class PersonDAOImpl implements PersonDAO {
             preparedStatement.executeUpdate();
 
         } catch (SQLException | ParseException e) {
-            LOGGER.error("SQLException or ParseException in PersonDAOimpl updateOneById", e);
+            LOGGER.error("SQLException or ParseException in PersonDAOImpl updateOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -126,7 +126,7 @@ public class PersonDAOImpl implements PersonDAO {
                 personList.add(person);
             }
         } catch (SQLException e) {
-            LOGGER.error("SQLException in PersonDAOimpl getAll", e);
+            LOGGER.error("SQLException in PersonDAOImpl getAll", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -143,7 +143,7 @@ public class PersonDAOImpl implements PersonDAO {
             preparedStatement.setString(1, email);
             return getPerson(person, preparedStatement.executeQuery());
         } catch (SQLException e) {
-            LOGGER.error("SQLException in PersonDAOimpl getOneByEmail", e);
+            LOGGER.error("SQLException in PersonDAOImpl getOneByEmail", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -159,7 +159,7 @@ public class PersonDAOImpl implements PersonDAO {
             preparedStatement.setString(1, password);
             return getPerson(person, preparedStatement.executeQuery());
         } catch (SQLException e) {
-            LOGGER.error("SQLException in PersonDAOimpl getOneByPassword", e);
+            LOGGER.error("SQLException in PersonDAOImpl getOneByPassword", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -175,7 +175,7 @@ public class PersonDAOImpl implements PersonDAO {
             preparedStatement.setString(2, password);
             return getPerson(person, preparedStatement.executeQuery());
         } catch (SQLException e) {
-            LOGGER.error("SQLException in PersonDAOimpl getOneByPasswordAndEmail", e);
+            LOGGER.error("SQLException in PersonDAOImpl getOneByPasswordAndEmail", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -191,7 +191,7 @@ public class PersonDAOImpl implements PersonDAO {
             preparedStatement.setString(1, firstName);
             return getPerson(person, preparedStatement.executeQuery());
         } catch (SQLException e) {
-            LOGGER.error("SQLException in PersonDAOimpl getByFirstName", e);
+            LOGGER.error("SQLException in PersonDAOImpl getByFirstName", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -207,7 +207,7 @@ public class PersonDAOImpl implements PersonDAO {
             preparedStatement.setString(1, lastName);
             return getPerson(person, preparedStatement.executeQuery());
         } catch (SQLException e) {
-            LOGGER.error("SQLException in PersonDAOimpl getByLastName", e);
+            LOGGER.error("SQLException in PersonDAOImpl getByLastName", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -226,7 +226,7 @@ public class PersonDAOImpl implements PersonDAO {
             person = getPerson(person, resultSet);
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in PersonDAOimpl getById", e);
+            LOGGER.error("SQLException in PersonDAOImpl getOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -258,7 +258,7 @@ public class PersonDAOImpl implements PersonDAO {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("SQLException in PersonDAOimpl deleteOneById", e);
+            LOGGER.error("SQLException in PersonDAOImpl deleteOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }

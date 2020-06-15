@@ -6,11 +6,13 @@ import java.security.NoSuchAlgorithmException;
 
 public class EncodePassword {
 
+    private static final String MD5 = "MD5";
+    private static final String STRING_ZERO = "0";
+
     public String getHashPassword (String input) {
 
         MessageDigest messageDigest;
         byte[] byteDigest = new byte[0];
-        String MD5 = "MD5";
 
         try {
             messageDigest = MessageDigest.getInstance(MD5);
@@ -23,7 +25,7 @@ public class EncodePassword {
         BigInteger number = new BigInteger(1, byteDigest);
         String hashHex = number.toString(16);
         while (hashHex.length() < 32) {
-            hashHex = "0" + hashHex;
+            hashHex = STRING_ZERO + hashHex;
         }
         return hashHex;
     }

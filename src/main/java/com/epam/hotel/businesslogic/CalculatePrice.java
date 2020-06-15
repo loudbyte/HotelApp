@@ -14,9 +14,9 @@ import java.util.List;
 
 public class CalculatePrice {
 
-    private static final Logger LOGGER = Logger.getLogger(OrderFacilityDetailDAOImpl.class);
+    private static final Logger LOGGER = Logger.getLogger(FacilityPackageDAOImpl.class);
 
-    public static final long MILISECONDS_TO_ONE_DAY = 24 * 60 * 60 * 1000;
+    public static final long MILLISECONDS_TO_ONE_DAY = 24 * 60 * 60 * 1000;
 
     public BigDecimal calculateOrderMain(long orderMainId) {
         BigDecimal orderMainPrice = BigDecimal.ZERO;
@@ -37,7 +37,7 @@ public class CalculatePrice {
         BigDecimal roomPrice = BigDecimal.ZERO;
 
         roomPrice = calculateRoomPrice(orderRoomDetail.getRoomId());
-        packageFacilityPrice = calculateFacilityPackagePrice(orderRoomDetail.getOrderFacilityDetailId());
+        packageFacilityPrice = calculateFacilityPackagePrice(orderRoomDetail.getFacilityPackageId());
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DAOConstant.DATE_PATTERN);
 
@@ -50,7 +50,7 @@ public class CalculatePrice {
             LOGGER.error("ParseException in CalculatePrice calculateOrderRoomDetail", e);
         }
         long difference = endDate.getTime() - startDate.getTime();
-        long diffDays = (difference / MILISECONDS_TO_ONE_DAY);
+        long diffDays = (difference / MILLISECONDS_TO_ONE_DAY);
 
         orderDetailPrice = (roomPrice.add(packageFacilityPrice)).multiply(BigDecimal.valueOf(diffDays));
 

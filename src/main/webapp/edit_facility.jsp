@@ -1,36 +1,41 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="language"/>
 <html>
 <head>
     <jsp:include page="style.jsp"/>
-    <title>Edit facility</title>
+    <title><fmt:message key="edit"/></title>
 </head>
 <body>
 <div class="container">
     <jsp:include page="header.jsp"/>
-    <h3>Редактирование услуги - ${param.get("facility_id")}</h3>
+    <h3><fmt:message key="edit.facility"/> - ${param.get("facility_id")}</h3>
     <div class="row">
         <div class="col-sm">
             <form action="${pageContext.request.contextPath}/controller/edit_facility" method="post">
                 <div class="form-row">
                     <div class="form-group col-md-5">
-                        <label for="facility_name">Название услуги</label>
+                        <label for="facility_name"><fmt:message key="name"/></label>
                         <input type="text" class="form-control" id="facility_name" name="facility_name" value="${param.get("facility_name")}">
                     </div>
                     <div class="form-group col-md-5">
-                        <label for="facility_price">Цена услуги</label>
+                        <label for="facility_price"><fmt:message key="price"/></label>
                         <input type="text" class="form-control" id="facility_price" name="facility_price" value="${param.get("facility_price")}">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-5">
-                        <label for="facility_description">Описание услуги</label>
+                        <label for="facility_description"><fmt:message key="desc"/></label>
                         <input type="text" class="form-control" id="facility_description" name="facility_description" value="${param.get("facility_description")}">
                     </div>
                 </div>
                 <br/>
                 <input type="hidden" name="facility_id" value="${param.get("facility_id")}" >
                 <div class="form-row">
-                    <button type="submit" style="width: 100px" class="btn btn-primary">Сохранить</button>
+                    <button type="submit" style="width: 100px" class="btn btn-primary"><fmt:message key="save"/></button>
                 </div>
             </form>
         </div>

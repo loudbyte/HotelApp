@@ -8,11 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.epam.hotel.action.impl.ActionConstant.EDIT_ROOM_URL;
+import static com.epam.hotel.action.impl.ActionConstant.ID;
 
 public class EditRoomButtonAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getSession().setAttribute("id", request.getParameter("id"));
+        request.getSession().setAttribute(ID, request.getParameter(ID));
         request.getRequestDispatcher(EDIT_ROOM_URL).forward(request, response);
     }
 }

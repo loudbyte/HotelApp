@@ -11,15 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.epam.hotel.action.impl.ActionConstant.*;
+
 public class DeleteOrderRoomDetailAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        long orderDetailId = Long.parseLong(request.getParameter("order_room_detail_id"));
-        long orderMainId = Long.parseLong(request.getParameter("order_main_id"));
-        long roomId = Long.parseLong(request.getParameter("room_id"));
+        long orderDetailId = Long.parseLong(request.getParameter(ORDER_ROOM_DETAIL_ID));
+        long orderMainId = Long.parseLong(request.getParameter(ORDER_MAIN_ID));
+        long roomId = Long.parseLong(request.getParameter(ActionConstant.ROOM_ID));
 
-        // TODO if role is ADMIN - delete_order_detail_action (in jsp),
-        //  else if role != ADMIN - delete_order_detail_action if order status_id = new, else button not available
         OrderRoomDetailDAOImpl orderRoomDetailDAO = new OrderRoomDetailDAOImpl();
         RoomDAOImpl roomDAO = new RoomDAOImpl();
         Room room = roomDAO.getOneById(roomId);
@@ -27,9 +27,9 @@ public class DeleteOrderRoomDetailAction implements Action {
         roomDAO.updateOneById(roomId, room);
         orderRoomDetailDAO.deleteOneById(orderDetailId);
 
-        request.setAttribute("order_main_id", orderMainId);
+        request.setAttribute(ORDER_MAIN_ID, orderMainId);
 
-        if (request.getSession().getAttribute("role") == Role.ADMIN) {
+        if (request.getSession().getAttribute(ROLE) == Role.ADMIN) {
             request.getRequestDispatcher(ActionConstant.SHOW_ORDER_ROOM_DETAIL_URL).forward(request, response);
             return;
         }

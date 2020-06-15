@@ -2,6 +2,7 @@ package com.epam.hotel.dao.impl;
 
 public class DAOConstant {
     public static final String DATE_PATTERN = "yyyy-MM-dd";
+    protected static final int ERROR_ID = -1;
     protected static final String ID = "id";
     protected static final String NAME = "name";
     protected static final String PRICE = "price";
@@ -30,16 +31,8 @@ public class DAOConstant {
     protected static final String AVAILABILITY = "availability";
     protected static final String ROOM_ID = "room_id";
     protected static final String IMAGE = "image";
-    protected static final String ORDER_FACILITY_DETAIL_ID = "order_facility_detail_id";
     protected static final String ORDER_MAIN_ID = "order_main_id";
     protected static final String START_DATE = "start_date";
     protected static final String END_DATE = "end_date";
     protected static final String FACILITY_PACKAGE_NAME = "facility_package_name";
-    protected static final String PACKAGE_ID = "package_id";
-    protected static final String FACILITY_ID = "facility_id";
-    protected static final String FACILITY_NAME = "facility_name";
-    protected static final String FACILITY_DESCRIPTION = "facility_description";
-    protected static final String FACILITY_PRICE = "facility_price";
-    protected static final String PACKAGE_ID_RELATION = "package_id_relation";
-    protected static final String FACILITY_ID_RELATION = "facility_id_relation";
 }

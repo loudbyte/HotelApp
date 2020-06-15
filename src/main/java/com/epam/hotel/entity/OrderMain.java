@@ -19,15 +19,6 @@ public class OrderMain implements BaseEntityMarker {
         this.date = date;
     }
 
-    public OrderMain(long id, long personId, long statusId, String statusEn, String statusRu, String date) {
-        this.id = id;
-        this.personId = personId;
-        this.statusId = statusId;
-        this.statusEn = statusEn;
-        this.statusRu = statusRu;
-        this.date = date;
-    }
-
     public long getId() {
         return id;
     }

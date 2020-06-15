@@ -1,14 +1,16 @@
 package com.epam.hotel.entity;
 
+import java.util.Arrays;
+
 public class RoomImage implements BaseEntityMarker {
     private long id;
     private byte[] image;
     private long roomId;
 
-    public RoomImage(long id, byte[] image, long room_id) {
+    public RoomImage(long id, byte[] image, long roomId) {
         this.id = id;
         this.image = image;
-        this.roomId = room_id;
+        this.roomId = roomId;
     }
 
     public RoomImage() {
@@ -42,7 +44,7 @@ public class RoomImage implements BaseEntityMarker {
     public String toString() {
         return "RoomImage{" +
                 "id=" + id +
-                ", image=" + image +
+                ", image=" + Arrays.toString(image) +
                 ", room_id=" + roomId +
                 '}';
     }

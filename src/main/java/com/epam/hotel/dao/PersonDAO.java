@@ -12,6 +12,6 @@ public interface PersonDAO extends BaseDAO<Person> {
 
     Person getOneByPassword(String password);
 
-    public Person getOneByPasswordAndEmail(String email, String password);
+    Person getOneByPasswordAndEmail(String email, String password);
 
 }

@@ -25,7 +25,7 @@ public class UploadImageServlet extends HttpServlet {
 
         for (Part part : request.getParts()) {
 
-            if (new ImageValidation().isImageValid(part)) {
+            if (ImageValidation.isImageValid(part)) {
                 BufferedImage bImage = ImageIO.read(part.getInputStream());
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 ImageIO.write(bImage, "jpg", bos);

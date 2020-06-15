@@ -26,6 +26,16 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>LanguageFilter</filter-name>
+        <filter-class>com.epam.hotel.filter.LanguageFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>LanguageFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>Controller</servlet-name>
         <servlet-class>com.epam.hotel.controller.HotelAppController</servlet-class>

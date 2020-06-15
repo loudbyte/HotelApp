@@ -7,12 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.ActionConstant.UPLOAD_IMAGE_URL;
+import static com.epam.hotel.action.impl.ActionConstant.*;
 
 public class UploadRoomImageButtonAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getSession().setAttribute("id", request.getParameter("id"));
+        request.getSession().setAttribute(ROOM_ID_FOR_UPLOAD, request.getParameter(ID));
         request.getRequestDispatcher(UPLOAD_IMAGE_URL).forward(request, response);
     }
 }

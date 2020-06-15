@@ -14,8 +14,10 @@ public class LogoutAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        session.invalidate();
 
-        response.sendRedirect(INDEX_URL);
+        if (session != null) {
+            session.invalidate();
+            response.sendRedirect(INDEX_URL);
+        }
     }
 }

@@ -3,6 +3,11 @@
 <jsp:useBean id="orderDAO" class="com.epam.hotel.dao.impl.OrderMainDAOImpl"/>
 <c:set value="${orderDAO.getAllByPersonId(sessionScope.person.id)}" var="myOrderList"/>
 <jsp:useBean id="calculatePrice" class="com.epam.hotel.businesslogic.CalculatePrice"/>
+
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="language"/>
 <html>
 <head>
     <title>My orders</title>
@@ -16,12 +21,13 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">Номер заказа</th>
-                    <th scope="col">Дата заказа</td>
-                    <th scope="col">Состояние</td>
-                    <th scope="col">Цена</td>
-                    <th scope="col"></td>
-                    <th scope="col"></td>
+                    <th scope="col"><fmt:message key="order.number"/></th>
+                    <th scope="col"><fmt:message key="date"/></th>
+                    <th scope="col"><fmt:message key="status"/></th>
+                    <th scope="col"><fmt:message key="price"/></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,21 +36,47 @@
                     <tr>
                         <td>${myOrder.id}</td>
                         <td>${myOrder.date}</td>
-                        <td>${myOrder.statusRu}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${'ru'.equals(sessionScope.local)}">${myOrder.statusRu}</c:when>
+                                <c:otherwise>${myOrder.statusEn}</c:otherwise>
+                            </c:choose>
+                        </td>
                         <td>${calculatePrice.calculateOrderMain(myOrder.id)}$</td>
                         <td>
                             <form action="${pageContext.request.contextPath}/controller/show_order_room_detail" method="post">
                                 <input type="hidden" name="order_main_id" value="${myOrder.id}">
                                 <button type="submit"
-                                        class="btn btn-warning">Детали</button>
+                                        class="btn btn-warning"><fmt:message key="details"/></button>
                             </form>
                         </td>
                         <td>
-                            <form action="${pageContext.request.contextPath}/controller/cancel_order" method="post">
-                                <input type="hidden" name="order_main_id" value="${myOrder.id}">
-                                <button type="submit"
-                                        class="btn btn-danger">Отменить</button>
-                            </form>
+                        <c:choose>
+                            <c:when test="${myOrder.statusId != 6}">
+                                <form action="${pageContext.request.contextPath}/controller/pay_order" method="post">
+                                    <input type="hidden" name="order_main_id" value="${myOrder.id}">
+                                    <button type="submit"
+                                            class="btn btn btn-warning"><fmt:message key="pay"/></button>
+                                </form>
+                            </c:when>
+                            <c:otherwise>
+                                <button title='<fmt:message key="paid"/>' type="button" class="btn btn btn-dark"><fmt:message key="pay"/></button>
+                            </c:otherwise>
+                        </c:choose>
+                        </td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${myOrder.statusId != 6}">
+                                    <form action="${pageContext.request.contextPath}/controller/cancel_order" method="post">
+                                        <input type="hidden" name="order_main_id" value="${myOrder.id}">
+                                        <button type="submit"
+                                                class="btn btn-danger"><fmt:message key="cancel"/></button>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <button title='<fmt:message key="paid"/>' type="button" class="btn btn btn-dark"><fmt:message key="cancel"/></button>
+                                </c:otherwise>
+                            </c:choose>
                         </td>
                     </tr>
                     </c:if>
@@ -53,7 +85,6 @@
             </table>
         </div>
         <div class="col">
-
         </div>
     </div>
 </div>

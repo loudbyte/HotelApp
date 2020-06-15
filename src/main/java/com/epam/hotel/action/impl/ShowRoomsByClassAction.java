@@ -15,7 +15,6 @@ import static com.epam.hotel.action.impl.ActionConstant.*;
 
 public class ShowRoomsByClassAction implements Action {
 
-
     private int roomClass;
 
     public ShowRoomsByClassAction(int roomClass) {
@@ -27,15 +26,15 @@ public class ShowRoomsByClassAction implements Action {
 
         RoomDAOImpl roomDAO = new RoomDAOImpl();
         List<Room> roomAllList = roomDAO.getAll();
-        List<Room> roomDeluxList = new ArrayList<>();
+        List<Room> roomDeluxeList = new ArrayList<>();
         List<Room> roomSuiteList = new ArrayList<>();
         List<Room> roomStandardList = new ArrayList<>();
         List<Room> showRoomList = new ArrayList<>();
 
         for (Room room : roomAllList) {
             switch ((int) room.getRoomClassId()) {
-                case DELUX:
-                    roomDeluxList.add(room);
+                case DELUXE:
+                    roomDeluxeList.add(room);
                     break;
                 case SUITE:
                     roomSuiteList.add(room);
@@ -47,8 +46,8 @@ public class ShowRoomsByClassAction implements Action {
         }
 
         switch (roomClass) {
-            case DELUX:
-                showRoomList = roomDeluxList;
+            case DELUXE:
+                showRoomList = roomDeluxeList;
                 break;
             case SUITE:
                 showRoomList = roomSuiteList;
@@ -58,7 +57,7 @@ public class ShowRoomsByClassAction implements Action {
                 break;
         }
 
-        request.setAttribute("room_list", showRoomList);
+        request.setAttribute(ROOM_LIST, showRoomList);
         request.getRequestDispatcher(SHOW_ROOMS_BY_CLASS_URL).forward(request, response);
 
     }

@@ -15,6 +15,13 @@ import java.util.List;
 import static com.epam.hotel.action.impl.ActionConstant.*;
 
 public class ShowRoomsAction implements Action {
+
+    private static final String ENCODER_PREFIX = "data:image/png;base64,";
+
+    private static final String IMAGE_URL_DELUXE = "image_url_deluxe";
+    private static final String IMAGE_URL_SUITE = "image_url_suite";
+    private static final String IMAGE_URL_STANDARD = "image_url_standard";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -27,7 +34,7 @@ public class ShowRoomsAction implements Action {
 
         for (Room room : roomList) {
             switch ((int) room.getRoomClassId()) {
-                case DELUX:
+                case DELUXE:
                     if (room.getImageList().size() != 0 && room.getImageList().get(0).getImage() != null)
                         roomDelux = room;
                     break;
@@ -44,13 +51,13 @@ public class ShowRoomsAction implements Action {
 
         Encoder encoder = Base64.getEncoder();
 
-        String urlDelux = "data:image/png;base64," + encoder.encodeToString(roomDelux.getImageList().get(0).getImage());
-        String urlSuite = "data:image/png;base64," + encoder.encodeToString(roomSuite.getImageList().get(0).getImage());
-        String urlStandard = "data:image/png;base64," + encoder.encodeToString(roomStandard.getImageList().get(0).getImage());
+        String urlDelux = ENCODER_PREFIX + encoder.encodeToString(roomDelux.getImageList().get(0).getImage());
+        String urlSuite = ENCODER_PREFIX + encoder.encodeToString(roomSuite.getImageList().get(0).getImage());
+        String urlStandard = ENCODER_PREFIX + encoder.encodeToString(roomStandard.getImageList().get(0).getImage());
 
-        request.setAttribute("image_url_delux", urlDelux);
-        request.setAttribute("image_url_suite", urlSuite);
-        request.setAttribute("image_url_standard", urlStandard);
+        request.setAttribute(IMAGE_URL_DELUXE, urlDelux);
+        request.setAttribute(IMAGE_URL_SUITE, urlSuite);
+        request.setAttribute(IMAGE_URL_STANDARD, urlStandard);
 
         request.getRequestDispatcher(SHOW_ROOMS_URL).forward(request, response);
     }

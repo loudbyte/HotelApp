@@ -39,7 +39,7 @@ public class FacilityDAOImpl implements FacilityDAO {
     public long create(Facility facility) {
         connection = connectionPool.getConnection();
 
-        long id = -1;
+        long id = ERROR_ID;
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FACILITY);
              PreparedStatement preparedStatementGetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_FACILITY_SEQ);) {
 
@@ -53,7 +53,7 @@ public class FacilityDAOImpl implements FacilityDAO {
                 id = resultSetGetSeq.getLong(1);
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOimpl create", e);
+            LOGGER.error("SQLException in FacilityDAOImpl create", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -72,7 +72,7 @@ public class FacilityDAOImpl implements FacilityDAO {
             facility = getFacility(facility, resultSet);
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOimpl getByName", e);
+            LOGGER.error("SQLException in FacilityDAOImpl getByName", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -98,7 +98,7 @@ public class FacilityDAOImpl implements FacilityDAO {
             }
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOimpl getAll", e);
+            LOGGER.error("SQLException in FacilityDAOImpl getAll", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -119,7 +119,7 @@ public class FacilityDAOImpl implements FacilityDAO {
             facility = getFacility(facility, resultSet);
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOimpl getOneById", e);
+            LOGGER.error("SQLException in FacilityDAOImpl getOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -141,7 +141,7 @@ public class FacilityDAOImpl implements FacilityDAO {
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOimpl updateOneById", e);
+            LOGGER.error("SQLException in FacilityDAOImpl updateOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -155,7 +155,7 @@ public class FacilityDAOImpl implements FacilityDAO {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOimpl deleteOneById", e);
+            LOGGER.error("SQLException in FacilityDAOImpl deleteOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -181,7 +181,7 @@ public class FacilityDAOImpl implements FacilityDAO {
                 facilityList.add(facility);
             }
         } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityPackageViewDAOImpl getByFacilityPackageId", e);
+            LOGGER.error("SQLException in FacilityDAOImpl getFacilityListByPackageId", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }

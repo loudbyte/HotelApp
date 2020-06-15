@@ -5,12 +5,11 @@ import java.util.regex.Pattern;
 
 public class PasswordValidation {
     private static final String PASSWORD_REGEX = "^[a-zA-Z0-9]{2,}$";
-    private Pattern pattern = Pattern.compile(PASSWORD_REGEX);
-    private Matcher matcher;
+    private static final Pattern pattern = Pattern.compile(PASSWORD_REGEX);
 
-    public boolean isPasswordValid(String password) {
+    public static boolean isPasswordValid(String password) {
         boolean result = false;
-        matcher = pattern.matcher(password);
+        Matcher matcher = pattern.matcher(password);
 
         if (matcher.find())
             result = true;

@@ -10,30 +10,28 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import static com.epam.hotel.action.impl.ActionConstant.ERROR_URL;
-import static com.epam.hotel.action.impl.ActionConstant.SHOW_ROOM_ADMIN_LIST_URL;
+import static com.epam.hotel.action.impl.ActionConstant.*;
 
 public class CreateRoomAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        RoomDAOImpl roomDAO = new RoomDAOImpl();
-
-        int roomNumber = Integer.parseInt(request.getParameter("room_number"));
-        int capacity = Integer.parseInt(request.getParameter("capacity"));
-        long roomClassId = Long.parseLong(request.getParameter("room_class_id"));
-        BigDecimal price = BigDecimal.valueOf(Long.parseLong(request.getParameter("price")));
-        String availability = request.getParameter("availability");
+        int roomNumber = Integer.parseInt(request.getParameter(ROOM_NUMBER));
+        int capacity = Integer.parseInt(request.getParameter(CAPACITY));
+        long roomClassId = Long.parseLong(request.getParameter(ROOM_CLASS_ID));
+        BigDecimal price = BigDecimal.valueOf(Long.parseLong(request.getParameter(PRICE)));
+        String availability = request.getParameter(AVAILABILITY);
         boolean isAvailable = false;
 
-        if (roomNumber == 0 || capacity == 0 || roomClassId == 0 || price.equals(null)) {
-            request.setAttribute("message", "Пустые поля.");
+        if (roomNumber == ZERO || capacity == ZERO || roomClassId == ZERO || price.equals(null)) {
+            request.setAttribute(MESSAGE, "Пустые поля.");
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
 
-        if (availability != null)
+        if (availability != null) {
             isAvailable = true;
+        }
 
         Room room = new Room();
         room.setRoomNumber(roomNumber);
@@ -42,6 +40,7 @@ public class CreateRoomAction implements Action {
         room.setPrice(price);
         room.setAvailability(isAvailable);
 
+        RoomDAOImpl roomDAO = new RoomDAOImpl();
         roomDAO.create(room);
 
         request.getRequestDispatcher(SHOW_ROOM_ADMIN_LIST_URL).forward(request, response);

@@ -31,7 +31,7 @@ public class ActionFactory {
         actions.put("/logout", new LogoutAction());
         actions.put("/show_rooms_standard", new ShowRoomsByClassAction(STANDARD));
         actions.put("/show_rooms_suite", new ShowRoomsByClassAction(SUITE));
-        actions.put("/show_rooms_delux", new ShowRoomsByClassAction(DELUX));
+        actions.put("/show_rooms_deluxe", new ShowRoomsByClassAction(DELUXE));
         actions.put("/delete_person", new DeletePersonAction());
         actions.put("/delete_room", new DeleteRoomAction());
         actions.put("/delete_item", new DeleteItemAction());
@@ -63,6 +63,8 @@ public class ActionFactory {
         actions.put("/edit_facility", new EditFacilityAction());
         actions.put("/create_facility", new CreateFacilityAction());
         actions.put("/show_cart", new ShowCartAction());
+        actions.put("/pay_order", new PayOrderAction());
+        actions.put("/payment", new PaymentAction());
 
     }
 

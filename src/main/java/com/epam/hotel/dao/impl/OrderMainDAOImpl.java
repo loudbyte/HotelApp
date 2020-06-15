@@ -40,7 +40,7 @@ public class OrderMainDAOImpl implements OrderMainDAO {
     public long create(OrderMain orderMain) {
         connection = connectionPool.getConnection();
 
-        long id = -1;
+        long id = ERROR_ID;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ORDER_MAIN);
              PreparedStatement preparedStatement1GetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_ORDER_MAIN_SEQ);) {
@@ -59,7 +59,7 @@ public class OrderMainDAOImpl implements OrderMainDAO {
                 id = resultSetGetSeq.getInt(1);
 
         } catch (SQLException | ParseException e) {
-            LOGGER.error("SQLException in OrderMainDAOImpl create ", e);
+            LOGGER.error("SQLException or ParseException in OrderMainDAOImpl create ", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -90,7 +90,7 @@ public class OrderMainDAOImpl implements OrderMainDAO {
             }
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in OrderMainDAOimpl getAll", e);
+            LOGGER.error("SQLException in OrderMainDAOImpl getAll", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -122,7 +122,7 @@ public class OrderMainDAOImpl implements OrderMainDAO {
             }
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in OrderMainDAOimpl getAll", e);
+            LOGGER.error("SQLException in OrderMainDAOImpl getAllByPersonId", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -151,7 +151,7 @@ public class OrderMainDAOImpl implements OrderMainDAO {
             }
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in OrderMainDAOimpl getOneById", e);
+            LOGGER.error("SQLException in OrderMainDAOImpl getOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -162,7 +162,6 @@ public class OrderMainDAOImpl implements OrderMainDAO {
     @Override
     public void updateOneById(long id, OrderMain orderMain) {
         connection = connectionPool.getConnection();
-
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ONE_BY_ID)) {
 
@@ -178,7 +177,7 @@ public class OrderMainDAOImpl implements OrderMainDAO {
             preparedStatement.executeUpdate();
 
         } catch (SQLException | ParseException e) {
-            LOGGER.error("SQLException or ParseException in OrderMainDAOimpl getById", e);
+            LOGGER.error("SQLException or ParseException in OrderMainDAOImpl updateOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -194,7 +193,7 @@ public class OrderMainDAOImpl implements OrderMainDAO {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in OrderMainDAOimpl deleteOneById", e);
+            LOGGER.error("SQLException in OrderMainDAOImpl deleteOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }

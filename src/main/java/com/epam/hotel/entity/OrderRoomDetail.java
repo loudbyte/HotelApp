@@ -4,7 +4,7 @@ public class OrderRoomDetail implements BaseEntityMarker {
 
     private long id;
     private long roomId;
-    private long orderFacilityDetailId;
+    private long facilityPackageId;
     private long orderMainId;
     private String startDate;
     private String endDate;
@@ -12,11 +12,11 @@ public class OrderRoomDetail implements BaseEntityMarker {
     public OrderRoomDetail() {
     }
 
-    public OrderRoomDetail(long id, long roomId, long orderFacilityDetailId, long orderMainid, String startDate, String endDate) {
+    public OrderRoomDetail(long id, long roomId, long facilityPackageId, long orderMainId, String startDate, String endDate) {
         this.id = id;
         this.roomId = roomId;
-        this.orderFacilityDetailId = orderFacilityDetailId;
-        this.orderMainId = orderMainid;
+        this.facilityPackageId = facilityPackageId;
+        this.orderMainId = orderMainId;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -37,12 +37,12 @@ public class OrderRoomDetail implements BaseEntityMarker {
         this.roomId = roomId;
     }
 
-    public long getOrderFacilityDetailId() {
-        return orderFacilityDetailId;
+    public long getFacilityPackageId() {
+        return facilityPackageId;
     }
 
-    public void setOrderFacilityDetailId(long orderFacilityDetailId) {
-        this.orderFacilityDetailId = orderFacilityDetailId;
+    public void setFacilityPackageId(long facilityPackageId) {
+        this.facilityPackageId = facilityPackageId;
     }
 
     public long getOrderMainId() {
@@ -74,8 +74,8 @@ public class OrderRoomDetail implements BaseEntityMarker {
         return "OrderRoomDetail{" +
                 "id=" + id +
                 ", roomId=" + roomId +
-                ", orderFacilityDetailId=" + orderFacilityDetailId +
-                ", orderMainid=" + orderMainId +
+                ", facilityPackageId=" + facilityPackageId +
+                ", orderMainId=" + orderMainId +
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
                 '}';

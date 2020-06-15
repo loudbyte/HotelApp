@@ -1,10 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="imageEncoder" class="com.epam.hotel.util.ImageEncoder"/>
+
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="language"/>
 <html>
 <head>
     <jsp:include page="style.jsp"/>
-    <title>Show room by class</title>
+    <title><fmt:message key="show.rooms"/></title>
 
 </head>
 <body>
@@ -18,15 +23,28 @@
     <c:if test="${room.availability}">
     <div class="row featurette">
         <div class="col-md-7">
-            <h2 class="featurette-heading">${room.roomClassRu} номер </h2>
+            <h2 class="featurette-heading">
+                <c:choose>
+                    <c:when test="${room.roomClassId == 1}">
+                        <fmt:message key="deluxe"/>
+                    </c:when>
+                    <c:when test="${room.roomClassId == 2}">
+                        <fmt:message key="suite"/>
+                    </c:when>
+                    <c:when test="${room.roomClassId == 3}">
+                        <fmt:message key="standard"/>
+                    </c:when>
+                </c:choose>
+                    <fmt:message key="room"/>
+            </h2>
             <p class="lead">
-                Вместимость: ${room.capacity} человек </br>
-                Цена в сутки: ${room.price}$ </br>
-                Номер комнаты №${room.roomNumber} </br>
+                <fmt:message key="capacity.people"/>: ${room.capacity}</br>
+                <fmt:message key="room.price"/>: ${room.price}$</br>
+                <fmt:message key="room.number"/>: №${room.roomNumber}</br>
             </p>
             <form action="${pageContext.request.contextPath}/controller/create_item_button" method="post">
                 <input type="hidden" name="room_id" value="${room.id}">
-                <div class="button-bottom"><p><button type="submit" class="btn btn-secondary" role="button">Забронировать &raquo;</button></p></div>
+                <div class="button-bottom"><p><button type="submit" class="btn btn-secondary" role="button"><fmt:message key="reservation"/> &raquo;</button></p></div>
             </form>
         </div>
         <div class="col-md-5">

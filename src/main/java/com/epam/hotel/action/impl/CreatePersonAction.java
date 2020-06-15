@@ -10,42 +10,49 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.ActionConstant.ERROR_URL;
-import static com.epam.hotel.action.impl.ActionConstant.SHOW_PERSON_ADMIN_LIST_URL;
+import static com.epam.hotel.action.impl.ActionConstant.*;
 
 public class CreatePersonAction implements Action {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PersonDAOImpl personDAO = new PersonDAOImpl();
 
         long id = -1;
-        String firstName = request.getParameter("first_name");
-        String lastName = request.getParameter("last_name");
-        String birthday = request.getParameter("birthday");
-        String phone = request.getParameter("phone");
-        String email = request.getParameter("email");
-        String iin = request.getParameter("iin");
-        String password = request.getParameter("password");
+        String firstName = request.getParameter(FIRST_NAME);
+        String lastName = request.getParameter(LAST_NAME);
+        String birthday = request.getParameter(BIRTHDAY);
+        String phone = request.getParameter(PHONE);
+        String email = request.getParameter(EMAIL);
+        String iin = request.getParameter(IIN);
+        String password = request.getParameter(PASSWORD);
         boolean isAdmin = false;
         boolean isBan = false;
 
+        if ("on".equals(request.getParameter(ADMIN))) {
+            isAdmin = true;
+        }
+
+        if ("on".equals(request.getParameter(BAN))) {
+            isBan = true;
+        }
+
         if (firstName.isEmpty() || lastName.isEmpty() || birthday.isEmpty() || phone.isEmpty()
                 || email.isEmpty() || password.isEmpty() || iin.isEmpty()) {
-            request.setAttribute("message", "Пустые поля");
+            request.setAttribute(MESSAGE, "Пустые поля");
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
 
-        if (!new EmailValidation().isEmailValid(email) || !new PasswordValidation().isPasswordValid(password)
-                || !new AgeValidation().isAgeValid(birthday) || !new NameValidation().isNameValid(firstName)
-                || !new NameValidation().isNameValid(lastName) || !new PhoneValidation().isPhoneValid(phone)
-                || !new IINValidation().isIINValid(iin)) {
-            request.setAttribute("message", "Данные введены некорректно.");
+        if (!EmailValidation.isEmailValid(email) || !PasswordValidation.isPasswordValid(password)
+                || !AgeValidation.isAgeValid(birthday) || !NameValidation.isNameValid(firstName)
+                || !NameValidation.isNameValid(lastName) || !PhoneValidation.isPhoneValid(phone)
+                || !IINValidation.isIINValid(iin)) {
+            request.setAttribute(MESSAGE, "Данные введены некорректно.");
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
 
+        PersonDAOImpl personDAO = new PersonDAOImpl();
         Person person = new Person();
 
         person.setFirstName(firstName);

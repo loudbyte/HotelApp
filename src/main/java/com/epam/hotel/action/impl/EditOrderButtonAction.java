@@ -7,16 +7,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.ActionConstant.EDIT_ORDER_URL;
+import static com.epam.hotel.action.impl.ActionConstant.*;
 
 public class EditOrderButtonAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        request.setAttribute("order_main_id", request.getParameter("order_main_id"));
-        request.setAttribute("person_id", request.getParameter("person_id"));
-        request.setAttribute("status_id", request.getParameter("status_id"));
-        request.setAttribute("date", request.getParameter("date"));
+        request.setAttribute(ORDER_MAIN_ID, request.getParameter(ORDER_MAIN_ID));
+        request.setAttribute(PERSON_ID, request.getParameter(PERSON_ID));
+        request.setAttribute(STATUS_ID, request.getParameter(STATUS_ID));
+        request.setAttribute(DATE, request.getParameter(DATE));
 
         request.getRequestDispatcher(EDIT_ORDER_URL).forward(request, response);
     }

@@ -1,24 +1,33 @@
 package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
-import com.epam.hotel.dao.impl.OrderFacilityDetailDAOImpl;
-import com.epam.hotel.entity.OrderFacilityDetail;
+import com.epam.hotel.dao.impl.FacilityPackageDAOImpl;
+import com.epam.hotel.entity.FacilityPackage;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.ActionConstant.SHOW_PACKAGE_ADMIN_LIST_URL;
+import static com.epam.hotel.action.impl.ActionConstant.*;
 
 public class CreatePackageAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String packageName = request.getParameter("package_name");
-        String facilities[] = request.getParameterValues("facilities");
 
-        OrderFacilityDetailDAOImpl orderFacilityDetailDAO = new OrderFacilityDetailDAOImpl();
-        long packageId = orderFacilityDetailDAO.create(new OrderFacilityDetail(packageName));
+        if (request.getParameter(PACKAGE_NAME) == null
+                || EMPTY_STRING.equals(request.getParameter(PACKAGE_NAME))
+                || request.getParameterValues(FACILITIES) == null) {
+            request.setAttribute(MESSAGE, "Данные введены некорректно");
+            request.getRequestDispatcher(ERROR_URL).forward(request, response);
+            return;
+        }
+
+        String packageName = request.getParameter(PACKAGE_NAME);
+        String facilities[] = request.getParameterValues(FACILITIES);
+
+        FacilityPackageDAOImpl orderFacilityDetailDAO = new FacilityPackageDAOImpl();
+        long packageId = orderFacilityDetailDAO.create(new FacilityPackage(packageName));
 
         for (String facilityId : facilities) {
             orderFacilityDetailDAO.createFacilityPackageRelation(Long.parseLong(facilityId), packageId);

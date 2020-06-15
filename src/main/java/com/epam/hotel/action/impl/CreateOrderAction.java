@@ -7,6 +7,7 @@ import com.epam.hotel.entity.Cart;
 import com.epam.hotel.entity.OrderMain;
 import com.epam.hotel.entity.OrderRoomDetail;
 import com.epam.hotel.entity.Person;
+import com.epam.hotel.validation.AuthorizationValidation;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,27 +22,24 @@ public class CreateOrderAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        Person person = null;
+        Person person = AuthorizationValidation.authorizationGetPerson(request, response);
+        if (person == null)
+            return;
 
-        if (request.getSession().getAttribute("person") instanceof Person) {
-            person = (Person) request.getSession().getAttribute("person");
-        } else {
-            request.setAttribute("message", "Необходимо зарегестрироваться");
+        if (!(request.getSession().getAttribute(CART) instanceof Cart)) {
+            request.setAttribute(MESSAGE, "Корзина не найдена.");
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
 
-        Cart cart = (Cart) request.getSession().getAttribute("cart");
+        Cart cart = (Cart) request.getSession().getAttribute(CART);
 
         long personId = person.getId();
         LocalDate localDateNow = LocalDate.now();
 
-        // TODO smth with orderRoomDetail
         OrderMain orderMain = new OrderMain();
-//        OrderRoomDetail orderRoomDetail = new OrderRoomDetail();
 
         OrderMainDAOImpl orderMainDAO = new OrderMainDAOImpl();
-//        OrderRoomDetailDAOImpl orderRoomDetailDAO = new OrderRoomDetailDAOImpl();
 
         orderMain.setPersonId(personId);
         orderMain.setStatusId(NEW);
@@ -58,17 +56,9 @@ public class CreateOrderAction implements Action {
 
         cart.clearOrderRoomDetailMap();
 
-        request.getSession().removeAttribute("cart");
-        request.getSession().setAttribute("cart", cart);
+        request.getSession().removeAttribute(CART);
+        request.getSession().setAttribute(CART, cart);
 
-//        orderRoomDetail.setRoomId(roomId);
-//        orderRoomDetail.setOrderFacilityDetailId(detailId);
-//        orderRoomDetail.setOrderMainId(orderMain.getId());
-//        orderRoomDetail.setStartDate(request.getParameter("start_date"));
-//        orderRoomDetail.setEndDate(request.getParameter("end_date"));
-//        orderRoomDetail.setId(orderRoomDetailDAO.create(orderRoomDetail));
-//
-//        request.setAttribute("my_orders", orderMainDAO.getAllByPersonId(personId));
         request.getRequestDispatcher(SHOW_MY_ORDERS_URL).forward(request, response);
     }
 }

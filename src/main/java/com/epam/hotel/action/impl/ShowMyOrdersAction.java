@@ -2,6 +2,7 @@ package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
 import com.epam.hotel.entity.Person;
+import com.epam.hotel.validation.AuthorizationValidation;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,15 +16,8 @@ public class ShowMyOrdersAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        Person person = null;
-
-        if (request.getSession().getAttribute("person") instanceof Person) {
-            person = (Person) request.getSession().getAttribute("person");
-        } else {
-            request.setAttribute("message", "Необходимо зарегестрироваться.");
-            request.getRequestDispatcher(ERROR_URL).forward(request, response);
+        if (!AuthorizationValidation.authorizationGetBoolean(request, response))
             return;
-        }
         request.getRequestDispatcher(SHOW_MY_ORDERS_URL).forward(request, response);
     }
 }

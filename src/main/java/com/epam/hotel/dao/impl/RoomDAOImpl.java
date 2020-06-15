@@ -44,7 +44,7 @@ public class RoomDAOImpl implements RoomDAO {
     public long create(Room room) {
         connection = connectionPool.getConnection();
 
-        long id = -1;
+        long id = ERROR_ID;
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ROOM);
              PreparedStatement preparedStatementGetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_ROOM_SEQ);) {
 
@@ -61,7 +61,7 @@ public class RoomDAOImpl implements RoomDAO {
 
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error("SQLException in RoomDAOImpl create", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -94,27 +94,6 @@ public class RoomDAOImpl implements RoomDAO {
         return imageList;
     }
 
-    private List<byte[]> getRoomImagesByRoomId(long id) {
-        connection = connectionPool.getConnection();
-
-        List<byte[]> images = null;
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_IMAGES_BY_ROOM_ID)) {
-            preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            images = new ArrayList<>();
-            while (resultSet.next()) {
-                images.add(resultSet.getBytes("image"));
-            }
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOImpl getRoomImagesByRoomId", e);
-        } finally {
-            connectionPool.releaseConnection(connection);
-        }
-
-        return images;
-    }
-
     @Override
     public void updateOneById(long id, Room room) {
         connection = connectionPool.getConnection();
@@ -131,7 +110,7 @@ public class RoomDAOImpl implements RoomDAO {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOimpl updateOneById", e);
+            LOGGER.error("SQLException in RoomDAOImpl updateOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -141,7 +120,7 @@ public class RoomDAOImpl implements RoomDAO {
         connection = connectionPool.getConnection();
 
         List<Room> roomList = new ArrayList<>();
-        Room room = null;
+        Room room;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_ROOMS);
              ResultSet resultSet = preparedStatement.executeQuery();
@@ -162,7 +141,7 @@ public class RoomDAOImpl implements RoomDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error("SQLException in RoomDAOImpl getAll", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -182,7 +161,7 @@ public class RoomDAOImpl implements RoomDAO {
             room = getRoom(room, resultSet);
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOimpl getById", e);
+            LOGGER.error("SQLException in RoomDAOImpl getOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -197,7 +176,7 @@ public class RoomDAOImpl implements RoomDAO {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOimpl deleteOneById", e);
+            LOGGER.error("SQLException in RoomDAOImpl deleteOneById", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -215,7 +194,7 @@ public class RoomDAOImpl implements RoomDAO {
             room = getRoom(room, resultSet);
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOimpl getByRoomNumber", e);
+            LOGGER.error("SQLException in RoomDAOImpl getByRoomNumber", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -234,7 +213,7 @@ public class RoomDAOImpl implements RoomDAO {
             room = getRoom(room, resultSet);
 
         } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOimpl getById", e);
+            LOGGER.error("SQLException in RoomDAOImpl getByCapacity", e);
         } finally {
             connectionPool.releaseConnection(connection);
         }

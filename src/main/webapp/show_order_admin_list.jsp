@@ -6,9 +6,14 @@
 <jsp:useBean id="personDAO" class="com.epam.hotel.dao.impl.PersonDAOImpl"/>
 <c:set var="personList" value="${personDAO.all}"/>
 <jsp:useBean id="calculatePrice" class="com.epam.hotel.businesslogic.CalculatePrice"/>
+
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setBundle basename="language"/>
 <html>
 <head>
-    <title>All orders</title>
+    <title><fmt:message key="orders"/></title>
     <jsp:include page="style.jsp"/>
 </head>
 <body>
@@ -19,12 +24,12 @@
             <table class="table table-sm">
                 <thead>
                 <tr>
-                    <th scope="col">Номер заказа</th>
-                    <th scope="col">Имя заказчика</th>
-                    <th scope="col">ИИН заказчика</th>
-                    <th scope="col">Дата заказа</th>
-                    <th scope="col">Состояние</th>
-                    <th scope="col">Цена</th>
+                    <th scope="col"><fmt:message key="order.number"/></th>
+                    <th scope="col"><fmt:message key="first.name"/></th>
+                    <th scope="col"><fmt:message key="last.name"/></th>
+                    <th scope="col"><fmt:message key="date"/></th>
+                    <th scope="col"><fmt:message key="status"/></th>
+                    <th scope="col"><fmt:message key="price"/></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
@@ -50,13 +55,18 @@
                                 </c:forEach>
                             </td>
                             <td>${order.date}</td>
-                            <td>${order.statusRu}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${'ru'.equals(sessionScope.local)}">${order.statusRu}</c:when>
+                                    <c:otherwise>${order.statusEn}</c:otherwise>
+                                </c:choose>
+                            </td>
                             <td>${calculatePrice.calculateOrderMain(order.id)}$</td>
                             <td>
                                 <form action="${pageContext.request.contextPath}/controller/show_order_room_detail" method="post">
                                     <input type="hidden" name="order_main_id" value="${order.id}">
                                     <button type="submit"
-                                            class="btn btn-sm  btn-warning">Детали</button>
+                                            class="btn btn-sm  btn-warning"><fmt:message key="details"/></button>
                                 </form>
                             </td>
                             <td>
@@ -66,14 +76,14 @@
                                       <input type="hidden" name="status_id" value="${order.statusId}">
                                       <input type="hidden" name="date" value="${order.date}">
                                       <button type="submit"
-                                              class="btn btn-sm btn-warning">Редактировать</button>
+                                              class="btn btn-sm btn-warning"><fmt:message key="edit"/></button>
                                 </form>
                             </td>
                             <td>
                                 <form action="${pageContext.request.contextPath}/controller/delete_order" method="post">
                                     <input type="hidden" name="order_main_id" value="${order.id}">
                                     <button type="submit"
-                                            class="btn btn-sm btn-danger">Удалить</button>
+                                            class="btn btn-sm btn-danger"><fmt:message key="delete"/></button>
                                 </form>
                             </td>
                         </tr>
