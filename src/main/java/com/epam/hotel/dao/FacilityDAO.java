@@ -2,7 +2,10 @@ package com.epam.hotel.dao;
 
 import com.epam.hotel.entity.Facility;
 
-public interface FacilityDAO extends BaseDAO<Facility>{
+import java.util.List;
 
-    Facility getByName(String name);
+public interface FacilityDAO extends BaseDAO<Facility> {
+
+    List<Facility> getFacilityListByFacilityPackageId(long packageId);
+
 }

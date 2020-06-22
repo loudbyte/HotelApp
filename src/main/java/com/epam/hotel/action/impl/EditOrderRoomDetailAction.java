@@ -1,6 +1,8 @@
 package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
+import com.epam.hotel.dao.FacilityPackageDAO;
+import com.epam.hotel.dao.OrderRoomDetailDAO;
 import com.epam.hotel.dao.impl.FacilityPackageDAOImpl;
 import com.epam.hotel.dao.impl.OrderRoomDetailDAOImpl;
 import com.epam.hotel.entity.OrderRoomDetail;
@@ -13,19 +15,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.epam.hotel.action.impl.ActionConstant.*;
+import static com.epam.hotel.action.impl.ErrorConstant.*;
 
 public class EditOrderRoomDetailAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         if (!NumericValidation.isNumeric(request.getParameter(ORDER_ROOM_DETAIL_ID))) {
-            request.setAttribute(MESSAGE, "Деталь заказа не найдена");
+            request.setAttribute(MESSAGE, ERROR_ORDER_DETAIL_NOT_FOUND);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
 
         if (!NumericValidation.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
-            request.setAttribute(MESSAGE, "Заказ не найден");
+            request.setAttribute(MESSAGE, ERROR_ORDER_NOT_FOUND);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
@@ -34,7 +37,7 @@ public class EditOrderRoomDetailAction implements Action {
                 || !NumericValidation.isNumeric(request.getParameter(FACILITY_PACKAGE_ID))
                 || !DateValidation.isDate(request.getParameter(START_DATE))
                 || !DateValidation.isDate(request.getParameter(END_DATE))) {
-            request.setAttribute(MESSAGE, "Данные введены некорректно");
+            request.setAttribute(MESSAGE, ERROR_INVALID_DATA);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
@@ -46,16 +49,16 @@ public class EditOrderRoomDetailAction implements Action {
         String startDate = request.getParameter(START_DATE);
         String endDate = request.getParameter(END_DATE);
 
-        FacilityPackageDAOImpl facilityPackageDAO = new FacilityPackageDAOImpl();
+        FacilityPackageDAO facilityPackageDAO = new FacilityPackageDAOImpl();
         int facilityPackageAmount = facilityPackageDAO.getAll().size();
 
         if (facilityPackageId > facilityPackageAmount || facilityPackageId < 1) {
-            request.setAttribute(MESSAGE, "Данные введены некорректно");
+            request.setAttribute(MESSAGE, ERROR_INVALID_DATA);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
 
-        OrderRoomDetailDAOImpl orderRoomDetailDAO = new OrderRoomDetailDAOImpl();
+        OrderRoomDetailDAO orderRoomDetailDAO = new OrderRoomDetailDAOImpl();
         OrderRoomDetail orderRoomDetail = new OrderRoomDetail(orderDetailId, roomId, facilityPackageId, orderMainId, startDate, endDate);
         orderRoomDetailDAO.updateOneById(orderDetailId, orderRoomDetail);
 

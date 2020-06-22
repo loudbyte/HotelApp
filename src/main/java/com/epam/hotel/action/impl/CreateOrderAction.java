@@ -1,6 +1,8 @@
 package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
+import com.epam.hotel.dao.OrderMainDAO;
+import com.epam.hotel.dao.OrderRoomDetailDAO;
 import com.epam.hotel.dao.impl.OrderMainDAOImpl;
 import com.epam.hotel.dao.impl.OrderRoomDetailDAOImpl;
 import com.epam.hotel.entity.Cart;
@@ -16,6 +18,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import static com.epam.hotel.action.impl.ActionConstant.*;
+import static com.epam.hotel.action.impl.ErrorConstant.*;
+import static com.epam.hotel.dao.impl.DAOConstant.ERROR_ID;
 
 public class CreateOrderAction implements Action {
 
@@ -27,7 +31,7 @@ public class CreateOrderAction implements Action {
             return;
 
         if (!(request.getSession().getAttribute(CART) instanceof Cart)) {
-            request.setAttribute(MESSAGE, "Корзина не найдена.");
+            request.setAttribute(MESSAGE, ERROR_CARD_NOT_FOUND);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
@@ -39,19 +43,29 @@ public class CreateOrderAction implements Action {
 
         OrderMain orderMain = new OrderMain();
 
-        OrderMainDAOImpl orderMainDAO = new OrderMainDAOImpl();
+        OrderMainDAO orderMainDAO = new OrderMainDAOImpl();
 
         orderMain.setPersonId(personId);
-        orderMain.setStatusId(NEW);
+        orderMain.setStatus(NEW);
         orderMain.setDate(String.valueOf(localDateNow));
 
         orderMain.setId(orderMainDAO.create(orderMain));
 
-        OrderRoomDetailDAOImpl orderRoomDetailDAO = new OrderRoomDetailDAOImpl();
+        if (orderMain.getId() == ERROR_ID) {
+            request.setAttribute(MESSAGE, ERROR_FAILED_TO_CREATE_ORDER);
+            request.getRequestDispatcher(ERROR_URL).forward(request, response);
+            return;
+        }
+
+        OrderRoomDetailDAO orderRoomDetailDAO = new OrderRoomDetailDAOImpl();
 
         for (OrderRoomDetail detail : cart.getOrderRoomDetailMap().values()) {
             detail.setOrderMainId(orderMain.getId());
-            orderRoomDetailDAO.create(detail);
+            if (orderRoomDetailDAO.create(detail) == ERROR_ID) {
+                request.setAttribute(MESSAGE, ERROR_FAILED_TO_CREATE_ORDER_DETAIL);
+                request.getRequestDispatcher(ERROR_URL).forward(request, response);
+                return;
+            }
         }
 
         cart.clearOrderRoomDetailMap();
@@ -59,6 +73,6 @@ public class CreateOrderAction implements Action {
         request.getSession().removeAttribute(CART);
         request.getSession().setAttribute(CART, cart);
 
-        request.getRequestDispatcher(SHOW_MY_ORDERS_URL).forward(request, response);
+        response.sendRedirect(SHOW_MY_ORDERS_URL);
     }
 }

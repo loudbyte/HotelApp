@@ -2,13 +2,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="calculatePrice" class="com.epam.hotel.businesslogic.CalculatePrice"/>
 <jsp:useBean id="roomDAO" class="com.epam.hotel.dao.impl.RoomDAOImpl"/>
-<jsp:useBean id="orderFacilityDetailDAO" class="com.epam.hotel.dao.impl.FacilityPackageDAOImpl"/>
+<jsp:useBean id="facilityPackageDAO" class="com.epam.hotel.dao.impl.FacilityPackageDAOImpl"/>
 <jsp:useBean id="orderMainDAO" class="com.epam.hotel.dao.impl.OrderMainDAOImpl"/>
 <c:set var="orderMain" value="${orderMainDAO.getOneById(requestScope.order_main_id)}"/>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="language"/>
 
 <jsp:useBean id="orderRoomDetailDAO" class="com.epam.hotel.dao.impl.OrderRoomDetailDAOImpl"/>
@@ -27,10 +27,10 @@
                 <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col"><fmt:message key="room.number"/></th>
-                    <th scope="col"><fmt:message key="package"/></th>
-                    <th scope="col"><fmt:message key="start.date"/></th>
-                    <th scope="col"><fmt:message key="end.date"/></th>
+                    <th scope="col"><fmt:message key="room_number"/></th>
+                    <th scope="col"><fmt:message key="facility_package"/></th>
+                    <th scope="col"><fmt:message key="start_date"/></th>
+                    <th scope="col"><fmt:message key="end_date"/></th>
                     <th scope="col"><fmt:message key="price"/></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
@@ -41,7 +41,7 @@
                         <tr>
                             <td>${orderRoomDetail.id}</td>
                             <td>${roomDAO.getOneById(orderRoomDetail.roomId).roomNumber}</td>
-                            <td>${orderFacilityDetailDAO.getOneById(orderRoomDetail.facilityPackageId).facilityPackageName}</td>
+                            <td>${facilityPackageDAO.getFacilityPackageNameMapByFacilityPackageId(orderRoomDetail.facilityPackageId).get(sessionScope.locale)}</td>
                             <td>${orderRoomDetail.startDate}</td>
                             <td>${orderRoomDetail.endDate}</td>
                             <td>${calculatePrice.calculateOrderRoomDetail(orderRoomDetail)}$</td>
@@ -63,7 +63,7 @@
                             </td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${orderMain.statusId == 1}">
+                                    <c:when test="${orderMain.status == 1}">
                                         <form action="${pageContext.request.contextPath}/controller/delete_order_room_detail" method="post">
                                             <input type="hidden" name="order_room_detail_id" value="${orderRoomDetail.id}">
                                             <input type="hidden" name="order_main_id" value="${requestScope.order_main_id}">
@@ -73,7 +73,7 @@
                                         </form>
                                     </c:when>
                                     <c:otherwise>
-                                        <button title='<fmt:message key="cannot.delete.order"/>' type="button" class="btn btn-sm btn-dark"><fmt:message key="delete"/></button>
+                                        <button title='<fmt:message key="cannot_delete_order"/>' type="button" class="btn btn-sm btn-dark"><fmt:message key="delete"/></button>
                                     </c:otherwise>
                                 </c:choose>
                             </td>

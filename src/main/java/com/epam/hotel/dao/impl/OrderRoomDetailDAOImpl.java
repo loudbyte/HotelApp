@@ -40,7 +40,7 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
         long id = ERROR_ID;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ORDER_ROOM_DETAIL);
-             PreparedStatement preparedStatement1GetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_ORDER_ROOM_DETAIL_SEQ)) {
+             PreparedStatement preparedStatementGetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_ORDER_ROOM_DETAIL_SEQ)) {
 
             SimpleDateFormat format = new SimpleDateFormat(DATE_PATTERN);
             java.util.Date myStartDate = format.parse(orderRoomDetail.getStartDate());
@@ -54,13 +54,13 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
             preparedStatement.setDate(4, sqlStartDate);
             preparedStatement.setDate(5, sqlEndDate);
             preparedStatement.executeUpdate();
-            ResultSet resultSetGetSeq = preparedStatement1GetSeq.executeQuery();
+            ResultSet resultSetGetSeq = preparedStatementGetSeq.executeQuery();
 
             if (resultSetGetSeq.next())
-                id = resultSetGetSeq.getInt(1);
+                id = resultSetGetSeq.getLong(1);
 
-        } catch (SQLException | ParseException e) {
-            LOGGER.error("SQLException or ParseException in OrderRoomDetailDAOImpl create ", e);
+        } catch (SQLException | ParseException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -89,8 +89,8 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
                 orderRoomDetailList.add(orderRoomDetail);
             }
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in OrderRoomDetailDAOImpl getAll", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -119,9 +119,9 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
                 orderRoomDetailList.add(orderRoomDetail);
             }
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in OrderRoomDetailDAOImpl getAllByOrderId", e);
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
+            exception.printStackTrace();
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -129,8 +129,8 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
         return orderRoomDetailList;
     }
 
-        @Override
-        public OrderRoomDetail getOneById(long id) {
+    @Override
+    public OrderRoomDetail getOneById(long id) {
         connection = connectionPool.getConnection();
 
         OrderRoomDetail orderRoomDetail = null;
@@ -148,8 +148,8 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
                 orderRoomDetail.setEndDate(resultSet.getString(END_DATE));
             }
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in OrderRoomDetailImpl getOneById", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -178,8 +178,8 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
 
             preparedStatement.executeUpdate();
 
-        } catch (SQLException | ParseException e) {
-            LOGGER.error("SQLException or ParseException in OrderRoomDetailDAOImpl updateOneById", e);
+        } catch (SQLException | ParseException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -194,8 +194,8 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in OrderRoomDetailDAOImpl deleteOneById", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }

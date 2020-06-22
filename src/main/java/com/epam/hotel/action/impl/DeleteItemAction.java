@@ -10,18 +10,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.epam.hotel.action.impl.ActionConstant.*;
+import static com.epam.hotel.action.impl.ErrorConstant.ERROR_CARD_NOT_FOUND;
+import static com.epam.hotel.action.impl.ErrorConstant.ERROR_ORDER_DETAIL_NOT_FOUND;
 
 public class DeleteItemAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         if (!(request.getSession().getAttribute(CART) instanceof Cart)) {
-            request.setAttribute(MESSAGE, "Корзина не найдена.");
+            request.setAttribute(MESSAGE, ERROR_CARD_NOT_FOUND);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
         if (!NumericValidation.isNumeric(request.getParameter(ORDER_DETAIL_ID))) {
-            request.setAttribute(MESSAGE, "Деталь не найдена.");
+            request.setAttribute(MESSAGE, ERROR_ORDER_DETAIL_NOT_FOUND);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }

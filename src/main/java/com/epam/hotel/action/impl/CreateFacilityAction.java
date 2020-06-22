@@ -1,7 +1,11 @@
 package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
+import com.epam.hotel.dao.FacilityDAO;
+import com.epam.hotel.dao.LanguageDAO;
+import com.epam.hotel.dao.impl.DAOConstant;
 import com.epam.hotel.dao.impl.FacilityDAOImpl;
+import com.epam.hotel.dao.impl.LanguageDAOImpl;
 import com.epam.hotel.entity.Facility;
 import com.epam.hotel.validation.NumericValidation;
 
@@ -10,29 +14,57 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.epam.hotel.action.impl.ActionConstant.*;
+import static com.epam.hotel.action.impl.ErrorConstant.*;
 
 public class CreateFacilityAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        if (EMPTY_STRING.equals(request.getParameter(FACILITY_NAME))
-                || EMPTY_STRING.equals(request.getParameter(FACILITY_DESCRIPTION))
-                || EMPTY_STRING.equals(request.getParameter(FACILITY_PRICE))
-                || !NumericValidation.isNumeric(request.getParameter(FACILITY_PRICE))) {
-            request.setAttribute(MESSAGE, "Данные введены некорректно");
+        LanguageDAO languageDAO = new LanguageDAOImpl();
+        Map<Integer, String> languageMap = languageDAO.getLanguageMap();
+
+        if (!facilityFieldValidation(languageMap, request, response))
+            return;
+
+        Map<Integer, String> facilityNameMap = new HashMap<>();
+        Map<Integer, String> facilityDescriptionMap = new HashMap<>();
+
+        for (Integer key : languageMap.keySet()) {
+            facilityNameMap.put(key, request.getParameter(FACILITY_NAME + key.toString()));
+            facilityDescriptionMap.put(key, request.getParameter(FACILITY_DESCRIPTION + key.toString()));
+        }
+        BigDecimal facilityPrice = BigDecimal.valueOf(Long.parseLong(request.getParameter(FACILITY_PRICE)));
+        FacilityDAO facilityDAO = new FacilityDAOImpl();
+
+        if (facilityDAO.create(new Facility(facilityPrice, facilityNameMap, facilityDescriptionMap)) == DAOConstant.ERROR_ID) {
+            request.setAttribute(MESSAGE, ERROR_FAILED_TO_CREATE_FACILITY);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
 
-        String facilityName = request.getParameter(FACILITY_NAME);
-        String facilityDescription = request.getParameter(FACILITY_DESCRIPTION);
-        BigDecimal facilityPrice = BigDecimal.valueOf(Long.parseLong(request.getParameter(FACILITY_PRICE)));
+        response.sendRedirect(SHOW_FACILITY_ADMIN_LIST_URL);
+    }
 
-        FacilityDAOImpl facilityDAO = new FacilityDAOImpl();
-        facilityDAO.create(new Facility(facilityName, facilityPrice, facilityDescription));
+    protected static boolean facilityFieldValidation(Map<Integer, String> languageMap, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (EMPTY_STRING.equals(request.getParameter(FACILITY_PRICE))
+                || !NumericValidation.isNumeric(request.getParameter(FACILITY_PRICE))) {
+            request.setAttribute(MESSAGE, ERROR_INVALID_DATA);
+            request.getRequestDispatcher(ERROR_URL).forward(request, response);
+            return false;
+        }
 
-        request.getRequestDispatcher(SHOW_FACILITY_ADMIN_LIST_URL).forward(request, response);
+        for (Integer key : languageMap.keySet()) {
+            if (EMPTY_STRING.equals(request.getParameter(FACILITY_NAME + key.toString()))
+                    || EMPTY_STRING.equals(request.getParameter(FACILITY_DESCRIPTION + key.toString()))) {
+                request.setAttribute(MESSAGE, ERROR_INVALID_DATA);
+                request.getRequestDispatcher(ERROR_URL).forward(request, response);
+                return false;
+            }
+        }
+        return true;
     }
 }

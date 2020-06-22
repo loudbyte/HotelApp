@@ -5,7 +5,7 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="language"/>
 <html>
 <head>
@@ -28,8 +28,9 @@
                     <th scope="col"><fmt:message key="capacity"/></th>
                     <th scope="col"><fmt:message key="photo"/></th>
                     <th scope="col"></th>
-                    <th scope="col"></td>
-                    <th scope="col"></td>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,38 +40,55 @@
                         <td>${room.roomNumber}</td>
                         <td>
                             <c:choose>
-                                <c:when test="${'ru'.equals(sessionScope.local)}">${room.roomClassRu}</c:when>
-                                <c:otherwise>${room.roomClassEn}</c:otherwise>
+                                <c:when test="${room.roomClass == 1}"><fmt:message key="deluxe"/></c:when>
+                                <c:when test="${room.roomClass == 2}"><fmt:message key="suite"/></c:when>
+                                <c:when test="${room.roomClass == 3}"><fmt:message key="standard"/></c:when>
                             </c:choose>
                         </td>
-                        <td>${room.price}</td>
+                        <td>${room.price}$</td>
                         <td>${room.availability}</td>
                         <td>${room.capacity}</td>
                         <td>${room.imageList.size()}</td>
                         <td>
-                            <form action="${requestScope.pageContext.request.contextPath}/controller/edit_room_button" method="post">
+                            <c:choose>
+                                <c:when test="${!room.availability}">
+                                    <form action="${pageContext.request.contextPath}/controller/set_available" method="post">
+                                        <input type="hidden" name="room_id" value="${room.id}">
+                                        <button type="submit" class="btn btn-sm btn-warning"><fmt:message key="set_available"/></button>
+                                    </form>
+                                </c:when>
+                                <c:when test="${room.availability}">
+                                    <form action="${pageContext.request.contextPath}/controller/set_reserved" method="post">
+                                        <input type="hidden" name="room_id" value="${room.id}">
+                                        <button type="submit" class="btn btn-sm btn-warning"><fmt:message key="set_reserved"/></button>
+                                    </form>
+                                </c:when>
+                            </c:choose>
+                        </td>
+                        <td>
+                            <form action="${pageContext.request.contextPath}/controller/edit_room_button" method="post">
                                 <input type="hidden" name="id" value="${room.id}">
                                 <button type="submit" class="btn btn-sm btn-warning"><fmt:message key="edit"/></button>
                             </form>
                         </td>
                         <td>
-                            <form action="${requestScope.pageContext.request.contextPath}/controller/upload_room_image_button" method="post">
+                            <form action="${pageContext.request.contextPath}/controller/upload_room_image_button" method="post">
                                 <input type="hidden" name="id" value="${room.id}">
-                                <button type="submit" style="width: 140px"
-                                        class="btn btn-sm btn-warning"><fmt:message key="add.photo"/></button>
+                                <button type="submit"
+                                        class="btn btn-sm btn-warning"><fmt:message key="add_photo"/></button>
                             </form>
                         </td>
                         <td>
                             <c:choose>
                                 <c:when test="${room.availability}">
-                                    <form action="${requestScope.pageContext.request.contextPath}/controller/delete_room" method="post">
+                                    <form action="${pageContext.request.contextPath}/controller/delete_room" method="post">
                                         <input type="hidden" name="id" value="${room.id}">
                                         <button type="submit"
                                                 class="btn btn-sm btn-danger"><fmt:message key="delete"/></button>
                                     </form>
                                 </c:when>
                                 <c:otherwise>
-                                    <button title='<fmt:message key="cannot.delete.room"/>' type="button" class="btn btn-sm btn-dark"><fmt:message key="delete"/></button>
+                                    <button title='<fmt:message key="cannot_delete_room"/>' type="button" class="btn btn-sm btn-dark"><fmt:message key="delete"/></button>
                                 </c:otherwise>
                             </c:choose>
                         </td>
@@ -85,7 +103,7 @@
                 <p>
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <a href="${requestScope.pageContext.request.contextPath}/create_room.jsp" type="button"
-                       class="btn btn-dark"><fmt:message key="new.room"/></a>
+                       class="btn btn-dark"><fmt:message key="new_room"/></a>
                 </div>
                 </p>
             </c:if>

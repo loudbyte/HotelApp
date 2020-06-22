@@ -8,18 +8,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import static com.epam.hotel.action.impl.ActionConstant.*;
 import static com.epam.hotel.dao.impl.DAOConstant.DATE_PATTERN;
 
 public class DateValidation {
 
     private static final Logger LOGGER = Logger.getLogger(DateValidation.class);
+
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
+    private static final int ZERO = 0;
+    private static final int ONE = 1;
+
 
     public static boolean isStartEndDatesValid(String stringStartDate, String stringEndDate) {
 
         boolean result = false;
 
-        if ("".equals(stringStartDate) || "".equals(stringEndDate)) {
+        if (EMPTY_STRING.equals(stringStartDate) || EMPTY_STRING.equals(stringEndDate)) {
             return result;
         }
 
@@ -30,11 +35,11 @@ public class DateValidation {
         try {
             startDate = simpleDateFormat.parse(stringStartDate);
             endDate = simpleDateFormat.parse(stringEndDate);
-        } catch (ParseException e) {
-            LOGGER.error("ParseException in DateValidation", e);
+        } catch (ParseException exception) {
+            LOGGER.error(exception, exception);
         }
 
-        if ((endDate.getTime() - startDate.getTime()) > 0 && (nowDate.getTime() - TimeUnit.DAYS.toMillis(1)) <= startDate.getTime()) {
+        if ((endDate.getTime() - startDate.getTime()) > ZERO && (nowDate.getTime() - TimeUnit.DAYS.toMillis(ONE)) <= startDate.getTime()) {
             result = true;
         }
 
@@ -42,11 +47,11 @@ public class DateValidation {
     }
 
     public static boolean isDate(String stringDate) {
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.setLenient(false);
+        DateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
+        simpleDateFormat.setLenient(false);
         try {
-            sdf.parse(stringDate);
-        } catch (ParseException e) {
+            simpleDateFormat.parse(stringDate);
+        } catch (ParseException exception) {
             return false;
         }
         return true;

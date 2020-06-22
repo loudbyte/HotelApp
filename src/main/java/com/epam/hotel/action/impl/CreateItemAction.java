@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static com.epam.hotel.action.impl.ActionConstant.*;
+import static com.epam.hotel.action.impl.ErrorConstant.*;
 
 public class CreateItemAction implements Action {
     @Override
@@ -21,21 +22,21 @@ public class CreateItemAction implements Action {
 
         if (!(request.getSession().getAttribute(PERSON) instanceof Person)
                 || request.getSession().getAttribute(PERSON) == null) {
-            request.setAttribute(MESSAGE, "Необходимо зарегистрироваться.");
+            request.setAttribute(MESSAGE, ERROR_NEED_TO_REGISTER);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
 
         if (!NumericValidation.isNumeric(request.getParameter(ROOM_ID))
                 || !NumericValidation.isNumeric(request.getParameter(DETAIL_ID))) {
-            request.setAttribute(MESSAGE, "Что-то пошло не так...");
+            request.setAttribute(MESSAGE, ERROR_ITEM_NOT_FOUND);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
 
         if (!DateValidation
                 .isStartEndDatesValid(request.getParameter(START_DATE), request.getParameter(END_DATE))) {
-            request.setAttribute(MESSAGE, "Неправильно выбраны даты.");
+            request.setAttribute(MESSAGE, ERROR_WRONG_DATE);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
@@ -58,6 +59,6 @@ public class CreateItemAction implements Action {
 
         cart.addElementByKeyToOrderRoomDetailMap(orderRoomDetail);
 
-        request.getRequestDispatcher(SHOW_CART_URL).forward(request, response);
+        response.sendRedirect(SHOW_CART_URL);
     }
 }

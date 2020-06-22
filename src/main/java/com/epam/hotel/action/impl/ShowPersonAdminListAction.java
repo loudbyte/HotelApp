@@ -10,9 +10,8 @@ import java.io.IOException;
 import static com.epam.hotel.action.impl.ActionConstant.SHOW_PERSON_ADMIN_LIST_URL;
 
 public class ShowPersonAdminListAction implements Action {
-
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(SHOW_PERSON_ADMIN_LIST_URL).forward(request, response);
+        response.sendRedirect(SHOW_PERSON_ADMIN_LIST_URL);
     }
 }

@@ -12,6 +12,6 @@ import static com.epam.hotel.action.impl.ActionConstant.SHOW_ROOM_ADMIN_LIST_URL
 public class ShowRoomAdminListAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(SHOW_ROOM_ADMIN_LIST_URL).forward(request, response);
+        response.sendRedirect(SHOW_ROOM_ADMIN_LIST_URL);
     }
 }

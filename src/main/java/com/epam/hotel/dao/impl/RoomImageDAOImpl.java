@@ -27,7 +27,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
             "SET image = ?, room_id = ?" +
             "WHERE id = ?";
 
-    private  static final String GET_LAST_VALUE_FROM_ROOM_IMAGE_SEQ = "select last_value FROM room_image_id_seq";
+    private static final String GET_LAST_VALUE_FROM_ROOM_IMAGE_SEQ = "select last_value FROM room_image_id_seq";
 
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
     private Connection connection;
@@ -46,11 +46,11 @@ public class RoomImageDAOImpl implements RoomImageDAO {
             preparedStatement.executeUpdate();
             ResultSet resultSetGetSeq = preparedStatementGetSeq.executeQuery();
 
-            if (resultSetGetSeq.next()) {
+            if (resultSetGetSeq.next())
                 id = resultSetGetSeq.getLong(1);
-            }
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomImageDAOImpl create", e);
+
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -75,8 +75,8 @@ public class RoomImageDAOImpl implements RoomImageDAO {
 
                 roomImageList.add(roomImage);
             }
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomImageDAOImpl geAllByRoomId", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -100,8 +100,8 @@ public class RoomImageDAOImpl implements RoomImageDAO {
 
                 roomImageList.add(new RoomImage(id, image, roomId));
             }
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomImageDAOImpl getAll", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -120,8 +120,8 @@ public class RoomImageDAOImpl implements RoomImageDAO {
 
             roomImage = getRoomImage(roomImage, resultSet);
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomImageDAOImpl getOneById", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -140,8 +140,8 @@ public class RoomImageDAOImpl implements RoomImageDAO {
 
             preparedStatement.executeUpdate();
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomImageDAOImpl updateOneById", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -154,8 +154,8 @@ public class RoomImageDAOImpl implements RoomImageDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ONE_BY_ID);) {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomImageDAOImpl deleteOneById", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }

@@ -7,9 +7,9 @@ import java.io.IOException;
 
 public class LanguageFilter implements Filter {
 
-    public static final String LOCAL = "local";
+    public static final String LOCAL = "locale";
     public static final String LANGUAGE = "language";
-    public static final String EN = "en";
+    public static final String EN = "en_US";
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -28,7 +28,6 @@ public class LanguageFilter implements Filter {
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
-
     }
 
     @Override

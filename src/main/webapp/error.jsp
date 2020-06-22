@@ -3,12 +3,12 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="language"/>
 <html lang="en">
 <head>
     <jsp:include page="style.jsp"/>
-    <title>Ошибка</title>
+    <title><fmt:message  key="error"/></title>
 </head>
 <body>
 
@@ -18,7 +18,7 @@
     <jsp:include page="header.jsp"/>
 
     <div class="row">
-        <div class="col-8"><h3><fmt:message key="error"/>. ${requestScope.message}</h3></div>
+        <div class="col-8"><h3><fmt:message key="error"/>. <fmt:message key="${requestScope.message}"/></h3></div>
         <div class="col-4">
 
         </div>

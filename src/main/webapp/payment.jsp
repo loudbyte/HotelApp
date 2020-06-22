@@ -3,7 +3,7 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="language"/>
 
 <html>
@@ -18,11 +18,11 @@
     <jsp:include page="header.jsp"/>
 
     <div class="row">
-        <div class="col-9"><h1><fmt:message key="paid"/></h1></div>
+        <div class="col-9"><h1><fmt:message key="payment_complete"/></h1></div>
         <div class="col">
             <p>
             <div class="btn-group" role="group" aria-label="Basic example">
-                <a href="${pageContext.request.contextPath}/controller/show_rooms" type="button" class="btn btn-secondary"><fmt:message key="show.rooms"/></a>
+                <a href="${pageContext.request.contextPath}/controller/show_rooms" type="button" class="btn btn-secondary"><fmt:message key="show_rooms"/></a>
             </div>
             </p>
         </div>

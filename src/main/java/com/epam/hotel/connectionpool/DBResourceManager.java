@@ -4,15 +4,16 @@ import java.util.ResourceBundle;
 
 public class DBResourceManager {
 
-    public static final String DATA_BASE_DRIVER = "db.driver";
-    public static final String DATA_BASE_URL = "db.url";
-    public static final String DATA_BASE_USERNAME = "db.username";
-    public static final String DATA_BASE_PASSWORD = "db.password";
-    public static final String DATA_BASE_POLL_SIZE = "db.poolsize";
+    protected static final String DATA_BASE_DRIVER = "db.driver";
+    protected static final String DATA_BASE_URL = "db.url";
+    protected static final String DATA_BASE_USERNAME = "db.username";
+    protected static final String DATA_BASE_PASSWORD = "db.password";
+    protected static final String DATA_BASE_POLL_SIZE = "db.poolsize";
+    private static final String PERSISTENCE = "persistence";
 
     private final static DBResourceManager instance = new DBResourceManager();
 
-    private static ResourceBundle bundle = ResourceBundle.getBundle("persistence");
+    private static ResourceBundle bundle = ResourceBundle.getBundle(PERSISTENCE);
 
     public static DBResourceManager getInstance() {
         return instance;

@@ -9,7 +9,7 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="language"/>
 <html>
 <head>
@@ -24,9 +24,9 @@
             <table class="table table-sm">
                 <thead>
                 <tr>
-                    <th scope="col"><fmt:message key="order.number"/></th>
-                    <th scope="col"><fmt:message key="first.name"/></th>
-                    <th scope="col"><fmt:message key="last.name"/></th>
+                    <th scope="col"><fmt:message key="order_number"/></th>
+                    <th scope="col"><fmt:message key="first_name"/></th>
+                    <th scope="col"><fmt:message key="last_name"/></th>
                     <th scope="col"><fmt:message key="date"/></th>
                     <th scope="col"><fmt:message key="status"/></th>
                     <th scope="col"><fmt:message key="price"/></th>
@@ -56,10 +56,9 @@
                             </td>
                             <td>${order.date}</td>
                             <td>
-                                <c:choose>
-                                    <c:when test="${'ru'.equals(sessionScope.local)}">${order.statusRu}</c:when>
-                                    <c:otherwise>${order.statusEn}</c:otherwise>
-                                </c:choose>
+                                <c:forEach var="counter" begin="1" end="6">
+                                    <c:if test="${order.status == counter}"><fmt:message key="status_${counter}"/></c:if>
+                                </c:forEach>
                             </td>
                             <td>${calculatePrice.calculateOrderMain(order.id)}$</td>
                             <td>
@@ -73,7 +72,7 @@
                                 <form action="${pageContext.request.contextPath}/controller/edit_order_button" method="post">
                                       <input type="hidden" name="order_main_id" value="${order.id}">
                                       <input type="hidden" name="person_id" value="${order.personId}">
-                                      <input type="hidden" name="status_id" value="${order.statusId}">
+                                      <input type="hidden" name="status" value="${order.status}">
                                       <input type="hidden" name="date" value="${order.date}">
                                       <button type="submit"
                                               class="btn btn-sm btn-warning"><fmt:message key="edit"/></button>

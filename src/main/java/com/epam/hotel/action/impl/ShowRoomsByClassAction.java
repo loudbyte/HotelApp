@@ -1,8 +1,10 @@
 package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
+import com.epam.hotel.dao.RoomDAO;
 import com.epam.hotel.dao.impl.RoomDAOImpl;
 import com.epam.hotel.entity.Room;
+import com.epam.hotel.validation.AuthorizationValidation;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +26,10 @@ public class ShowRoomsByClassAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        RoomDAOImpl roomDAO = new RoomDAOImpl();
+        if (!AuthorizationValidation.authorizationGetBoolean(request, response))
+            return;
+
+        RoomDAO roomDAO = new RoomDAOImpl();
         List<Room> roomAllList = roomDAO.getAll();
         List<Room> roomDeluxeList = new ArrayList<>();
         List<Room> roomSuiteList = new ArrayList<>();
@@ -32,7 +37,7 @@ public class ShowRoomsByClassAction implements Action {
         List<Room> showRoomList = new ArrayList<>();
 
         for (Room room : roomAllList) {
-            switch ((int) room.getRoomClassId()) {
+            switch ((int) room.getRoomClass()) {
                 case DELUXE:
                     roomDeluxeList.add(room);
                     break;
@@ -59,6 +64,5 @@ public class ShowRoomsByClassAction implements Action {
 
         request.setAttribute(ROOM_LIST, showRoomList);
         request.getRequestDispatcher(SHOW_ROOMS_BY_CLASS_URL).forward(request, response);
-
     }
 }

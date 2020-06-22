@@ -23,12 +23,11 @@ public class HotelAppController extends HttpServlet {
     }
 
     private void getAction(HttpServletRequest request, HttpServletResponse response) {
-
         try {
             Action action = ActionFactory.getInstance().getAction(request);
             action.execute(request, response);
-        } catch (IOException | ServletException e) {
-            LOGGER.error("IOException | ServletException in HotelAppController getAction", e);
+        } catch (IOException | ServletException exception) {
+            LOGGER.error(exception, exception);
         }
     }
 }

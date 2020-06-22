@@ -2,7 +2,7 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="language"/>
 <html>
 <head>
@@ -17,7 +17,7 @@
             <form action="${pageContext.request.contextPath}/controller/edit_room" method="post">
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="roomNumber"><fmt:message key="room.number"/></label>
+                        <label for="roomNumber"><fmt:message key="room_number"/></label>
                         <input type="number" class="form-control" id="roomNumber" name="room_number">
                     </div>
                     <div class="form-group col-md-6">
@@ -27,13 +27,20 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="roomClassId"><fmt:message key="class"/> ID</label>
-                        <input type="number" class="form-control" id="roomClassId" placeholder='<fmt:message key="deluxe"/> - 1, <fmt:message key="suite"/> - 2, <fmt:message key="standard"/> - 3' name="room_class_id">
-                    </div>
-                    <div class="form-group col-md-6">
                         <label for="price"><fmt:message key="price"/></label>
                         <input type="number" class="form-control" id="price" placeholder="" name="price">
                     </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input type="radio" id="deluxe" name="room_class" value="1" class="radio"/>
+                        <label for="deluxe"><fmt:message key="deluxe"/></label>
+                        <input type="radio" id="suite" name="room_class" value="2" class="radio"/>
+                        <label for="suite"><fmt:message key="suite"/></label>
+                        <input type="radio" id="standard" name="room_class" value="3" class="radio"/>
+                        <label for="standard"><fmt:message key="standard"/></label>
+                   </div>
+
                 </div>
                 <div class="form-row">
                     <div class="custom-control custom-checkbox my-2 mr-sm-5">

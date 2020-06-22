@@ -1,7 +1,6 @@
 package com.epam.hotel.entity;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Room implements BaseEntityMarker {
@@ -9,9 +8,7 @@ public class Room implements BaseEntityMarker {
     private long id;
     private int roomNumber;
     private int capacity;
-    private long roomClassId;
-    private String roomClassEn;
-    private String roomClassRu;
+    private int roomClass;
     private BigDecimal price;
     private boolean availability;
     private List<RoomImage> imageList;
@@ -40,28 +37,12 @@ public class Room implements BaseEntityMarker {
         this.capacity = capacity;
     }
 
-    public long getRoomClassId() {
-        return roomClassId;
+    public long getRoomClass() {
+        return roomClass;
     }
 
-    public void setRoomClassId(long roomClassId) {
-        this.roomClassId = roomClassId;
-    }
-
-    public String getRoomClassEn() {
-        return roomClassEn;
-    }
-
-    public void setRoomClassEn(String roomClassEn) {
-        this.roomClassEn = roomClassEn;
-    }
-
-    public String getRoomClassRu() {
-        return roomClassRu;
-    }
-
-    public void setRoomClassRu(String roomClassRu) {
-        this.roomClassRu = roomClassRu;
+    public void setRoomClass(int roomClassId) {
+        this.roomClass = roomClassId;
     }
 
     public BigDecimal getPrice() {
@@ -94,9 +75,7 @@ public class Room implements BaseEntityMarker {
                 "id=" + id +
                 ", roomNumber=" + roomNumber +
                 ", capacity=" + capacity +
-                ", roomClassId=" + roomClassId +
-                ", roomClassEn='" + roomClassEn + '\'' +
-                ", roomClassRu='" + roomClassRu + '\'' +
+                ", roomClassId=" + roomClass +
                 ", price=" + price +
                 ", availability=" + availability +
                 ", imageList=" + imageList +

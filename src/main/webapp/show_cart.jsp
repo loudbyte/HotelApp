@@ -6,7 +6,7 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="language"/>
 <html>
 <head>
@@ -23,10 +23,10 @@
                     <table class="table table-sm">
                         <thead>
                         <tr>
-                            <th scope="col"><fmt:message key="room.number"/></th>
-                            <th scope="col"><fmt:message key="package"/></th>
-                            <th scope="col"><fmt:message key="start.date"/></th>
-                            <th scope="col"><fmt:message key="end.date"/></th>
+                            <th scope="col"><fmt:message key="room_number"/></th>
+                            <th scope="col"><fmt:message key="facility_package"/></th>
+                            <th scope="col"><fmt:message key="start_date"/></th>
+                            <th scope="col"><fmt:message key="end_date"/></th>
                             <th scope="col"><fmt:message key="price"/></th>
                             <th scope="col"></th>
                         </tr>
@@ -35,7 +35,7 @@
                         <c:forEach var="orderDetail" items="${sessionScope.cart.orderRoomDetailMap.values()}">
                             <tr>
                                 <td>${roomDAO.getOneById(orderDetail.roomId).roomNumber}</td>
-                                <td>${packageDAO.getOneById(orderDetail.facilityPackageId).facilityPackageName}</td>
+                                <td>${packageDAO.getFacilityPackageNameMapByFacilityPackageId(orderDetail.facilityPackageId).get(sessionScope.locale)}</td>
                                 <td>${orderDetail.startDate}</td>
                                 <td>${orderDetail.endDate}</td>
                                 <td>${calculatePrice.calculateOrderRoomDetail(orderDetail)}$</td>
@@ -52,14 +52,14 @@
                     </table>
                 </c:when>
                 <c:otherwise>
-                        <h2><fmt:message key="empty.cart"/></h2>
+                        <h2><fmt:message key="empty_cart"/></h2>
                 </c:otherwise>
             </c:choose>
         </div>
         <div class="col">
             <p>
             <div class="btn-group" role="group" aria-label="Basic example">
-                <a href="${pageContext.request.contextPath}/controller/show_rooms" type="button" class="btn btn-secondary"><fmt:message key="show.rooms"/></a>
+                <a href="${pageContext.request.contextPath}/controller/show_rooms" type="button" class="btn btn-secondary"><fmt:message key="show_rooms"/></a>
             </div>
             </p>
             <c:if test="${sessionScope.role == 'ADMIN'}">
@@ -67,7 +67,7 @@
             </c:if>
             <c:if test="${sessionScope.cart.orderRoomDetailMap.size() != 0}">
                 <form action="${pageContext.request.contextPath}/controller/create_order" method="post">
-                    <button type="submit" class="btn btn-lg  btn-info"><fmt:message key="create.order"/></button>
+                    <button type="submit" class="btn btn-lg  btn-info"><fmt:message key="create_order"/></button>
                 </form>
             </c:if>
         </div>

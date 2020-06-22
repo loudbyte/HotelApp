@@ -56,15 +56,20 @@ public class ActionFactory {
         actions.put("/edit_order", new EditOrderAction());
         actions.put("/edit_order_room_detail_button", new EditOrderRoomDetailButtonAction());
         actions.put("/edit_order_room_detail", new EditOrderRoomDetailAction());
-        actions.put("/delete_package", new DeletePackageAction());
-        actions.put("/edit_package", new EditPackageAction());
-        actions.put("/create_package", new CreatePackageAction());
+        actions.put("/delete_facility_package", new DeleteFacilityPackageAction());
+        actions.put("/edit_facility_package", new EditFacilityPackageAction());
+        actions.put("/create_facility_package", new CreateFacilityPackageAction());
         actions.put("/delete_facility", new DeleteFacilityAction());
         actions.put("/edit_facility", new EditFacilityAction());
         actions.put("/create_facility", new CreateFacilityAction());
         actions.put("/show_cart", new ShowCartAction());
         actions.put("/pay_order", new PayOrderAction());
         actions.put("/payment", new PaymentAction());
+        actions.put("/set_reserved", new SetRoomAvailabilityAction(Boolean.FALSE));
+        actions.put("/set_available", new SetRoomAvailabilityAction(Boolean.TRUE));
+        actions.put("/create_language", new CreateLanguageAction());
+        actions.put("/edit_language", new EditLanguageAction());
+        actions.put("/delete_language", new DeleteLanguageAction());
 
     }
 

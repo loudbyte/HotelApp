@@ -7,7 +7,7 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="language"/>
 <html>
 <head>
@@ -28,14 +28,15 @@
             <div class="col-md-6">
                 <p class="featurette-heading">
                     <c:choose>
-                        <c:when test="${'ru'.equals(sessionScope.local)}">${room.roomClassRu}</c:when>
-                        <c:otherwise>${room.roomClassEn}</c:otherwise>
+                        <c:when test="${room.roomClass == 1}"><fmt:message key="deluxe"/></c:when>
+                        <c:when test="${room.roomClass == 2}"><fmt:message key="suite"/></c:when>
+                        <c:when test="${room.roomClass == 3}"><fmt:message key="standard"/></c:when>
                     </c:choose>
                         <fmt:message key="number"/>
                     ID: ${room.id}</br>
-                    <fmt:message key="room.number"/> №${room.price} </br>
+                    <fmt:message key="room_number"/> №${room.price} </br>
                 </p>
-                <fmt:message key="add.photo"/>
+                <fmt:message key="add_photo"/>
                 <div class="input-group mb-6">
                     <div class="custom-file">
                         <input type="file" name="file" class="">
@@ -51,16 +52,16 @@
                     <ul>
                         <li>
                             <p>
-                                <fmt:message key="check.upload.photo"/>
-                                <input type="radio" value="0" name="room_image_id_radio">
+                                <label for="check_upload_photo"><fmt:message key="check_upload_photo"/></label>
+                                <input id="check_upload_photo" type="radio" value="0" name="room_image_id_radio">
                             </p>
                         </li>
                         <c:forEach items="${room.imageList}" var="image">
                             <li>
                                 <p>
                                     <fmt:message key="photo"/> ID: ${image.id}<br/>
-                                    <fmt:message key="check.replace"/>
-                                    <input type="radio" value="${image.id}" name="room_image_id_radio"><br/>
+                                    <label for="${image.id}"><fmt:message key="check_replace"/></label>
+                                    <input id="${image.id}" type="radio" value="${image.id}" name="room_image_id_radio"><br/>
                                     <input type="hidden" name="room_image_radio" value="${image.id}">
                                 <img width="200" height="200" src="${imageEncoder.encode(image.image)}"/><br/>
                                     <a href="${pageContext.request.contextPath}/controller/delete_room_image?image_id=${image.id}" type="button" style="width: 200px" class="btn btn-warning"><fmt:message key="delete"/></a>

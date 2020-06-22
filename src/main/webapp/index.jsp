@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="language"/>
 <head>
   <jsp:include page="style.jsp"/>
-  <title><fmt:message key="title.index"/></title>
+  <title><fmt:message key="title_index"/></title>
 </head>
 <body>
 
@@ -16,7 +16,7 @@
 
   <div class="row">
     <div class="col-9">
-      <h1><fmt:message key="welcome.to.the"/> <strong><fmt:message key="hotel.ca"/></strong></h1>
+      <h1><fmt:message key="welcome_to_the"/> <strong><fmt:message key="hotel_ca"/></strong></h1>
     </div>
     <div class="col">
       <p>
@@ -29,7 +29,7 @@
       </p>
       <p>
       <div class="btn-group" role="group" aria-label="Basic example">
-        <a href="${pageContext.request.contextPath}/controller/show_rooms" type="button" class="btn btn-secondary"><fmt:message key="show.rooms"/></a>
+        <a href="${pageContext.request.contextPath}/controller/show_rooms" type="button" class="btn btn-secondary"><fmt:message key="show_rooms"/></a>
       </div>
       </p>
     </div>

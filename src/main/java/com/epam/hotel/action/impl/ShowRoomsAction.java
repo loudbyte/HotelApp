@@ -1,6 +1,7 @@
 package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
+import com.epam.hotel.dao.RoomDAO;
 import com.epam.hotel.dao.impl.RoomDAOImpl;
 import com.epam.hotel.entity.Room;
 
@@ -25,7 +26,7 @@ public class ShowRoomsAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        RoomDAOImpl roomDAO = new RoomDAOImpl();
+        RoomDAO roomDAO = new RoomDAOImpl();
         List<Room> roomList = roomDAO.getAll();
 
         Room roomDelux = null;
@@ -33,7 +34,7 @@ public class ShowRoomsAction implements Action {
         Room roomStandard = null;
 
         for (Room room : roomList) {
-            switch ((int) room.getRoomClassId()) {
+            switch ((int) room.getRoomClass()) {
                 case DELUXE:
                     if (room.getImageList().size() != 0 && room.getImageList().get(0).getImage() != null)
                         roomDelux = room;

@@ -15,7 +15,7 @@ public class EditOrderButtonAction implements Action {
 
         request.setAttribute(ORDER_MAIN_ID, request.getParameter(ORDER_MAIN_ID));
         request.setAttribute(PERSON_ID, request.getParameter(PERSON_ID));
-        request.setAttribute(STATUS_ID, request.getParameter(STATUS_ID));
+        request.setAttribute(STATUS, request.getParameter(STATUS));
         request.setAttribute(DATE, request.getParameter(DATE));
 
         request.getRequestDispatcher(EDIT_ORDER_URL).forward(request, response);

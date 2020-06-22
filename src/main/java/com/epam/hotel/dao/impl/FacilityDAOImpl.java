@@ -5,78 +5,87 @@ import com.epam.hotel.dao.FacilityDAO;
 import com.epam.hotel.entity.Facility;
 import org.apache.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
 import static com.epam.hotel.dao.impl.DAOConstant.*;
 
 public class FacilityDAOImpl implements FacilityDAO {
 
     private static final Logger LOGGER = Logger.getLogger(FacilityDAOImpl.class);
+    private static final String CREATE_FACILITY = "INSERT INTO facility (price) VALUES (?) ";
+    private static final String CREATE_FACILITY_TRANSLATION = "INSERT INTO " +
+            "facility_translation (name, description, language_id, facility_id) VALUES (?, ?, ?, ?)";
     private static final String GET_ALL_FACILITIES = "SELECT * FROM facility";
-    private static final String GET_ONE_BY_ID = "SELECT * FROM facility WHERE id = ?";
-    private static final String GET_ONE_BY_NAME = "SELECT * FROM facility WHERE name = ?";
-    private static final String CREATE_FACILITY = "INSERT INTO facility (name, price, description)" +
-            "VALUES (?, ?, ?)";
-    private static final String DELETE_ONE_BY_ID = "DELETE FROM facility WHERE id = ?";
-    private static final String UPDATE_ONE_BY_ID = "UPDATE facility " +
-            "SET id = ?, name = ?, price = ?, description = ?" +
-            "WHERE id = ?";
-    private static final String GET_FACILITY_LIST_BY_PACKAGE_ID = "SELECT * FROM facility AS f " +
-            "JOIN facility_package_relation AS fpr ON f.id = fpr.facility_id WHERE fpr.package_id = ?";
+    private static final String GET_FACILITY_NAME_MAP_BY_FACILITY_ID = "SELECT name, language.id FROM facility_translation " +
+            "LEFT JOIN language ON language.id = facility_translation.language_id WHERE facility_id = ?";
+    private static final String GET_FACILITY_DESCRIPTION_MAP_BY_FACILITY_ID = "SELECT description, language.id FROM facility_translation " +
+            "LEFT JOIN language ON language.id = facility_translation.language_id WHERE facility_id = ?";
+    private static final String GET_FACILITY_LIST_BY_FACILITY_PACKAGE_ID = "SELECT * FROM facility AS f " +
+            "JOIN facility_package_relation AS fpr ON f.id = fpr.facility_id WHERE fpr.facility_package_id = ?";
+    private static final String GET_ONE_FACILITY_BY_FACILITY_ID = "SELECT * FROM facility WHERE id = ?";
+    private static final String UPDATE_ONE_FACILITY_BY_FACILITY_ID = "UPDATE facility " +
+            "SET price = ? WHERE id = ?";
+    private static final String UPDATE_ONE_FACILITY_TRANSLATION_BY_FACILITY_ID = "UPDATE facility_translation " +
+            "SET name = ?, description = ?, language_id = ?, facility_id = ? WHERE facility_id = ? AND language_id = ?";
+    private static final String DELETE_ONE_FACILITY_TRANSLATION_BY_ID = "DELETE FROM facility_translation WHERE facility_id = ?";
+    private static final String DELETE_ONE_FACILITY_BY_ID = "DELETE FROM facility WHERE id = ?";
 
     private static final String GET_LAST_VALUE_FROM_FACILITY_SEQ = "SELECT last_value FROM facility_id_seq";
+
+    private static final String SAVEPOINT_CREATE_FACILITY = "savepointCreateFacility";
+    private static final String SAVEPOINT_UPDATE_FACILITY = "savepointUpdateFacility";
+    private static final String SAVEPOINT_DELETE_FACILITY = "savepointDeleteFacility";
 
     private ConnectionPool connectionPool = ConnectionPool.getInstance();
     private Connection connection;
 
     @Override
     public long create(Facility facility) {
+
+        long facilityId = ERROR_ID;
+
         connection = connectionPool.getConnection();
+        Savepoint savepoint = null;
 
-        long id = ERROR_ID;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FACILITY);
-             PreparedStatement preparedStatementGetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_FACILITY_SEQ);) {
+        try {
+            connection.setAutoCommit(false);
+            savepoint = connection.setSavepoint(SAVEPOINT_CREATE_FACILITY);
 
-            preparedStatement.setString(1, facility.getName());
-            preparedStatement.setBigDecimal(2, facility.getPrice());
-            preparedStatement.setString(3, facility.getDescription());
-            preparedStatement.executeUpdate();
-            ResultSet resultSetGetSeq = preparedStatementGetSeq.executeQuery();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FACILITY);
+                 PreparedStatement preparedStatementGetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_FACILITY_SEQ)) {
 
-            if (resultSetGetSeq.next())
-                id = resultSetGetSeq.getLong(1);
+                preparedStatement.setBigDecimal(1, facility.getPrice());
+                preparedStatement.executeUpdate();
+                ResultSet resultSetGetSeq = preparedStatementGetSeq.executeQuery();
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOImpl create", e);
+                if (resultSetGetSeq.next())
+                    facilityId = resultSetGetSeq.getLong(1);
+
+            }
+            for (Map.Entry<Integer, String> entry : facility.getFacilityNameMap().entrySet()) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FACILITY_TRANSLATION)) {
+
+                    preparedStatement.setString(1, entry.getValue());
+                    preparedStatement.setString(2, facility.getFacilityDescriptionMap().get(entry.getKey()));
+                    preparedStatement.setInt(3, entry.getKey());
+                    preparedStatement.setLong(4, facilityId);
+                    preparedStatement.executeUpdate();
+                }
+            }
+            connection.commit();
+        } catch (Exception exception) {
+            try {
+                connection.rollback(savepoint);
+                connection.releaseSavepoint(savepoint);
+            } catch (SQLException rollbackException) {
+                LOGGER.error(rollbackException, rollbackException);
+            }
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
-        return id;
-    }
-
-    @Override
-    public Facility getByName(String name) {
-        connection = connectionPool.getConnection();
-
-        Facility facility = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ONE_BY_NAME)) {
-            preparedStatement.setString(1, name);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            facility = getFacility(facility, resultSet);
-
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOImpl getByName", e);
-        } finally {
-            connectionPool.releaseConnection(connection);
-        }
-        return facility;
+        return facilityId;
     }
 
     @Override
@@ -85,25 +94,19 @@ public class FacilityDAOImpl implements FacilityDAO {
 
         List<Facility> facilityList = new ArrayList<>();
 
-        Facility facility = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_FACILITIES)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                facility = new Facility();
-                facility.setId(resultSet.getInt(ID));
-                facility.setName(resultSet.getString(NAME));
-                facility.setPrice(resultSet.getBigDecimal(PRICE));
-                facility.setDescription(resultSet.getString(DESCRIPTION));
-                facilityList.add(facility);
-            }
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOImpl getAll", e);
+            while (resultSet.next()) {
+                facilityList.add(getFacility(resultSet));
+            }
+            facilityList.sort(Comparator.comparing(Facility::getId));
+
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
-
-        facilityList.sort(Comparator.comparing(Facility::getId));
         return facilityList;
     }
 
@@ -112,36 +115,81 @@ public class FacilityDAOImpl implements FacilityDAO {
         connection = connectionPool.getConnection();
 
         Facility facility = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ONE_BY_ID)) {
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ONE_FACILITY_BY_FACILITY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            facility = getFacility(facility, resultSet);
+            if (resultSet.next()) {
+                facility = getFacility(resultSet);
+            }
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOImpl getOneById", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
         return facility;
     }
 
-    @Override
-    public void updateOneById(long id, Facility facility) {
+    public List<Facility> getFacilityListByFacilityPackageId(long packageId) {
         connection = connectionPool.getConnection();
 
-        String sql = UPDATE_ONE_BY_ID;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+        List<Facility> facilityList = new ArrayList<>();
 
-            preparedStatement.setLong(1, facility.getId());
-            preparedStatement.setString(2, facility.getName());
-            preparedStatement.setBigDecimal(3, facility.getPrice());
-            preparedStatement.setString(4, facility.getDescription());
-            preparedStatement.setLong(5, id);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_FACILITY_LIST_BY_FACILITY_PACKAGE_ID)) {
+            preparedStatement.setLong(1, packageId);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOImpl updateOneById", e);
+            while (resultSet.next()) {
+                facilityList.add(getFacility(resultSet));
+            }
+            facilityList.sort(Comparator.comparing(Facility::getId));
+
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
+        return facilityList;
+    }
+
+    @Override
+    public void updateOneById(long facilityId, Facility facility) {
+
+        connection = connectionPool.getConnection();
+        Savepoint savepoint = null;
+
+        try {
+            connection.setAutoCommit(false);
+            savepoint = connection.setSavepoint(SAVEPOINT_UPDATE_FACILITY);
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ONE_FACILITY_BY_FACILITY_ID)) {
+                preparedStatement.setBigDecimal(1, facility.getPrice());
+                preparedStatement.setLong(2, facilityId);
+                preparedStatement.executeUpdate();
+            }
+            for (Map.Entry<Integer, String> entry : facility.getFacilityNameMap().entrySet()) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ONE_FACILITY_TRANSLATION_BY_FACILITY_ID)) {
+
+                    preparedStatement.setString(1, entry.getValue());
+                    preparedStatement.setString(2, facility.getFacilityDescriptionMap().get(entry.getKey()));
+                    preparedStatement.setInt(3, entry.getKey());
+                    preparedStatement.setLong(4, facilityId);
+                    preparedStatement.setLong(5, facilityId);
+                    preparedStatement.setLong(6, entry.getKey());
+                    preparedStatement.executeUpdate();
+                }
+            }
+            connection.commit();
+        } catch (Exception exception) {
+            try {
+                connection.rollback(savepoint);
+                connection.releaseSavepoint(savepoint);
+            } catch (SQLException rollbackException) {
+                LOGGER.error(rollbackException, rollbackException);
+            }
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -150,52 +198,68 @@ public class FacilityDAOImpl implements FacilityDAO {
     @Override
     public void deleteOneById(long id) {
         connection = connectionPool.getConnection();
+        Savepoint savepoint = null;
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ONE_BY_ID);) {
+        try {
+            connection.setAutoCommit(false);
+            savepoint = connection.setSavepoint(SAVEPOINT_DELETE_FACILITY);
+
+            deleteFacility(id, DELETE_ONE_FACILITY_TRANSLATION_BY_ID);
+            deleteFacility(id, DELETE_ONE_FACILITY_BY_ID);
+
+            connection.commit();
+        } catch (Exception exception) {
+            try {
+                connection.rollback(savepoint);
+                connection.releaseSavepoint(savepoint);
+            } catch (SQLException rollbackException) {
+                LOGGER.error(rollbackException, rollbackException);
+            }
+            LOGGER.error(exception, exception);
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
+    }
+
+    private void deleteFacility(long id, String sql) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOImpl deleteOneById", e);
-        } finally {
-            connectionPool.releaseConnection(connection);
         }
     }
 
-    public List<Facility> getFacilityListByPackageId(long packageId) {
-        connection = connectionPool.getConnection();
+    private Facility getFacility(ResultSet resultSet) throws SQLException {
+        Facility facility = new Facility();
+        facility.setId(resultSet.getInt(ID));
+        facility.setPrice(resultSet.getBigDecimal(PRICE));
 
-        List<Facility> facilityList = null;
-        Facility facility = null;
+        try (PreparedStatement preparedStatementNameMap = connection.prepareStatement(GET_FACILITY_NAME_MAP_BY_FACILITY_ID)) {
+            preparedStatementNameMap.setLong(1, facility.getId());
+            ResultSet resultSetNameMap = preparedStatementNameMap.executeQuery();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_FACILITY_LIST_BY_PACKAGE_ID)) {
-            preparedStatement.setLong(1, packageId);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            Map<Integer, String> facilityNameMap = new HashMap<>();
 
-            facilityList = new ArrayList<>();
-            while (resultSet.next()) {
-                facility = new Facility();
-                facility.setId(resultSet.getLong(ID));
-                facility.setName(resultSet.getString(NAME));
-                facility.setPrice(resultSet.getBigDecimal(PRICE));
-                facility.setDescription(resultSet.getString(DESCRIPTION));
-                facilityList.add(facility);
+            while (resultSetNameMap.next()) {
+                facilityNameMap.put(
+                        resultSetNameMap.getInt(ID),
+                        resultSetNameMap.getString(NAME)
+                );
             }
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in FacilityDAOImpl getFacilityListByPackageId", e);
-        } finally {
-            connectionPool.releaseConnection(connection);
+            facility.setFacilityNameMap(facilityNameMap);
         }
-        facilityList.sort(Comparator.comparing(Facility::getId));
-        return facilityList;
-    }
+        try (PreparedStatement preparedStatementDescriptionMap = connection.prepareStatement(GET_FACILITY_DESCRIPTION_MAP_BY_FACILITY_ID)) {
+            preparedStatementDescriptionMap.setLong(1, facility.getId());
+            ResultSet resultSetDescriptionMap = preparedStatementDescriptionMap.executeQuery();
 
-    private Facility getFacility(Facility facility, ResultSet resultSet) throws SQLException {
-        if (resultSet.next()) {
-            facility = new Facility();
-            facility.setId(resultSet.getInt(ID));
-            facility.setName(resultSet.getString(NAME));
-            facility.setPrice(resultSet.getBigDecimal(PRICE));
-            facility.setDescription(resultSet.getString(DESCRIPTION));
+            Map<Integer, String> facilityDescriptionMap = new HashMap<>();
+
+            while (resultSetDescriptionMap.next()) {
+                facilityDescriptionMap.put(
+                        resultSetDescriptionMap.getInt(ID),
+                        resultSetDescriptionMap.getString(DESCRIPTION)
+                );
+            }
+            facility.setFacilityDescriptionMap(facilityDescriptionMap);
         }
         return facility;
     }

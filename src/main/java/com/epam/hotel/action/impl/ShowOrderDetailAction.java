@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.epam.hotel.action.impl.ActionConstant.*;
+import static com.epam.hotel.action.impl.ErrorConstant.ERROR_ORDER_NOT_FOUND;
 
 public class ShowOrderDetailAction implements Action {
     @Override
@@ -20,7 +21,7 @@ public class ShowOrderDetailAction implements Action {
             return;
 
         if (!NumericValidation.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
-            request.setAttribute(MESSAGE, "Заказ не найден.");
+            request.setAttribute(MESSAGE, ERROR_ORDER_NOT_FOUND);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }

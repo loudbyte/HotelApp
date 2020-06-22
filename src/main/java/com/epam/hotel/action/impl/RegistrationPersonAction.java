@@ -1,6 +1,7 @@
 package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
+import com.epam.hotel.dao.PersonDAO;
 import com.epam.hotel.dao.impl.PersonDAOImpl;
 import com.epam.hotel.entity.Person;
 import com.epam.hotel.validation.*;
@@ -11,13 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.epam.hotel.action.impl.ActionConstant.*;
+import static com.epam.hotel.action.impl.ErrorConstant.*;
+import static com.epam.hotel.dao.impl.DAOConstant.ERROR_ID;
 
 public class RegistrationPersonAction implements Action {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        long id = -1;
         String firstName = request.getParameter(FIRST_NAME);
         String lastName = request.getParameter(LAST_NAME);
         String birthday = request.getParameter(BIRTHDAY);
@@ -30,7 +32,7 @@ public class RegistrationPersonAction implements Action {
 
         if (firstName.isEmpty() || lastName.isEmpty() || birthday.isEmpty() || phone.isEmpty()
                 || email.isEmpty() || password.isEmpty() || iin.isEmpty()) {
-            request.setAttribute(MESSAGE, "Пустые поля");
+            request.setAttribute(MESSAGE, ERROR_EMPTY_FIELDS);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
@@ -39,7 +41,7 @@ public class RegistrationPersonAction implements Action {
                 || !AgeValidation.isAgeValid(birthday) || !NameValidation.isNameValid(firstName)
                 || !NameValidation.isNameValid(lastName) || !PhoneValidation.isPhoneValid(phone)
                 || !IINValidation.isIINValid(iin)) {
-            request.setAttribute(MESSAGE, "Данные введены некорректно.");
+            request.setAttribute(MESSAGE, ERROR_INVALID_DATA);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
@@ -56,11 +58,14 @@ public class RegistrationPersonAction implements Action {
         person.setAdmin(isAdmin);
         person.setBan(isBan);
 
-        PersonDAOImpl personDAO = new PersonDAOImpl();
-        id = personDAO.create(person);
+        PersonDAO personDAO = new PersonDAOImpl();
 
-        person.setId(id);
+        if (personDAO.create(person) == ERROR_ID) {
+            request.setAttribute(MESSAGE, ERROR_REGISTRATION_FAILED);
+            request.getRequestDispatcher(ERROR_URL).forward(request, response);
+            return;
+        }
 
-        request.getRequestDispatcher(LOGIN_URL).forward(request, response);
+        response.sendRedirect(LOGIN_URL);
     }
 }

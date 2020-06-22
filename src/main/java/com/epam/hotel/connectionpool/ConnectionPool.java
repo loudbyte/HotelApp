@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 public class ConnectionPool {
 
-    private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class);
 
     private String driverName;
     private String url;
@@ -31,7 +31,7 @@ public class ConnectionPool {
 
         try {
             this.poolSize = Integer.parseInt(dbResourceManager.getValue(DBResourceManager.DATA_BASE_POLL_SIZE));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException exception) {
             poolSize = 5;
         }
 
@@ -41,8 +41,8 @@ public class ConnectionPool {
             for (int i = 0; i < poolSize; i++) {
                 connectionsQueue.add(DriverManager.getConnection(url, userName, password));
             }
-        } catch (ClassNotFoundException | SQLException e) {
-            LOGGER.error("ClassNotFoundException | SQLException in ConnectionPool", e);
+        } catch (ClassNotFoundException | SQLException exception) {
+            LOGGER.error(exception, exception);
         }
     }
 
@@ -66,18 +66,25 @@ public class ConnectionPool {
         Connection newConnection;
         try {
             newConnection = connectionsQueue.take();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException exception) {
             newConnection = connectionsQueue.poll();
         }
         return newConnection;
-
     }
 
     public void releaseConnection(Connection connection) {
 
         try {
+            boolean isAutocommit = connection.getAutoCommit();
+            if (!isAutocommit) {
+                connection.setAutoCommit(Boolean.TRUE);
+            }
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
+        }
+        try {
             connectionsQueue.put(connection);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException exception) {
             connectionsQueue.offer(connection);
         }
     }

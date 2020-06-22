@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static com.epam.hotel.action.impl.ActionConstant.*;
+
 public class AuthorizationFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
@@ -18,12 +20,12 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpSession session = request.getSession();
-        Role role = (Role) session.getAttribute("role");
+        Role role = (Role) session.getAttribute(ROLE);
 
         if (role != null) {
             filterChain.doFilter(request, response);
         } else {
-            session.setAttribute("role", Role.GUEST);
+            session.setAttribute(ROLE, Role.GUEST);
             filterChain.doFilter(request, response);
         }
     }

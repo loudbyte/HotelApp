@@ -1,6 +1,7 @@
 package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
+import com.epam.hotel.dao.PersonDAO;
 import com.epam.hotel.dao.impl.PersonDAOImpl;
 import com.epam.hotel.entity.Cart;
 import com.epam.hotel.entity.Person;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static com.epam.hotel.action.impl.ActionConstant.*;
+import static com.epam.hotel.action.impl.ErrorConstant.*;
 
 public class LoginAction implements Action {
     @Override
@@ -27,23 +29,29 @@ public class LoginAction implements Action {
         String password = request.getParameter(PASSWORD);
 
         if (email.isEmpty() || password.isEmpty()) {
-            request.setAttribute(MESSAGE, "Пустые поля");
+            request.setAttribute(MESSAGE, ERROR_EMPTY_FIELDS);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
 
         if (!EmailValidation.isEmailValid(email) || !PasswordValidation.isPasswordValid(password)) {
-            request.setAttribute(MESSAGE, "Данные введены некорректно.");
+            request.setAttribute(MESSAGE, ERROR_INVALID_DATA);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
 
         password = encodePassword.getHashPassword(password);
-        PersonDAOImpl personDAO = new PersonDAOImpl();
+        PersonDAO personDAO = new PersonDAOImpl();
         Person person = personDAO.getOneByPasswordAndEmail(email, password);
 
+        if (person == null) {
+            request.setAttribute(MESSAGE, ERROR_USER_NOT_FOUND);
+            request.getRequestDispatcher(ERROR_URL).forward(request, response);
+            return;
+        }
+
         if (person.isBan()) {
-            request.setAttribute(MESSAGE, "К сожалению Вы забанены.");
+            request.setAttribute(MESSAGE, ERROR_YOU_BANNED);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
             return;
         }
@@ -61,7 +69,7 @@ public class LoginAction implements Action {
             session.setAttribute(CART, cart);
             response.sendRedirect(CABINET_URL);
         } else {
-            request.setAttribute(MESSAGE, "Пользователя не существует.");
+            request.setAttribute(MESSAGE, ERROR_USER_NOT_FOUND);
             request.getRequestDispatcher(ERROR_URL).forward(request, response);
         }
     }

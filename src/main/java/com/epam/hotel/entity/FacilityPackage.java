@@ -1,19 +1,46 @@
 package com.epam.hotel.entity;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
 public class FacilityPackage implements BaseEntityMarker {
     private long id;
-    private String facilityPackageName;
+    Map<Integer, String> facilityPackageNameMap;
+    private BigDecimal discount;
+    private List<Facility> facilityList;
+
+    public List<Facility> getFacilityList() {
+        return facilityList;
+    }
+
+    public void setFacilityList(List<Facility> facilityList) {
+        this.facilityList = facilityList;
+    }
+
+    public FacilityPackage(Map<Integer, String> facilityPackageNameMap, List<Facility> facilityList, BigDecimal discount) {
+        this.facilityPackageNameMap = facilityPackageNameMap;
+        this.discount = discount;
+        this.facilityList = facilityList;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
+    }
 
     public FacilityPackage() {
     }
 
-    public FacilityPackage(String facilityPackage) {
-        this.facilityPackageName = facilityPackage;
+    public Map<Integer, String> getFacilityPackageNameMap() {
+        return facilityPackageNameMap;
     }
 
-    public FacilityPackage(long id, String facilityPackage) {
-        this.id = id;
-        this.facilityPackageName = facilityPackage;
+    public void setFacilityPackageNameMap(Map<Integer, String> facilityPackageNameMap) {
+        this.facilityPackageNameMap = facilityPackageNameMap;
     }
 
     public long getId() {
@@ -24,19 +51,13 @@ public class FacilityPackage implements BaseEntityMarker {
         this.id = id;
     }
 
-    public String getFacilityPackageName() {
-        return facilityPackageName;
-    }
-
-    public void setFacilityPackageName(String facilityPackageName) {
-        this.facilityPackageName = facilityPackageName;
-    }
-
     @Override
     public String toString() {
-        return "OrderFacilityDetail{" +
+        return "FacilityPackage{" +
                 "id=" + id +
-                ", facilityPackage='" + facilityPackageName + '\'' +
+                ", facilityPackageNameMap=" + facilityPackageNameMap +
+                ", discount=" + discount +
+                ", facilityList=" + facilityList +
                 '}';
     }
 }

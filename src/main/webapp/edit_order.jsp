@@ -3,7 +3,7 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="language"/>
 <html>
 <head>
@@ -13,7 +13,7 @@
 <body>
 <div class="container">
     <jsp:include page="header.jsp"/>
-    <h3><fmt:message key="edit"/> <fmt:message key="order.number"/> - ${requestScope.order_main_id}</h3>
+    <h3><fmt:message key="edit"/> <fmt:message key="order_number"/> - ${requestScope.order_main_id}</h3>
     <div class="row">
         <div class="col-sm">
             <form action="${pageContext.request.contextPath}/controller/edit_order" method="post">
@@ -22,15 +22,19 @@
                         <label for="person_id"><fmt:message key="client"/> ID</label>
                         <input type="text" class="form-control" id="person_id" name="person_id" value="${requestScope.person_id}">
                     </div>
-                    <div class="form-group col-md-5">
-                        <label for="status_id"><fmt:message key="status"/> ID</label>
-                        <input type="number" class="form-control" id="status_id" name="status_id" value="${requestScope.status_id}"
-                               placeholder="1 New, 2 In progress, 3 Done, 4 Cancelled, 5 Denial 6 Paid">
-                    </div>
+
                     <div class="form-group col-md-5">
                         <label for="date"><fmt:message key="date"/></label>
                         <input type="text" class="form-control" id="date" name="date" value="${requestScope.date}">
                     </div>
+                </div>
+                <div class="form-group col-md-5">
+                    <h5><fmt:message key="status"/>:</h5>
+                    <ul>
+                        <c:forEach var="counter" begin="1" end="6">
+                            <li><input type="radio" name="status" value="${counter}" id="${counter}" <c:if test="${requestScope.status == counter}">checked</c:if> /> <label for="${counter}"><strong><fmt:message key="status_${counter}"/></strong></label></li>
+                        </c:forEach>
+                    </ul>
                 </div>
                 <br/>
                 <input type="hidden" name="order_main_id" value="${requestScope.order_main_id}" >

@@ -5,7 +5,7 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="language"/>
 <html>
 <head>
@@ -21,8 +21,8 @@
                 <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col"><fmt:message key="first.name"/></th>
-                    <th scope="col"><fmt:message key="last.name"/></th>
+                    <th scope="col"><fmt:message key="first_name"/></th>
+                    <th scope="col"><fmt:message key="last_name"/></th>
                     <th scope="col"><fmt:message key="iin"/></th>
                     <th scope="col"><fmt:message key="phone"/></th>
                     <th scope="col"><fmt:message key="email"/></th>
@@ -63,8 +63,8 @@
                 <jsp:include page="admin_right_panel.jsp" />
                 <p>
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <a href="${pageContext.request.contextPath}/create_person.jsp" type="button"
-                       class="btn btn-dark"><fmt:message key="new.user"/></a>
+                    <a style="float: right" href="${pageContext.request.contextPath}/create_person.jsp" type="button"
+                       class="btn btn-dark"><fmt:message key="new_user"/></a>
                 </div>
                 </p>
             </c:if>

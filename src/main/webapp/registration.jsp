@@ -2,7 +2,7 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<fmt:setLocale value="${sessionScope.local}"/>
+<fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:setBundle basename="language"/>
 <html>
 <head>
@@ -17,11 +17,11 @@
                 <form action="${pageContext.request.contextPath}/controller/registration_person" method="post">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="inputFirstName"><fmt:message key="first.name"/></label>
+                            <label for="inputFirstName"><fmt:message key="first_name"/></label>
                             <input type="text" class="form-control" id="inputFirstName" name="first_name">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="inputLastName"><fmt:message key="last.name"/></label>
+                            <label for="inputLastName"><fmt:message key="last_name"/></label>
                             <input type="text" class="form-control" id="inputLastName" name="last_name">
                         </div>
                     </div>

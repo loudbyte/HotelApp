@@ -12,6 +12,6 @@ import static com.epam.hotel.action.impl.ActionConstant.SHOW_CART_URL;
 public class ShowCartAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher(SHOW_CART_URL).forward(request, response);
+        response.sendRedirect(SHOW_CART_URL);
     }
 }

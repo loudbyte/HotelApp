@@ -15,9 +15,8 @@ import static com.epam.hotel.action.impl.ActionConstant.SHOW_MY_ORDERS_URL;
 public class ShowMyOrdersAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         if (!AuthorizationValidation.authorizationGetBoolean(request, response))
             return;
-        request.getRequestDispatcher(SHOW_MY_ORDERS_URL).forward(request, response);
+        response.sendRedirect(SHOW_MY_ORDERS_URL);
     }
 }

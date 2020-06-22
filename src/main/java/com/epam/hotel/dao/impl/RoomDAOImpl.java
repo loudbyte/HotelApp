@@ -19,20 +19,18 @@ import static com.epam.hotel.dao.impl.DAOConstant.*;
 public class RoomDAOImpl implements RoomDAO {
 
     private static final Logger LOGGER = Logger.getLogger(RoomDAOImpl.class);
-    private static final String GET_ALL_ROOMS =
-            "SELECT room.id, room_number, capacity, availability, price, room_class_id, room_class_en, room_class_ru " +
-                    "FROM room LEFT JOIN room_class ON room.room_class_id = room_class.id";
+    private static final String GET_ALL_ROOMS = "SELECT id, room_number, capacity, availability, price, room_class FROM room";
     private static final String GET_IMAGES_BY_ROOM_ID = "SELECT * FROM room_image WHERE room_id = ?";
     private static final String GET_ONE_BY_NUMBER = "SELECT * FROM room WHERE room_number = ?";
     private static final String GET_ONE_BY_CAPACITY = "SELECT * FROM room WHERE capacity = ?";
     private static final String GET_ONE_BY_ID =
-            "SELECT room.id, room_number, capacity, availability, price, room_class_id, room_class_en, room_class_ru " +
-            "FROM room LEFT JOIN room_class ON room.room_class_id = room_class.id WHERE room.id = ?";;
-    private static final String CREATE_ROOM = "INSERT INTO room (room_number, capacity, room_class_id, price, availability)" +
+            "SELECT id, room_number, capacity, availability, price, room_class " +
+                    "FROM room WHERE room.id = ?";
+    private static final String CREATE_ROOM = "INSERT INTO room (room_number, capacity, room_class, price, availability)" +
             "VALUES (?, ?, ?, ?, ?)";
     private final String DELETE_ONE_BY_ID = "DELETE FROM room WHERE id = ?";
     private final String UPDATE_ONE_BY_ID = "UPDATE room " +
-            "SET room_number = ?, capacity = ?, room_class_id = ?, price = ?, availability = ? " +
+            "SET room_number = ?, capacity = ?, room_class = ?, price = ?, availability = ? " +
             "WHERE id = ?";
 
     private static final String GET_LAST_VALUE_FROM_ROOM_SEQ = "select last_value FROM room_id_seq";
@@ -50,18 +48,18 @@ public class RoomDAOImpl implements RoomDAO {
 
             preparedStatement.setInt(1, room.getRoomNumber());
             preparedStatement.setInt(2, room.getCapacity());
-            preparedStatement.setLong(3, room.getRoomClassId());
+            preparedStatement.setLong(3, room.getRoomClass());
             preparedStatement.setBigDecimal(4, room.getPrice());
             preparedStatement.setBoolean(5, room.isAvailability());
             preparedStatement.executeUpdate();
             ResultSet resultSetGetSeq = preparedStatementGetSeq.executeQuery();
 
             if (resultSetGetSeq.next())
-                id = resultSetGetSeq.getLong(1) + 1;
+                id = resultSetGetSeq.getLong(1);
 
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOImpl create", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -85,8 +83,8 @@ public class RoomDAOImpl implements RoomDAO {
                 image.setImage(resultSet.getBytes(IMAGE));
                 imageList.add(image);
             }
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOImpl getRoomImagesByRoomId", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -102,15 +100,15 @@ public class RoomDAOImpl implements RoomDAO {
 
             preparedStatement.setInt(1, room.getRoomNumber());
             preparedStatement.setInt(2, room.getCapacity());
-            preparedStatement.setLong(3, room.getRoomClassId());
+            preparedStatement.setLong(3, room.getRoomClass());
             preparedStatement.setBigDecimal(4, room.getPrice());
             preparedStatement.setBoolean(5, room.isAvailability());
             preparedStatement.setLong(6, id);
 
             preparedStatement.executeUpdate();
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOImpl updateOneById", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -130,9 +128,7 @@ public class RoomDAOImpl implements RoomDAO {
                 room.setId(resultSet.getLong(ID));
                 room.setRoomNumber(resultSet.getInt(ROOM_NUMBER));
                 room.setCapacity(resultSet.getInt(CAPACITY));
-                room.setRoomClassId(resultSet.getLong(ROOM_CLASS_ID));
-                room.setRoomClassEn(resultSet.getString(ROOM_CLASS_EN));
-                room.setRoomClassRu(resultSet.getString(ROOM_CLASS_RU));
+                room.setRoomClass(resultSet.getInt(ROOM_CLASS));
                 room.setPrice(resultSet.getBigDecimal(PRICE));
                 room.setAvailability(resultSet.getBoolean(AVAILABILITY));
                 long id = room.getId();
@@ -140,8 +136,8 @@ public class RoomDAOImpl implements RoomDAO {
                 roomList.add(room);
             }
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOImpl getAll", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -160,8 +156,8 @@ public class RoomDAOImpl implements RoomDAO {
 
             room = getRoom(room, resultSet);
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOImpl getOneById", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -175,8 +171,8 @@ public class RoomDAOImpl implements RoomDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ONE_BY_ID);) {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOImpl deleteOneById", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -193,8 +189,8 @@ public class RoomDAOImpl implements RoomDAO {
 
             room = getRoom(room, resultSet);
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOImpl getByRoomNumber", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -212,8 +208,8 @@ public class RoomDAOImpl implements RoomDAO {
 
             room = getRoom(room, resultSet);
 
-        } catch (SQLException e) {
-            LOGGER.error("SQLException in RoomDAOImpl getByCapacity", e);
+        } catch (SQLException exception) {
+            LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
@@ -227,9 +223,7 @@ public class RoomDAOImpl implements RoomDAO {
             room.setId(resultSet.getLong(ID));
             room.setRoomNumber(resultSet.getInt(ROOM_NUMBER));
             room.setCapacity(resultSet.getInt(CAPACITY));
-            room.setRoomClassId(resultSet.getLong(ROOM_CLASS_ID));
-            room.setRoomClassEn(resultSet.getString(ROOM_CLASS_EN));
-            room.setRoomClassRu(resultSet.getString(ROOM_CLASS_RU));
+            room.setRoomClass(resultSet.getInt(ROOM_CLASS));
             room.setPrice(resultSet.getBigDecimal(PRICE));
             room.setAvailability(resultSet.getBoolean(AVAILABILITY));
             long id = room.getId();

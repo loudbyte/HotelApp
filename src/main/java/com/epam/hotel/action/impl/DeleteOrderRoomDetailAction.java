@@ -1,6 +1,8 @@
 package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
+import com.epam.hotel.dao.OrderRoomDetailDAO;
+import com.epam.hotel.dao.RoomDAO;
 import com.epam.hotel.dao.impl.OrderRoomDetailDAOImpl;
 import com.epam.hotel.dao.impl.RoomDAOImpl;
 import com.epam.hotel.entity.Room;
@@ -20,8 +22,8 @@ public class DeleteOrderRoomDetailAction implements Action {
         long orderMainId = Long.parseLong(request.getParameter(ORDER_MAIN_ID));
         long roomId = Long.parseLong(request.getParameter(ActionConstant.ROOM_ID));
 
-        OrderRoomDetailDAOImpl orderRoomDetailDAO = new OrderRoomDetailDAOImpl();
-        RoomDAOImpl roomDAO = new RoomDAOImpl();
+        OrderRoomDetailDAO orderRoomDetailDAO = new OrderRoomDetailDAOImpl();
+        RoomDAO roomDAO = new RoomDAOImpl();
         Room room = roomDAO.getOneById(roomId);
         room.setAvailability(Boolean.TRUE);
         roomDAO.updateOneById(roomId, room);
