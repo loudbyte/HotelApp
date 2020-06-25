@@ -3,25 +3,32 @@ package com.epam.hotel.action.impl;
 import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.OrderMainDAO;
 import com.epam.hotel.dao.impl.OrderMainDAOImpl;
+import com.epam.hotel.validation.NumericValidation;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.ActionConstant.ORDER_MAIN_ID;
-import static com.epam.hotel.action.impl.ActionConstant.SHOW_ORDER_ADMIN_LIST_URL;
+import static com.epam.hotel.util.constant.ActionConstant.*;
+import static com.epam.hotel.util.constant.ErrorConstant.ERROR_INVALID_DATA;
 
 public class DeleteOrderAction implements Action {
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        long orderMainId = Long.parseLong(request.getParameter(ORDER_MAIN_ID));
+        if (NumericValidation.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
 
-        OrderMainDAO orderMainDAO = new OrderMainDAOImpl();
-        orderMainDAO.deleteOneById(orderMainId);
+            long orderMainId = Long.parseLong(request.getParameter(ORDER_MAIN_ID));
 
-        response.sendRedirect(SHOW_ORDER_ADMIN_LIST_URL);
+            OrderMainDAO orderMainDAO = new OrderMainDAOImpl();
+            orderMainDAO.deleteOneById(orderMainId);
+
+            response.sendRedirect(SHOW_ORDER_ADMIN_LIST_JSP);
+
+        } else {
+            request.getSession().setAttribute(MESSAGE, ERROR_INVALID_DATA);
+            response.sendRedirect(ERROR_JSP);
+        }
     }
 }

@@ -7,8 +7,8 @@ public class Facility implements BaseEntityMarker {
 
     private long id;
     private BigDecimal price;
-    Map<Integer, String> facilityNameMap;
-    Map<Integer, String> facilityDescriptionMap;
+    private Map<Integer, String> facilityNameMap;
+    private Map<Integer, String> facilityDescriptionMap;
 
     public Facility() {
     }

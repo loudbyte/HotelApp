@@ -16,6 +16,7 @@ public class EncodePassword {
     private static final int RADIX = 16;
     private static final int HASH_LENGTH = 32;
     private static final int ZERO_MASSIVE = 0;
+    private static final int OFFSET = 0;
 
     public String getHashPassword (String input) {
 
@@ -31,10 +32,10 @@ public class EncodePassword {
         }
 
         BigInteger number = new BigInteger(POSITIVE_SIGN, byteDigest);
-        String hashHex = number.toString(RADIX);
+        StringBuilder hashHex = new StringBuilder(number.toString(RADIX));
         while (hashHex.length() < HASH_LENGTH) {
-            hashHex = STRING_ZERO + hashHex;
+            hashHex.insert(OFFSET, STRING_ZERO);
         }
-        return hashHex;
+        return hashHex.toString();
     }
 }

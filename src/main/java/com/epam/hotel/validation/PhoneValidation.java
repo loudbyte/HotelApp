@@ -8,12 +8,8 @@ public class PhoneValidation {
     private static final Pattern pattern = Pattern.compile(REGEX);
 
     public static boolean isPhoneValid(String phone) {
-        boolean result = false;
         Matcher matcher = pattern.matcher(phone);
 
-        if (matcher.find())
-            result = true;
-
-        return result;
+        return matcher.find();
     }
 }

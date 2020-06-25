@@ -10,8 +10,6 @@ public class ImageEncoder {
 
         Base64.Encoder encoder = Base64.getEncoder();
 
-        String imageUrl = DATA_IMAGE_JPG_BASE_64 + encoder.encodeToString(bytes);
-
-        return imageUrl;
+        return DATA_IMAGE_JPG_BASE_64 + encoder.encodeToString(bytes);
     }
 }

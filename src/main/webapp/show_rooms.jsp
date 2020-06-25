@@ -1,5 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:useBean id="roomClassDAO" class="com.epam.hotel.dao.impl.RoomClassDAOImpl"/>
+<jsp:useBean id="roomDAO" class="com.epam.hotel.dao.impl.RoomDAOImpl"/>
+<jsp:useBean id="languageDAO" class="com.epam.hotel.dao.impl.LanguageDAOImpl"/>
+<jsp:useBean id="imageEncoder" class="com.epam.hotel.util.ImageEncoder"/>
+
+<c:set value="${languageDAO.languageMap}" var="languageMap"/>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -8,7 +14,7 @@
 <html>
 <head>
     <jsp:include page="style.jsp"/>
-    <title><fmt:message key="show_rooms"/></title>
+    <title><fmt:message key="title.rooms"/></title>
     <style>
         .wrapper {
             width: 20em;
@@ -29,27 +35,32 @@
 </head>
 <body>
 <div class="container marketing">
-        <jsp:include page="header.jsp"/>
-        <div class="row">
+    <jsp:include page="header.jsp"/>
+    <div class="row">
+        <c:forEach var="roomClass" items="${roomClassDAO.all}">
             <div class="col-lg-4">
-                <div class="wrapper"><img src="${requestScope.image_url_standard}" class="rounded-circle" alt="" width="300" height="300"></div>
-                <h2><fmt:message key="standard"/></h2>
-                <p><fmt:message key="standard.desc"/></p>
-                <p><a class="btn btn-secondary" href="${pageContext.request.contextPath}/controller/show_rooms_standard" role="button"><fmt:message key="show_rooms"/> &raquo;</a></p>
+                <form action="show_rooms_by_class.jsp" >
+                    <a class="btn btn-outline-dark" href="${pageContext.request.contextPath}/show_rooms_by_class.jsp?room_class_id=${roomClass.id}" role="button">
+                        <div class="wrapper"><img src="${imageEncoder.encode(roomDAO.getAllByRoomClassId(roomClass.id).get(0).imageList.get(0).image)}" class="rounded-circle" alt=""
+                                                  width="300" height="300"></div>
+                        <c:forEach items="${languageMap}" var="language">
+                            <h2>
+                                <c:if test="${language.value.equals(sessionScope.locale)}">
+                                    ${roomClass.roomClassNameMap.get(language.key)}
+                                </c:if>
+                            </h2>
+                            <p>
+                                <c:if test="${language.value.equals(sessionScope.locale)}">
+                                    ${roomClass.roomClassDescriptionMap.get(language.key)}
+                                </c:if>
+                            </p>
+                        </c:forEach>
+                        <button type="button" class="btn btn-primary"><fmt:message key="page.show_rooms"/> &raquo;</button>
+                    </a>
+                </form>
             </div>
-            <div class="col-lg-4">
-                <div class="wrapper"><img src="${requestScope.image_url_suite}" class="rounded-circle" alt="" width="300" height="300"></div>
-                <h2><fmt:message key="suite"/></h2>
-                <p><fmt:message key="suite.desc"/></p>
-                <p><a class="btn btn-secondary" href="${pageContext.request.contextPath}/controller/show_rooms_suite" role="button"><fmt:message key="show_rooms"/> &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <div class="wrapper"><img src="${requestScope.image_url_deluxe}" class="rounded-circle" alt="" width="300" height="300"></div>
-                <h2><fmt:message key="deluxe"/></h2>
-                <p><fmt:message key="deluxe.desc"/></p>
-                <p><a class="btn btn-secondary" href="${pageContext.request.contextPath}/controller/show_rooms_deluxe" role="button"><fmt:message key="show_rooms"/> &raquo;</a></p>
-            </div>
-        </div>
+        </c:forEach>
+    </div>
 </div>
 </body>
 </html>

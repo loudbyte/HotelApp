@@ -1,62 +1,57 @@
 package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
+import com.epam.hotel.dao.RoomClassDAO;
 import com.epam.hotel.dao.RoomDAO;
+import com.epam.hotel.dao.impl.RoomClassDAOImpl;
 import com.epam.hotel.dao.impl.RoomDAOImpl;
-import com.epam.hotel.entity.Room;
 import com.epam.hotel.validation.NumericValidation;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import static com.epam.hotel.action.impl.ActionConstant.*;
-import static com.epam.hotel.action.impl.ErrorConstant.ERROR_INVALID_CLASS;
-import static com.epam.hotel.action.impl.ErrorConstant.ERROR_ROOM_NOT_FOUND;
+import static com.epam.hotel.util.constant.ActionConstant.*;
+import static com.epam.hotel.util.constant.ErrorConstant.ERROR_INVALID_CLASS;
+import static com.epam.hotel.util.constant.ErrorConstant.ERROR_ROOM_NOT_FOUND;
 
 public class EditRoomAction implements Action {
+
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (!NumericValidation.isNumeric(String.valueOf(request.getSession().getAttribute(ID)))) {
-            request.setAttribute(MESSAGE, ERROR_ROOM_NOT_FOUND);
-            request.getRequestDispatcher(ERROR_URL).forward(request, response);
-            return;
+        if (NumericValidation.isNumeric(request.getParameter(ROOM_ID))
+            && CreateRoomAction.roomFieldValidation(request,response)) {
+
+            if (CreateRoomAction.roomFieldValidation(request, response)) {
+
+                long roomId = Long.parseLong(request.getParameter(ROOM_ID));
+                int roomNumber = Integer.parseInt(request.getParameter(ROOM_NUMBER));
+                int capacity = Integer.parseInt(request.getParameter(CAPACITY));
+                long roomClassId = Long.parseLong(request.getParameter(ROOM_CLASS_ID));
+                BigDecimal price = BigDecimal.valueOf(Long.parseLong(request.getParameter(PRICE)));
+                String availability = request.getParameter(AVAILABILITY);
+                boolean isAvailable = false;
+
+                RoomClassDAO roomClassDAO = new RoomClassDAOImpl();
+                RoomDAO roomDAO = new RoomDAOImpl();
+
+                if (roomNumber != ZERO && capacity != ZERO && price != null
+                        && roomClassDAO.getOneById(roomClassId) != null) {
+
+                    roomDAO.updateOneById(roomId,
+                            CreateRoomAction.defineRoomEntity(roomNumber, capacity, roomClassId, price, availability, isAvailable));
+
+                    response.sendRedirect(SHOW_ROOM_ADMIN_LIST_JSP);
+                } else {
+                    request.getSession().setAttribute(MESSAGE, ERROR_INVALID_CLASS);
+                    response.sendRedirect(ERROR_JSP);
+                }
+            }
+        } else {
+            request.getSession().setAttribute(MESSAGE, ERROR_ROOM_NOT_FOUND);
+            response.sendRedirect(ERROR_JSP);
         }
-        if (!CreateRoomAction.roomFieldValidation(request, response))
-            return;
-
-        long id = Long.parseLong(String.valueOf(request.getSession().getAttribute(ID)));
-        int roomNumber = Integer.parseInt(request.getParameter(ROOM_NUMBER));
-        int capacity = Integer.parseInt(request.getParameter(CAPACITY));
-        int roomClass = Integer.parseInt(request.getParameter(ROOM_CLASS));
-        BigDecimal price = BigDecimal.valueOf(Long.parseLong(request.getParameter(PRICE)));
-        String availability = request.getParameter(AVAILABILITY);
-        boolean isAvailable = false;
-
-        if (1 > roomClass || roomClass > 3) {
-            request.setAttribute(MESSAGE, ERROR_INVALID_CLASS);
-            request.getRequestDispatcher(ERROR_URL).forward(request, response);
-            return;
-        }
-
-        if (availability != null) {
-            isAvailable = true;
-        }
-
-        RoomDAO roomDAO = new RoomDAOImpl();
-
-        Room room = new Room();
-        room.setRoomNumber(roomNumber);
-        room.setCapacity(capacity);
-        room.setRoomClass(roomClass);
-        room.setPrice(price);
-        room.setAvailability(isAvailable);
-
-        roomDAO.updateOneById(id, room);
-
-        response.sendRedirect(SHOW_ROOM_ADMIN_LIST_URL);
     }
 }

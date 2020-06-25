@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="facilityPackageDAO" class="com.epam.hotel.dao.impl.FacilityPackageDAOImpl"/>
 <jsp:useBean id="facilityDAO" class="com.epam.hotel.dao.impl.FacilityDAOImpl"/>
@@ -9,7 +9,7 @@
 <fmt:setBundle basename="language"/>
 <html>
 <head>
-    <title><fmt:message key="facility_packages"/></title>
+    <title><fmt:message key="title.facility_packages"/></title>
     <jsp:include page="style.jsp"/>
 </head>
 <body>
@@ -21,8 +21,8 @@
                 <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col"><fmt:message key="facility_package"/></th>
-                    <th scope="col"><fmt:message key="discount"/></th>
+                    <th scope="col"><fmt:message key="page.facility_package"/></th>
+                    <th scope="col"><fmt:message key="page.discount"/></th>
                     <th scope="col"></td>
                     <th scope="col"></td>
                 </tr>
@@ -41,14 +41,14 @@
                                 </c:forEach>
                                 <input type="hidden" name="discount" value="${facilityPackage.discount}">
                                 <button type="submit"
-                                        class="btn btn-sm  btn-warning"><fmt:message key="edit"/></button>
+                                        class="btn btn-sm  btn-warning"><fmt:message key="page.edit"/></button>
                             </form>
                         </td>
                         <td>
                             <form action="${pageContext.request.contextPath}/controller/delete_facility_package" method="post">
                                 <input type="hidden" name="facility_package_id" value="${facilityPackage.id}">
                                 <button type="submit"
-                                        class="btn btn-sm btn-danger"><fmt:message key="delete"/></button>
+                                        class="btn btn-sm btn-danger"><fmt:message key="page.delete"/></button>
                             </form>
                         </td>
                     </tr>
@@ -62,7 +62,7 @@
                 <p>
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <a href="${pageContext.request.contextPath}/create_facility_package.jsp" type="button"
-                       class="btn btn-dark"><fmt:message key="new_facility_package"/></a>
+                       class="btn btn-dark"><fmt:message key="page.new_facility_package"/></a>
                 </div>
                 </p>
             </c:if>

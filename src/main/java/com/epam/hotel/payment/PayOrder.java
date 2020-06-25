@@ -1,6 +1,6 @@
-package com.epam.hotel.businesslogic;
+package com.epam.hotel.payment;
 
-import com.epam.hotel.action.impl.ActionConstant;
+import com.epam.hotel.util.constant.ActionConstant;
 import com.epam.hotel.dao.OrderMainDAO;
 import com.epam.hotel.dao.impl.OrderMainDAOImpl;
 import com.epam.hotel.entity.OrderMain;
@@ -22,13 +22,15 @@ public class PayOrder {
         //some code for payment
         int randomNumber = (int) (Math.random() * RANGE);
 
+        boolean result;
         if (randomNumber < BOUND) {
-            orderMain.setStatus(ActionConstant.PAID);
+            orderMain.setOrderStatusId(ActionConstant.PAID);
             OrderMainDAO orderMainDAO = new OrderMainDAOImpl();
             orderMainDAO.updateOneById(orderMain.getId(), orderMain);
-            return true;
+            result = true;
         } else {
-            return false;
+            result = false;
         }
+        return result;
     }
 }

@@ -8,7 +8,7 @@ public class Room implements BaseEntityMarker {
     private long id;
     private int roomNumber;
     private int capacity;
-    private int roomClass;
+    private long roomClassId;
     private BigDecimal price;
     private boolean availability;
     private List<RoomImage> imageList;
@@ -37,12 +37,12 @@ public class Room implements BaseEntityMarker {
         this.capacity = capacity;
     }
 
-    public long getRoomClass() {
-        return roomClass;
+    public long getRoomClassId() {
+        return roomClassId;
     }
 
-    public void setRoomClass(int roomClassId) {
-        this.roomClass = roomClassId;
+    public void setRoomClassId(long roomClassId) {
+        this.roomClassId = roomClassId;
     }
 
     public BigDecimal getPrice() {
@@ -75,7 +75,7 @@ public class Room implements BaseEntityMarker {
                 "id=" + id +
                 ", roomNumber=" + roomNumber +
                 ", capacity=" + capacity +
-                ", roomClassId=" + roomClass +
+                ", roomClassId=" + roomClassId +
                 ", price=" + price +
                 ", availability=" + availability +
                 ", imageList=" + imageList +

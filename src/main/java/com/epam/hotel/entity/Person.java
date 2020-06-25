@@ -13,18 +13,6 @@ public class Person implements BaseEntityMarker {
     private boolean isAdmin;
     private boolean isBan;
 
-    public Person(String firstName, String lastName, String birthday, String phone, String email, String iin, String password, boolean isAdmin, boolean isBan) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthday = birthday;
-        this.phone = phone;
-        this.email = email;
-        this.iin = iin;
-        this.password = password;
-        this.isAdmin = isAdmin;
-        this.isBan = isBan;
-    }
-
     public Person() {
     }
 

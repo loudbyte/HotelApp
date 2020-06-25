@@ -5,16 +5,15 @@ import java.util.Map;
 
 public class Cart {
 
-    private Long orderRoomDetailCounter = 0L;
-
-    public Long getOrderRoomDetailCounter() {
-        return orderRoomDetailCounter;
-    }
-
+    private long orderRoomDetailCounter = 0L;
     private Map<Long, OrderRoomDetail> orderRoomDetailMap = new HashMap<>();
 
     public Map<Long, OrderRoomDetail> getOrderRoomDetailMap() {
         return orderRoomDetailMap;
+    }
+
+    public Long getOrderRoomDetailCounter() {
+        return orderRoomDetailCounter;
     }
 
     public void setOrderRoomDetailMap(Map<Long, OrderRoomDetail> orderRoomDetailMap) {

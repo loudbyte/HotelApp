@@ -1,4 +1,4 @@
-package com.epam.hotel.businesslogic;
+package com.epam.hotel.payment;
 
 import com.epam.hotel.dao.FacilityDAO;
 import com.epam.hotel.dao.FacilityPackageDAO;
@@ -8,6 +8,7 @@ import com.epam.hotel.dao.impl.*;
 import com.epam.hotel.entity.Facility;
 import com.epam.hotel.entity.OrderRoomDetail;
 import com.epam.hotel.entity.Room;
+import com.epam.hotel.util.constant.DAOConstant;
 import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
@@ -39,9 +40,9 @@ public class CalculatePrice {
 
     public BigDecimal calculateOrderRoomDetail(OrderRoomDetail orderRoomDetail) {
 
-        BigDecimal orderDetailPrice = BigDecimal.ZERO;
-        BigDecimal packageFacilityPrice = BigDecimal.ZERO;
-        BigDecimal roomPrice = BigDecimal.ZERO;
+        BigDecimal orderDetailPrice;
+        BigDecimal packageFacilityPrice;
+        BigDecimal roomPrice;
 
         roomPrice = calculateRoomPrice(orderRoomDetail.getRoomId());
         packageFacilityPrice = calculateFacilityPackagePrice(orderRoomDetail.getFacilityPackageId());
@@ -66,7 +67,7 @@ public class CalculatePrice {
 
     public BigDecimal calculateRoomPrice(long roomId) {
 
-        BigDecimal roomPrice = BigDecimal.ZERO;
+        BigDecimal roomPrice;
 
         RoomDAO roomDAO = new RoomDAOImpl();
         Room room = roomDAO.getOneById(roomId);

@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.epam.hotel.dao.impl.DAOConstant.*;
+import static com.epam.hotel.util.constant.DAOConstant.*;
 
 public class LanguageDAOImpl implements LanguageDAO {
 
@@ -22,10 +22,10 @@ public class LanguageDAOImpl implements LanguageDAO {
     private static final String DELETE_LANGUAGE_BY_ID = "DELETE FROM language WHERE id = ?";
     private static final String UPDATE_LANGUAGE_BY_ID = "UPDATE language SET locale = ? WHERE id = ?";
 
-    private static final String GET_LAST_VALUE_FROM_LANGUAGE_SEQ = "select last_value FROM language_id_seq";
+    private static final String GET_LAST_VALUE_FROM_LANGUAGE_ID_SEQ = "select last_value FROM language_id_seq";
 
 
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private Connection connection;
 
     public long addLanguage(String locale) {
@@ -34,11 +34,12 @@ public class LanguageDAOImpl implements LanguageDAO {
         long id = ERROR_ID;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_LANGUAGE);
-            PreparedStatement preparedStatement1GetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_LANGUAGE_SEQ)) {
+             PreparedStatement preparedStatementGetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_LANGUAGE_ID_SEQ)) {
 
             preparedStatement.setString(1, locale);
             preparedStatement.executeUpdate();
-            ResultSet resultSetGetSeq = preparedStatement1GetSeq.executeQuery();
+
+            ResultSet resultSetGetSeq = preparedStatementGetSeq.executeQuery();
 
             if (resultSetGetSeq.next())
                 id = resultSetGetSeq.getInt(1);

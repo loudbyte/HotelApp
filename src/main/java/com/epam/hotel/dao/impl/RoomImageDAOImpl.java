@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.epam.hotel.dao.impl.DAOConstant.*;
+import static com.epam.hotel.util.constant.DAOConstant.*;
 
 public class RoomImageDAOImpl implements RoomImageDAO {
 
     private static final Logger LOGGER = Logger.getLogger(RoomImageDAOImpl.class);
-    private static final String GET_ALL_ROOM_IMAGES_BY_ROOM_ID = "SELECT * FROM room_image";
+    private static final String GET_ALL = "SELECT * FROM room_image";
     private static final String GET_ONE_BY_ID = "SELECT * FROM room_image WHERE id = ?";
     private static final String CREATE_ROOM_IMAGE = "INSERT INTO room_image (image, room_id)" +
             "VALUES (?, ?)";
@@ -29,7 +29,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
 
     private static final String GET_LAST_VALUE_FROM_ROOM_IMAGE_SEQ = "select last_value FROM room_image_id_seq";
 
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private Connection connection;
 
     @Override
@@ -39,7 +39,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
         long id = ERROR_ID;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ROOM_IMAGE);
-             PreparedStatement preparedStatementGetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_ROOM_IMAGE_SEQ);) {
+             PreparedStatement preparedStatementGetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_ROOM_IMAGE_SEQ)) {
 
             preparedStatement.setBytes(1, roomImage.getImage());
             preparedStatement.setLong(2, roomImage.getRoomId());
@@ -58,54 +58,23 @@ public class RoomImageDAOImpl implements RoomImageDAO {
     }
 
     @Override
-    public List<RoomImage> geAllByRoomId(long roomId) {
-        connection = connectionPool.getConnection();
-
-        List<RoomImage> roomImageList = new ArrayList<>();
-        RoomImage roomImage;
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_ROOM_IMAGES_BY_ROOM_ID);
-             ResultSet resultSet = preparedStatement.executeQuery();) {
-
-            while (resultSet.next()) {
-                roomImage = new RoomImage();
-                roomImage.setId(resultSet.getLong(ID));
-                roomImage.setImage(resultSet.getBytes(IMAGE));
-                roomImage.setRoomId(roomId);
-
-                roomImageList.add(roomImage);
-            }
-        } catch (SQLException exception) {
-            LOGGER.error(exception, exception);
-        } finally {
-            connectionPool.releaseConnection(connection);
-        }
-        roomImageList.sort(Comparator.comparing(RoomImage::getId));
-        return roomImageList;
-    }
-
-    @Override
     public List<RoomImage> getAll() {
         connection = connectionPool.getConnection();
 
         List<RoomImage> roomImageList = new ArrayList<>();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_ROOM_IMAGES_BY_ROOM_ID);
-             ResultSet resultSet = preparedStatement.executeQuery();) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                long id = resultSet.getLong(ID);
-                byte[] image = resultSet.getBytes(IMAGE);
-                long roomId = resultSet.getLong(ROOM_ID);
-
-                roomImageList.add(new RoomImage(id, image, roomId));
+                roomImageList.add(getRoomImage(resultSet));
             }
+            roomImageList.sort(Comparator.comparing(RoomImage::getId));
         } catch (SQLException exception) {
             LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
-        roomImageList.sort(Comparator.comparing(RoomImage::getId));
         return roomImageList;
     }
 
@@ -117,8 +86,9 @@ public class RoomImageDAOImpl implements RoomImageDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ONE_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-
-            roomImage = getRoomImage(roomImage, resultSet);
+            if (resultSet.next()) {
+                roomImage = getRoomImage(resultSet);
+            }
 
         } catch (SQLException exception) {
             LOGGER.error(exception, exception);
@@ -132,7 +102,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
     public void updateOneById(long id, RoomImage roomImage) {
         connection = connectionPool.getConnection();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ONE_BY_ID);) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ONE_BY_ID)) {
 
             preparedStatement.setBytes(1, roomImage.getImage());
             preparedStatement.setLong(2, roomImage.getRoomId());
@@ -151,7 +121,7 @@ public class RoomImageDAOImpl implements RoomImageDAO {
     public void deleteOneById(long id) {
         connection = connectionPool.getConnection();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ONE_BY_ID);) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ONE_BY_ID)) {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException exception) {
@@ -161,14 +131,12 @@ public class RoomImageDAOImpl implements RoomImageDAO {
         }
     }
 
-    private RoomImage getRoomImage(RoomImage roomImage, ResultSet resultSet) throws SQLException {
+    private RoomImage getRoomImage(ResultSet resultSet) throws SQLException {
 
-        if (resultSet.next()) {
-            roomImage = new RoomImage();
-            roomImage.setId(resultSet.getLong(ID));
-            roomImage.setImage(resultSet.getBytes(IMAGE));
-            roomImage.setRoomId(resultSet.getLong(ROOM_ID));
-        }
+        RoomImage roomImage = new RoomImage();
+        roomImage.setId(resultSet.getLong(ID));
+        roomImage.setImage(resultSet.getBytes(IMAGE));
+        roomImage.setRoomId(resultSet.getLong(ROOM_ID));
         return roomImage;
     }
 }

@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="personDAO" class="com.epam.hotel.dao.impl.PersonDAOImpl"/>
 <c:set var="personList" value="${personDAO.all}"/>
@@ -9,7 +9,7 @@
 <fmt:setBundle basename="language"/>
 <html>
 <head>
-    <title>Пользователи</title>
+    <title><fmt:message key="title.users"/></title>
     <jsp:include page="style.jsp"/>
 </head>
 <body>
@@ -21,11 +21,11 @@
                 <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col"><fmt:message key="first_name"/></th>
-                    <th scope="col"><fmt:message key="last_name"/></th>
-                    <th scope="col"><fmt:message key="iin"/></th>
-                    <th scope="col"><fmt:message key="phone"/></th>
-                    <th scope="col"><fmt:message key="email"/></th>
+                    <th scope="col"><fmt:message key="page.first_name"/></th>
+                    <th scope="col"><fmt:message key="page.last_name"/></th>
+                    <th scope="col"><fmt:message key="page.iin"/></th>
+                    <th scope="col"><fmt:message key="page.phone"/></th>
+                    <th scope="col"><fmt:message key="page.email"/></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
@@ -43,14 +43,14 @@
                             <form action="${pageContext.request.contextPath}/controller/edit_person_button" method="post">
                                 <input type="hidden" name="person_id" value="${person.id}">
                                 <button type="submit"
-                                        class="btn  btn-sm btn-warning"><fmt:message key="edit"/></button>
+                                        class="btn  btn-sm btn-warning"><fmt:message key="page.edit"/></button>
                             </form>
                         </td>
                         <td>
                             <form action="${pageContext.request.contextPath}/controller/delete_person" method="post">
                                 <input type="hidden" name="person_id" value="${person.id}">
                                 <button type="submit"
-                                        class="btn  btn-sm btn-danger"><fmt:message key="delete"/></button>
+                                        class="btn  btn-sm btn-danger"><fmt:message key="page.delete"/></button>
                             </form>
                         </td>
                     </tr>
@@ -64,7 +64,7 @@
                 <p>
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <a style="float: right" href="${pageContext.request.contextPath}/create_person.jsp" type="button"
-                       class="btn btn-dark"><fmt:message key="new_user"/></a>
+                       class="btn btn-dark"><fmt:message key="page.new_user"/></a>
                 </div>
                 </p>
             </c:if>

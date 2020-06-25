@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.epam.hotel.dao.impl.DAOConstant.*;
+import static com.epam.hotel.util.constant.DAOConstant.*;
 
 public class OrderMainDAOImpl implements OrderMainDAO {
 
@@ -21,13 +21,13 @@ public class OrderMainDAOImpl implements OrderMainDAO {
     private static final String GET_ALL_ORDERS = "SELECT * FROM order_main";
     private static final String GET_ONE_BY_ID = "SELECT * FROM order_main WHERE id = ?";
     private static final String GET_ALL_BY_PERSON_ID = "SELECT * FROM order_main WHERE person_id = ?";
-    private static final String CREATE_ORDER_MAIN = "INSERT INTO order_main (person_id, status, date) VALUES (?, ?, ?)";
-    private static final String UPDATE_ONE_BY_ID = "UPDATE order_main SET person_id = ?, status = ?, date = ? WHERE id = ?";
+    private static final String CREATE_ORDER_MAIN = "INSERT INTO order_main (person_id, order_status_id, date) VALUES (?, ?, ?)";
+    private static final String UPDATE_ONE_BY_ID = "UPDATE order_main SET person_id = ?, order_status_id = ?, date = ? WHERE id = ?";
     private static final String DELETE_ONE_BY_ID = "DELETE FROM order_main WHERE id = ?";
 
     private static final String GET_LAST_VALUE_FROM_ORDER_MAIN_SEQ = "select last_value FROM order_main_id_seq";
 
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private Connection connection;
 
     @Override
@@ -37,16 +37,11 @@ public class OrderMainDAOImpl implements OrderMainDAO {
         long id = ERROR_ID;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ORDER_MAIN);
-             PreparedStatement preparedStatement1GetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_ORDER_MAIN_SEQ);) {
+             PreparedStatement preparedStatement1GetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_ORDER_MAIN_SEQ)) {
 
-            SimpleDateFormat format = new SimpleDateFormat(DATE_PATTERN);
-            java.util.Date utilDate = format.parse(orderMain.getDate());
-            Date sqlDate = new Date(utilDate.getTime());
-
-            preparedStatement.setLong(1, orderMain.getPersonId());
-            preparedStatement.setLong(2, orderMain.getStatus());
-            preparedStatement.setDate(3, sqlDate);
+            createUpdateOrderMain(orderMain, preparedStatement);
             preparedStatement.executeUpdate();
+
             ResultSet resultSetGetSeq = preparedStatement1GetSeq.executeQuery();
 
             if (resultSetGetSeq.next())
@@ -72,22 +67,14 @@ public class OrderMainDAOImpl implements OrderMainDAO {
             orderMainList = new ArrayList<>();
 
             while (resultSet.next()) {
-                OrderMain orderMain = new OrderMain();
-                orderMain.setId(resultSet.getLong(ID));
-                orderMain.setStatus(resultSet.getLong(STATUS));
-                orderMain.setPersonId(resultSet.getLong(PERSON_ID));
-                orderMain.setDate(resultSet.getString(DATE));
-
-                orderMainList.add(orderMain);
+                orderMainList.add(getOrderMain(resultSet));
             }
-
+            orderMainList.sort(Comparator.comparing(OrderMain::getId));
         } catch (SQLException exception) {
             LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
-
-        orderMainList.sort(Comparator.comparing(OrderMain::getId));
         return orderMainList;
     }
 
@@ -102,21 +89,14 @@ public class OrderMainDAOImpl implements OrderMainDAO {
             orderMainList = new ArrayList<>();
 
             while (resultSet.next()) {
-                OrderMain orderMain = new OrderMain();
-                orderMain.setId(resultSet.getLong(ID));
-                orderMain.setStatus(resultSet.getLong(STATUS));
-                orderMain.setPersonId(resultSet.getLong(PERSON_ID));
-                orderMain.setDate(resultSet.getString(DATE));
-
-                orderMainList.add(orderMain);
+                orderMainList.add(getOrderMain(resultSet));
             }
-
+            orderMainList.sort(Comparator.comparing(OrderMain::getId));
         } catch (SQLException exception) {
             LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
-        orderMainList.sort(Comparator.comparing(OrderMain::getId));
         return orderMainList;
     }
 
@@ -130,14 +110,8 @@ public class OrderMainDAOImpl implements OrderMainDAO {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                orderMain = new OrderMain();
-                orderMain.setId(id);
-                orderMain.setStatus(resultSet.getLong(STATUS));
-                orderMain.setPersonId(resultSet.getLong(PERSON_ID));
-                orderMain.setDate(resultSet.getString(DATE));
-                preparedStatement.executeQuery();
+                orderMain = getOrderMain(resultSet);
             }
-
         } catch (SQLException exception) {
             LOGGER.error(exception, exception);
         } finally {
@@ -153,15 +127,8 @@ public class OrderMainDAOImpl implements OrderMainDAO {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ONE_BY_ID)) {
 
-            SimpleDateFormat format = new SimpleDateFormat(DATE_PATTERN);
-            java.util.Date utilDate = format.parse(orderMain.getDate());
-            Date sqlDate = new Date(utilDate.getTime());
-
-            preparedStatement.setLong(1, orderMain.getPersonId());
-            preparedStatement.setLong(2, orderMain.getStatus());
-            preparedStatement.setDate(3, sqlDate);
+            createUpdateOrderMain(orderMain, preparedStatement);
             preparedStatement.setLong(4, orderMain.getId());
-
             preparedStatement.executeUpdate();
 
         } catch (SQLException | ParseException exception) {
@@ -185,5 +152,24 @@ public class OrderMainDAOImpl implements OrderMainDAO {
         } finally {
             connectionPool.releaseConnection(connection);
         }
+    }
+
+    private OrderMain getOrderMain(ResultSet resultSet) throws SQLException {
+        OrderMain orderMain = new OrderMain();
+        orderMain.setId(resultSet.getLong(ID));
+        orderMain.setOrderStatusId(resultSet.getLong(ORDER_STATUS_ID));
+        orderMain.setPersonId(resultSet.getLong(PERSON_ID));
+        orderMain.setDate(resultSet.getString(DATE));
+        return orderMain;
+    }
+
+    private void createUpdateOrderMain(OrderMain orderMain, PreparedStatement preparedStatement) throws ParseException, SQLException {
+        SimpleDateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        java.util.Date utilDate = format.parse(orderMain.getDate());
+        Date sqlDate = new Date(utilDate.getTime());
+
+        preparedStatement.setLong(1, orderMain.getPersonId());
+        preparedStatement.setLong(2, orderMain.getOrderStatusId());
+        preparedStatement.setDate(3, sqlDate);
     }
 }

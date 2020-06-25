@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class FacilityPackage implements BaseEntityMarker {
     private long id;
-    Map<Integer, String> facilityPackageNameMap;
+    private Map<Integer, String> facilityPackageNameMap;
     private BigDecimal discount;
     private List<Facility> facilityList;
 

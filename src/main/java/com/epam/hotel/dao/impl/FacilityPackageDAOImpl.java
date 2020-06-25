@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import java.sql.*;
 import java.util.*;
 
-import static com.epam.hotel.dao.impl.DAOConstant.*;
+import static com.epam.hotel.util.constant.DAOConstant.*;
 
 public class FacilityPackageDAOImpl implements FacilityPackageDAO {
 
@@ -19,7 +19,7 @@ public class FacilityPackageDAOImpl implements FacilityPackageDAO {
     private static final String GET_ALL_FACILITY_PACKAGES = "SELECT * FROM facility_package";
     private static final String GET_ONE_BY_ID = "SELECT * FROM facility_package WHERE id = ?";
     private static final String CREATE_FACILITY_PACKAGE = "INSERT INTO facility_package (discount) VALUES (?)";
-    private static final String CREATE_FACILITY_PACKAGE_TRANSLATION_BY_ID = "INSERT INTO facility_package_translation " +
+    private static final String CREATE_FACILITY_PACKAGE_TRANSLATION_BY_FACILITY_PACKAGE_ID = "INSERT INTO facility_package_translation " +
             "(name, language_id, facility_package_id) VALUES (?, ?, ?)";
     private static final String GET_FACILITY_PACKAGE_NAME_MAP_BY_FACILITY_PACKAGE_ID = "SELECT name, locale FROM facility_package_translation " +
             "LEFT JOIN language ON language.id = facility_package_translation.language_id WHERE facility_package_id = ?";
@@ -40,7 +40,7 @@ public class FacilityPackageDAOImpl implements FacilityPackageDAO {
     private static final String SAVEPOINT_DELETE_FACILITY_PACKAGE = "savepointDeleteFacilityPackage";
 
 
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private Connection connection;
 
     public long create(FacilityPackage facilityPackage) {
@@ -64,26 +64,11 @@ public class FacilityPackageDAOImpl implements FacilityPackageDAO {
                     facilityPackageId = resultSetGetSeq.getLong(1);
 
             }
-
-            for (Map.Entry<Integer, String> entry : facilityPackage.getFacilityPackageNameMap().entrySet()) {
-                try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FACILITY_PACKAGE_TRANSLATION_BY_ID)) {
-
-                    preparedStatement.setString(1, entry.getValue());
-                    preparedStatement.setInt(2, entry.getKey());
-                    preparedStatement.setLong(3, facilityPackageId);
-                    preparedStatement.executeUpdate();
-                }
-            }
-            for (Facility facility : facilityPackage.getFacilityList()) {
-                try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FACILITY_PACKAGE_RELATION)) {
-
-                    preparedStatement.setLong(1, facility.getId());
-                    preparedStatement.setLong(2, facilityPackageId);
-                    preparedStatement.executeUpdate();
-                }
-            }
+            createUpdateFacilityPackageTranslation(facilityPackage, facilityPackageId, CREATE_FACILITY_PACKAGE_TRANSLATION_BY_FACILITY_PACKAGE_ID);
+            createFacilityPackageRelation(facilityPackage, facilityPackageId);
             connection.commit();
         } catch (Exception exception) {
+            facilityPackageId = ERROR_ID;
             try {
                 connection.rollback(savepoint);
                 connection.releaseSavepoint(savepoint);
@@ -102,36 +87,13 @@ public class FacilityPackageDAOImpl implements FacilityPackageDAO {
         connection = connectionPool.getConnection();
 
         List<FacilityPackage> facilityPackageList = null;
-        FacilityPackage facilityPackage = null;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_FACILITY_PACKAGES);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             facilityPackageList = new ArrayList<>();
 
-            FacilityDAO facilityDAO = new FacilityDAOImpl();
-            Map<Integer, String> facilityPackageNameMap = null;
-
             while (resultSet.next()) {
-                facilityPackage = new FacilityPackage();
-                facilityPackage.setId(resultSet.getLong(ID));
-                facilityPackage.setDiscount(resultSet.getBigDecimal(DISCOUNT));
-                try (PreparedStatement preparedStatementNameMap = connection.prepareStatement(GET_FACILITY_PACKAGE_TRANSLATION_BY_FACILITY_PACKAGE_ID)) {
-
-                    facilityPackageNameMap = new HashMap<>();
-                    preparedStatementNameMap.setLong(1, facilityPackage.getId());
-                    ResultSet resultSetNameMap = preparedStatementNameMap.executeQuery();
-
-                    while (resultSetNameMap.next()){
-                        facilityPackageNameMap.put(
-                                resultSetNameMap.getInt(ID),
-                                resultSetNameMap.getString(NAME)
-                        );
-                    }
-                }
-                facilityPackage.setFacilityPackageNameMap(facilityPackageNameMap);
-                facilityPackage.setFacilityList(facilityDAO.getFacilityListByFacilityPackageId(facilityPackage.getId()));
-
-                facilityPackageList.add(facilityPackage);
+                facilityPackageList.add(getFacilityPackage(resultSet));
             }
             facilityPackageList.sort(Comparator.comparing(FacilityPackage::getId));
 
@@ -156,28 +118,8 @@ public class FacilityPackageDAOImpl implements FacilityPackageDAO {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            FacilityDAO facilityDAO = new FacilityDAOImpl();
-            Map<Integer, String> facilityPackageNameMap = null;
-
             if (resultSet.next()) {
-                facilityPackage = new FacilityPackage();
-                facilityPackage.setId(resultSet.getLong(ID));
-                facilityPackage.setDiscount(resultSet.getBigDecimal(DISCOUNT));
-                try (PreparedStatement preparedStatementNameMap = connection.prepareStatement(GET_FACILITY_PACKAGE_TRANSLATION_BY_FACILITY_PACKAGE_ID)) {
-
-                    facilityPackageNameMap = new HashMap<>();
-                    preparedStatementNameMap.setLong(1, facilityPackage.getId());
-                    ResultSet resultSetNameMap = preparedStatementNameMap.executeQuery();
-
-                    while (resultSetNameMap.next()){
-                        facilityPackageNameMap.put(
-                                resultSetNameMap.getInt(ID),
-                                resultSetNameMap.getString(NAME)
-                        );
-                    }
-                }
-                facilityPackage.setFacilityPackageNameMap(facilityPackageNameMap);
-                facilityPackage.setFacilityList(facilityDAO.getFacilityListByFacilityPackageId(facilityPackage.getId()));
+                facilityPackage = getFacilityPackage(resultSet);
             }
         } catch (SQLException exception) {
             LOGGER.error(exception, exception);
@@ -203,28 +145,13 @@ public class FacilityPackageDAOImpl implements FacilityPackageDAO {
                 preparedStatement.executeUpdate();
 
             }
-            for (Map.Entry<Integer, String> entry : facilityPackage.getFacilityPackageNameMap().entrySet()) {
-                try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_FACILITY_PACKAGE_TRANSLATION_BY_FACILITY_PACKAGE_ID)) {
-
-                    preparedStatement.setString(1, entry.getValue());
-                    preparedStatement.setInt(2, entry.getKey());
-                    preparedStatement.setLong(3, facilityPackageId);
-                    preparedStatement.executeUpdate();
-                }
-            }
+            createUpdateFacilityPackageTranslation(facilityPackage, facilityPackageId, UPDATE_FACILITY_PACKAGE_TRANSLATION_BY_FACILITY_PACKAGE_ID);
             try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_FACILITY_PACKAGE_RELATION_BY_PACKAGE_ID)) {
 
                 preparedStatement.setLong(1, facilityPackageId);
                 preparedStatement.executeUpdate();
             }
-            for (Facility facility : facilityPackage.getFacilityList()) {
-                try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FACILITY_PACKAGE_RELATION)) {
-
-                    preparedStatement.setLong(1, facility.getId());
-                    preparedStatement.setLong(2, facilityPackageId);
-                    preparedStatement.executeUpdate();
-                }
-            }
+            createFacilityPackageRelation(facilityPackage, facilityPackageId);
             connection.commit();
         } catch (Exception exception) {
             try {
@@ -284,7 +211,7 @@ public class FacilityPackageDAOImpl implements FacilityPackageDAO {
 
             facilityNameMap = new HashMap<>();
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 facilityNameMap.put(
                         resultSet.getString(LOCALE),
                         resultSet.getString(NAME)
@@ -296,5 +223,57 @@ public class FacilityPackageDAOImpl implements FacilityPackageDAO {
             connectionPool.releaseConnection(connection);
         }
         return facilityNameMap;
+    }
+
+    private FacilityPackage getFacilityPackage(ResultSet resultSet) throws SQLException {
+        FacilityDAO facilityDAO = new FacilityDAOImpl();
+        FacilityPackage facilityPackage;
+        facilityPackage = new FacilityPackage();
+        facilityPackage.setId(resultSet.getLong(ID));
+        facilityPackage.setDiscount(resultSet.getBigDecimal(DISCOUNT));
+        facilityPackage.setFacilityPackageNameMap(getNameOrDescriptionTranslationMap(connection, GET_FACILITY_PACKAGE_TRANSLATION_BY_FACILITY_PACKAGE_ID, facilityPackage.getId(), NAME));
+        facilityPackage.setFacilityList(facilityDAO.getFacilityListByFacilityPackageId(facilityPackage.getId()));
+        return facilityPackage;
+    }
+
+    protected static Map<Integer, String> getNameOrDescriptionTranslationMap(Connection connection, String sql, long entityId, String nameOrDescription) throws SQLException {
+        Map<Integer, String> translationNameOrDescriptionMap;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            translationNameOrDescriptionMap = new HashMap<>();
+            preparedStatement.setLong(1, entityId);
+            ResultSet resultSetNameMap = preparedStatement.executeQuery();
+
+            while (resultSetNameMap.next()) {
+                translationNameOrDescriptionMap.put(
+                        resultSetNameMap.getInt(ID),
+                        resultSetNameMap.getString(nameOrDescription)
+                );
+            }
+        }
+        return translationNameOrDescriptionMap;
+    }
+
+    private void createUpdateFacilityPackageTranslation(FacilityPackage facilityPackage, long facilityPackageId, String createFacilityPackageTranslationById) throws SQLException {
+        for (Map.Entry<Integer, String> entry : facilityPackage.getFacilityPackageNameMap().entrySet()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(createFacilityPackageTranslationById)) {
+
+                preparedStatement.setString(1, entry.getValue());
+                preparedStatement.setInt(2, entry.getKey());
+                preparedStatement.setLong(3, facilityPackageId);
+                preparedStatement.executeUpdate();
+            }
+        }
+    }
+
+    private void createFacilityPackageRelation(FacilityPackage facilityPackage, long facilityPackageId) throws SQLException {
+        for (Facility facility : facilityPackage.getFacilityList()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FACILITY_PACKAGE_RELATION)) {
+
+                preparedStatement.setLong(1, facility.getId());
+                preparedStatement.setLong(2, facilityPackageId);
+                preparedStatement.executeUpdate();
+            }
+        }
     }
 }

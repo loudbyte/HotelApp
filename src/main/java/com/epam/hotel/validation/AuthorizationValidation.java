@@ -2,33 +2,33 @@ package com.epam.hotel.validation;
 
 import com.epam.hotel.entity.Person;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.ActionConstant.*;
-import static com.epam.hotel.action.impl.ErrorConstant.ERROR_NEED_TO_REGISTER;
+import static com.epam.hotel.util.constant.ActionConstant.*;
+import static com.epam.hotel.util.constant.ErrorConstant.ERROR_NEED_TO_REGISTER;
 
 public class AuthorizationValidation {
-    public static Person authorizationGetPerson(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    public static Person authorizationGetPerson(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Person person = null;
         if (request.getSession().getAttribute(PERSON) instanceof Person) {
-            return (Person) request.getSession().getAttribute(PERSON);
+            person = (Person) request.getSession().getAttribute(PERSON);
         } else {
-            request.setAttribute(MESSAGE, ERROR_NEED_TO_REGISTER);
-            request.getRequestDispatcher(ERROR_URL).forward(request, response);
-            return null;
+            request.getSession().setAttribute(MESSAGE, ERROR_NEED_TO_REGISTER);
+            response.sendRedirect(ERROR_JSP);
         }
+        return person;
     }
 
-    public static boolean authorizationGetBoolean(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public static boolean authorizationGetBoolean(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        boolean result = false;
         if (request.getSession().getAttribute(PERSON) instanceof Person) {
-            return true;
+            result = true;
         } else {
-            request.setAttribute(MESSAGE, ERROR_NEED_TO_REGISTER);
-            request.getRequestDispatcher(ERROR_URL).forward(request, response);
-            return false;
+            request.getSession().setAttribute(MESSAGE, ERROR_NEED_TO_REGISTER);
+            response.sendRedirect(ERROR_JSP);
         }
+        return result;
     }
 }

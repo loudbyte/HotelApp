@@ -4,16 +4,16 @@ public class OrderMain implements BaseEntityMarker {
 
     private long id;
     private long personId;
-    private long status;
+    private long orderStatusId;
     private String date;
 
     public OrderMain() {
     }
 
-    public OrderMain(long id, long personId, long status, String date) {
+    public OrderMain(long id, long personId, long orderStatusId, String date) {
         this.id = id;
         this.personId = personId;
-        this.status = status;
+        this.orderStatusId = orderStatusId;
         this.date = date;
     }
 
@@ -33,12 +33,12 @@ public class OrderMain implements BaseEntityMarker {
         this.personId = personId;
     }
 
-    public long getStatus() {
-        return status;
+    public long getOrderStatusId() {
+        return orderStatusId;
     }
 
-    public void setStatus(long status) {
-        this.status = status;
+    public void setOrderStatusId(long orderStatusId) {
+        this.orderStatusId = orderStatusId;
     }
 
     public String getDate() {
@@ -54,7 +54,7 @@ public class OrderMain implements BaseEntityMarker {
         return "OrderMain{" +
                 "id=" + id +
                 ", personId=" + personId +
-                ", status=" + status +
+                ", status=" + orderStatusId +
                 ", date='" + date + '\'' +
                 '}';
     }

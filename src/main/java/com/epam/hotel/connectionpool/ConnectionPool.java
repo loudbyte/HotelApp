@@ -11,10 +11,10 @@ public class ConnectionPool {
 
     private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class);
 
-    private String driverName;
-    private String url;
-    private String userName;
-    private String password;
+    private final String driverName;
+    private final String url;
+    private final String userName;
+    private final String password;
     private int poolSize;
 
     private BlockingQueue<Connection> connectionsQueue;

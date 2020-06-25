@@ -4,39 +4,38 @@ import com.epam.hotel.action.Action;
 import com.epam.hotel.entity.Cart;
 import com.epam.hotel.validation.NumericValidation;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.ActionConstant.*;
-import static com.epam.hotel.action.impl.ErrorConstant.ERROR_CARD_NOT_FOUND;
-import static com.epam.hotel.action.impl.ErrorConstant.ERROR_ORDER_DETAIL_NOT_FOUND;
+import static com.epam.hotel.util.constant.ActionConstant.*;
+import static com.epam.hotel.util.constant.ErrorConstant.ERROR_CARD_NOT_FOUND;
+import static com.epam.hotel.util.constant.ErrorConstant.ERROR_ORDER_DETAIL_NOT_FOUND;
 
 public class DeleteItemAction implements Action {
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (!(request.getSession().getAttribute(CART) instanceof Cart)) {
-            request.setAttribute(MESSAGE, ERROR_CARD_NOT_FOUND);
-            request.getRequestDispatcher(ERROR_URL).forward(request, response);
-            return;
+        if (request.getSession().getAttribute(CART) instanceof Cart) {
+            if (NumericValidation.isNumeric(request.getParameter(ORDER_DETAIL_ID))) {
+
+                Cart cart = (Cart) request.getSession().getAttribute(CART);
+                long detailId = Long.parseLong(String.valueOf(request.getParameter(ORDER_DETAIL_ID)));
+
+                cart.deleteElementByKeyFromOrderRoomDetailMap(detailId);
+
+                request.getSession().removeAttribute(CART);
+                request.getSession().setAttribute(CART, cart);
+
+                response.sendRedirect(SHOW_CART_JSP);
+
+            } else {
+                request.getSession().setAttribute(MESSAGE, ERROR_ORDER_DETAIL_NOT_FOUND);
+                response.sendRedirect(ERROR_JSP);
+            }
+        } else {
+            request.getSession().setAttribute(MESSAGE, ERROR_CARD_NOT_FOUND);
+            response.sendRedirect(ERROR_JSP);
         }
-        if (!NumericValidation.isNumeric(request.getParameter(ORDER_DETAIL_ID))) {
-            request.setAttribute(MESSAGE, ERROR_ORDER_DETAIL_NOT_FOUND);
-            request.getRequestDispatcher(ERROR_URL).forward(request, response);
-            return;
-        }
-
-        Cart cart = (Cart) request.getSession().getAttribute(CART);
-        long detailId = Long.parseLong(String.valueOf(request.getParameter(ORDER_DETAIL_ID)));
-
-        cart.deleteElementByKeyFromOrderRoomDetailMap(detailId);
-
-        request.getSession().removeAttribute(CART);
-        request.getSession().setAttribute(CART, cart);
-
-        request.getRequestDispatcher(ActionConstant.SHOW_CART_URL).forward(request, response);
-
     }
 }

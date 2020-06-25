@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static com.epam.hotel.action.impl.ActionConstant.*;
-import static com.epam.hotel.dao.impl.DAOConstant.DATE_PATTERN;
+import static com.epam.hotel.util.constant.ActionConstant.*;
+import static com.epam.hotel.util.constant.DAOConstant.DATE_PATTERN;
 
 public class DateValidation {
 
@@ -24,25 +24,24 @@ public class DateValidation {
 
         boolean result = false;
 
-        if (EMPTY_STRING.equals(stringStartDate) || EMPTY_STRING.equals(stringEndDate)) {
-            return result;
+        if (!EMPTY_STRING.equals(stringStartDate) && !EMPTY_STRING.equals(stringEndDate)) {
+            Date startDate = null;
+            Date endDate = null;
+            Date nowDate = new Date();
+
+            try {
+                startDate = simpleDateFormat.parse(stringStartDate);
+                endDate = simpleDateFormat.parse(stringEndDate);
+            } catch (ParseException exception) {
+                LOGGER.error(exception, exception);
+            }
+
+            if ((endDate.getTime() - startDate.getTime()) > ZERO
+                    && (nowDate.getTime() - TimeUnit.DAYS.toMillis(ONE)) <= startDate.getTime()) {
+
+                result = true;
+            }
         }
-
-        Date startDate = null;
-        Date endDate = null;
-        Date nowDate = new Date();
-
-        try {
-            startDate = simpleDateFormat.parse(stringStartDate);
-            endDate = simpleDateFormat.parse(stringEndDate);
-        } catch (ParseException exception) {
-            LOGGER.error(exception, exception);
-        }
-
-        if ((endDate.getTime() - startDate.getTime()) > ZERO && (nowDate.getTime() - TimeUnit.DAYS.toMillis(ONE)) <= startDate.getTime()) {
-            result = true;
-        }
-
         return result;
     }
 

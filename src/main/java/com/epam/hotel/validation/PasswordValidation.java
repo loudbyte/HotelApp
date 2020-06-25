@@ -8,12 +8,8 @@ public class PasswordValidation {
     private static final Pattern pattern = Pattern.compile(PASSWORD_REGEX);
 
     public static boolean isPasswordValid(String password) {
-        boolean result = false;
         Matcher matcher = pattern.matcher(password);
 
-        if (matcher.find())
-            result = true;
-
-        return result;
+        return matcher.find();
     }
 }

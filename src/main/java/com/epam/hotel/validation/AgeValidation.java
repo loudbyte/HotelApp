@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
-import static com.epam.hotel.dao.impl.DAOConstant.DATE_PATTERN;
+import static com.epam.hotel.util.constant.DAOConstant.DATE_PATTERN;
 
 public class AgeValidation {
 

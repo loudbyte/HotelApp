@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <jsp:useBean id="facilityDAO" class="com.epam.hotel.dao.impl.FacilityDAOImpl"/>
 <jsp:useBean id="languageDAO" class="com.epam.hotel.dao.impl.LanguageDAOImpl"/>
 <jsp:useBean id="facilityPackageDAO" class="com.epam.hotel.dao.impl.FacilityPackageDAOImpl"/>
@@ -12,26 +12,26 @@
 <html>
 <head>
     <jsp:include page="style.jsp"/>
-    <title><fmt:message key="new_facility_package"/></title>
+    <title><fmt:message key="title.new_facility_package"/></title>
 </head>
 <body>
 <div class="container">
     <jsp:include page="header.jsp"/>
-    <h3><fmt:message key="new_facility_package"/></h3>
+    <h3><fmt:message key="page.new_facility_package"/></h3>
     <div class="row">
         <div class="col-sm">
             <form action="${pageContext.request.contextPath}/controller/create_facility_package" method="post">
                 <div class="form-row">
                     <c:forEach var="language" items="${languageDAO.languageMap}">
                         <div class="form-group col-md-5">
-                            <label for="package_name"><fmt:message key="facility_package"/> ${language.value}</label>
+                            <label for="package_name"><fmt:message key="page.facility_package"/> ${language.value}</label>
                             <input type="text" class="form-control" id="package_name" name="${language.key}"/>
                         </div>
                     </c:forEach>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-5">
-                        <label><fmt:message key="select_services"/></label>
+                        <label><fmt:message key="page.select_services"/></label>
                         <ul>
                             <c:forEach var="facility" items="${facilityDAO.all}">
                                 <li>
@@ -50,13 +50,13 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-5">
-                        <label for="discount"><fmt:message key="discount"/></label>
+                        <label for="discount"><fmt:message key="page.discount"/></label>
                         <input type="text" class="form-control" id="discount" name="discount"/>
                     </div>
                 </div>
                 <br/>
                 <div class="form-row">
-                    <button type="submit" style="width: 100px" class="btn btn-primary"><fmt:message key="save"/></button>
+                    <button type="submit" style="width: 100px" class="btn btn-primary"><fmt:message key="page.save"/></button>
                 </div>
             </form>
         </div>

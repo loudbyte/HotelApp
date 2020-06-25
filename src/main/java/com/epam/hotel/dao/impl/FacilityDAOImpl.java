@@ -6,9 +6,12 @@ import com.epam.hotel.entity.Facility;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
-import static com.epam.hotel.dao.impl.DAOConstant.*;
+import static com.epam.hotel.util.constant.DAOConstant.*;
 
 public class FacilityDAOImpl implements FacilityDAO {
 
@@ -37,7 +40,7 @@ public class FacilityDAOImpl implements FacilityDAO {
     private static final String SAVEPOINT_UPDATE_FACILITY = "savepointUpdateFacility";
     private static final String SAVEPOINT_DELETE_FACILITY = "savepointDeleteFacility";
 
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private Connection connection;
 
     @Override
@@ -75,6 +78,7 @@ public class FacilityDAOImpl implements FacilityDAO {
             }
             connection.commit();
         } catch (Exception exception) {
+            facilityId = ERROR_ID;
             try {
                 connection.rollback(savepoint);
                 connection.releaseSavepoint(savepoint);
@@ -221,9 +225,9 @@ public class FacilityDAOImpl implements FacilityDAO {
         }
     }
 
-    private void deleteFacility(long id, String sql) throws SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
-            preparedStatement.setLong(1, id);
+    private void deleteFacility(long facilityId, String sql) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, facilityId);
             preparedStatement.executeUpdate();
         }
     }
@@ -232,35 +236,10 @@ public class FacilityDAOImpl implements FacilityDAO {
         Facility facility = new Facility();
         facility.setId(resultSet.getInt(ID));
         facility.setPrice(resultSet.getBigDecimal(PRICE));
-
-        try (PreparedStatement preparedStatementNameMap = connection.prepareStatement(GET_FACILITY_NAME_MAP_BY_FACILITY_ID)) {
-            preparedStatementNameMap.setLong(1, facility.getId());
-            ResultSet resultSetNameMap = preparedStatementNameMap.executeQuery();
-
-            Map<Integer, String> facilityNameMap = new HashMap<>();
-
-            while (resultSetNameMap.next()) {
-                facilityNameMap.put(
-                        resultSetNameMap.getInt(ID),
-                        resultSetNameMap.getString(NAME)
-                );
-            }
-            facility.setFacilityNameMap(facilityNameMap);
-        }
-        try (PreparedStatement preparedStatementDescriptionMap = connection.prepareStatement(GET_FACILITY_DESCRIPTION_MAP_BY_FACILITY_ID)) {
-            preparedStatementDescriptionMap.setLong(1, facility.getId());
-            ResultSet resultSetDescriptionMap = preparedStatementDescriptionMap.executeQuery();
-
-            Map<Integer, String> facilityDescriptionMap = new HashMap<>();
-
-            while (resultSetDescriptionMap.next()) {
-                facilityDescriptionMap.put(
-                        resultSetDescriptionMap.getInt(ID),
-                        resultSetDescriptionMap.getString(DESCRIPTION)
-                );
-            }
-            facility.setFacilityDescriptionMap(facilityDescriptionMap);
-        }
+        facility.setFacilityNameMap(FacilityPackageDAOImpl
+                .getNameOrDescriptionTranslationMap(connection, GET_FACILITY_NAME_MAP_BY_FACILITY_ID, facility.getId(), NAME));
+        facility.setFacilityDescriptionMap(FacilityPackageDAOImpl
+                .getNameOrDescriptionTranslationMap(connection, GET_FACILITY_DESCRIPTION_MAP_BY_FACILITY_ID, facility.getId(), DESCRIPTION));
         return facility;
     }
 }

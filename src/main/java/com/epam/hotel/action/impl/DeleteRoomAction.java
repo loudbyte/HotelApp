@@ -6,33 +6,33 @@ import com.epam.hotel.dao.impl.RoomDAOImpl;
 import com.epam.hotel.entity.Room;
 import com.epam.hotel.validation.NumericValidation;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.hotel.action.impl.ActionConstant.*;
-import static com.epam.hotel.action.impl.ErrorConstant.ERROR_ROOM_NOT_FOUND;
+import static com.epam.hotel.util.constant.ActionConstant.*;
+import static com.epam.hotel.util.constant.ErrorConstant.ERROR_INVALID_DATA;
+import static com.epam.hotel.util.constant.ErrorConstant.ERROR_ROOM_NOT_FOUND;
 
 public class DeleteRoomAction implements Action {
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (!NumericValidation.isNumeric(request.getParameter(ID))) {
-            request.setAttribute(MESSAGE, ERROR_ROOM_NOT_FOUND);
-            request.getRequestDispatcher(ERROR_URL).forward(request, response);
-            return;
-        }
+        if (NumericValidation.isNumeric(request.getParameter(ID))) {
 
-        long roomId = Long.parseLong(request.getParameter(ID));
-        RoomDAO roomDAO = new RoomDAOImpl();
-        Room room = roomDAO.getOneById(roomId);
-        if (room != null) {
-            roomDAO.deleteOneById(roomId);
-            request.getRequestDispatcher(SHOW_ROOM_ADMIN_LIST_URL).forward(request, response);
+            long roomId = Long.parseLong(request.getParameter(ID));
+            RoomDAO roomDAO = new RoomDAOImpl();
+            Room room = roomDAO.getOneById(roomId);
+            if (room != null) {
+                roomDAO.deleteOneById(roomId);
+                response.sendRedirect(SHOW_ROOM_ADMIN_LIST_JSP);
+            } else {
+                request.getSession().setAttribute(MESSAGE, ERROR_ROOM_NOT_FOUND);
+                response.sendRedirect(ERROR_JSP);
+            }
         } else {
-            request.setAttribute(MESSAGE, ERROR_ROOM_NOT_FOUND);
-            request.getRequestDispatcher(ERROR_URL).forward(request, response);
+            request.getSession().setAttribute(MESSAGE, ERROR_INVALID_DATA);
+            response.sendRedirect(ERROR_JSP);
         }
     }
 }

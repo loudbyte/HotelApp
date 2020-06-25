@@ -1,10 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="calculatePrice" class="com.epam.hotel.businesslogic.CalculatePrice"/>
+<jsp:useBean id="calculatePrice" class="com.epam.hotel.payment.CalculatePrice"/>
 <jsp:useBean id="roomDAO" class="com.epam.hotel.dao.impl.RoomDAOImpl"/>
 <jsp:useBean id="facilityPackageDAO" class="com.epam.hotel.dao.impl.FacilityPackageDAOImpl"/>
 <jsp:useBean id="orderMainDAO" class="com.epam.hotel.dao.impl.OrderMainDAOImpl"/>
-<c:set var="orderMain" value="${orderMainDAO.getOneById(requestScope.order_main_id)}"/>
+<c:set var="orderMain" value="${orderMainDAO.getOneById(sessionScope.order_main_id)}"/>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -12,10 +12,10 @@
 <fmt:setBundle basename="language"/>
 
 <jsp:useBean id="orderRoomDetailDAO" class="com.epam.hotel.dao.impl.OrderRoomDetailDAOImpl"/>
-<c:set var="orderRoomDetailList" value="${orderRoomDetailDAO.getAllByOrderId(requestScope.order_main_id)}"/>
+<c:set var="orderRoomDetailList" value="${orderRoomDetailDAO.getAllByOrderId(sessionScope.order_main_id)}"/>
 <html>
 <head>
-    <title>Order detail</title>
+    <title><fmt:message key="title.orders"/></title>
     <jsp:include page="style.jsp"/>
 </head>
 <body>
@@ -27,11 +27,11 @@
                 <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col"><fmt:message key="room_number"/></th>
-                    <th scope="col"><fmt:message key="facility_package"/></th>
-                    <th scope="col"><fmt:message key="start_date"/></th>
-                    <th scope="col"><fmt:message key="end_date"/></th>
-                    <th scope="col"><fmt:message key="price"/></th>
+                    <th scope="col"><fmt:message key="page.room_number"/></th>
+                    <th scope="col"><fmt:message key="page.facility_package"/></th>
+                    <th scope="col"><fmt:message key="page.start_date"/></th>
+                    <th scope="col"><fmt:message key="page.end_date"/></th>
+                    <th scope="col"><fmt:message key="page.price"/></th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
@@ -48,7 +48,7 @@
                             <td>
                                 <c:choose>
                                     <c:when test="${sessionScope.role == 'ADMIN'}">
-                                        <form action="${pageContext.request.contextPath}/controller/edit_order_room_detail_button" method="post">
+                                        <form action="${pageContext.request.contextPath}/edit_order_room_detail.jsp" method="post">
                                             <input type="hidden" name="order_room_detail_id" value="${orderRoomDetail.id}">
                                             <input type="hidden" name="start_date" value="${orderRoomDetail.startDate}">
                                             <input type="hidden" name="end_date" value="${orderRoomDetail.endDate}">
@@ -56,24 +56,24 @@
                                             <input type="hidden" name="order_main_id" value="${orderRoomDetail.orderMainId}">
                                             <input type="hidden" name="facility_package_id" value="${orderRoomDetail.facilityPackageId}">
                                             <button type="submit"
-                                                    class="btn btn-sm  btn-warning"><fmt:message key="edit"/></button>
+                                                    class="btn btn-sm  btn-warning"><fmt:message key="page.edit"/></button>
                                         </form>
                                     </c:when>
                                 </c:choose>
                             </td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${orderMain.status == 1}">
+                                    <c:when test="${orderMain.orderStatusId == 1}">
                                         <form action="${pageContext.request.contextPath}/controller/delete_order_room_detail" method="post">
                                             <input type="hidden" name="order_room_detail_id" value="${orderRoomDetail.id}">
-                                            <input type="hidden" name="order_main_id" value="${requestScope.order_main_id}">
+                                            <input type="hidden" name="order_main_id" value="${sessionScope.order_main_id}">
                                             <input type="hidden" name="room_id" value="${orderRoomDetail.roomId}">
                                             <button type="submit"
-                                                    class="btn btn-sm  btn-danger"><fmt:message key="delete"/></button>
+                                                    class="btn btn-sm  btn-danger"><fmt:message key="page.delete"/></button>
                                         </form>
                                     </c:when>
                                     <c:otherwise>
-                                        <button title='<fmt:message key="cannot_delete_order"/>' type="button" class="btn btn-sm btn-dark"><fmt:message key="delete"/></button>
+                                        <button title='<fmt:message key="page.cannot_delete_order"/>' type="button" class="btn btn-sm btn-dark"><fmt:message key="page.delete"/></button>
                                     </c:otherwise>
                                 </c:choose>
                             </td>

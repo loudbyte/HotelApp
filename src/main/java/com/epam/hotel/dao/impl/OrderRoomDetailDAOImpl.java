@@ -3,6 +3,7 @@ package com.epam.hotel.dao.impl;
 import com.epam.hotel.connectionpool.ConnectionPool;
 import com.epam.hotel.dao.OrderRoomDetailDAO;
 import com.epam.hotel.entity.OrderRoomDetail;
+import com.epam.hotel.util.constant.DAOConstant;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.epam.hotel.dao.impl.DAOConstant.*;
+import static com.epam.hotel.util.constant.DAOConstant.*;
 
 public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
 
@@ -30,7 +31,7 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
 
     private static final String GET_LAST_VALUE_FROM_ORDER_ROOM_DETAIL_SEQ = "select last_value FROM order_room_detail_id_seq";
 
-    private ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private Connection connection;
 
     @Override
@@ -42,18 +43,9 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ORDER_ROOM_DETAIL);
              PreparedStatement preparedStatementGetSeq = connection.prepareStatement(GET_LAST_VALUE_FROM_ORDER_ROOM_DETAIL_SEQ)) {
 
-            SimpleDateFormat format = new SimpleDateFormat(DATE_PATTERN);
-            java.util.Date myStartDate = format.parse(orderRoomDetail.getStartDate());
-            java.util.Date myEndDate = format.parse(orderRoomDetail.getEndDate());
-            Date sqlStartDate = new Date(myStartDate.getTime());
-            Date sqlEndDate = new Date(myEndDate.getTime());
-
-            preparedStatement.setLong(1, orderRoomDetail.getRoomId());
-            preparedStatement.setLong(2, orderRoomDetail.getFacilityPackageId());
-            preparedStatement.setLong(3, orderRoomDetail.getOrderMainId());
-            preparedStatement.setDate(4, sqlStartDate);
-            preparedStatement.setDate(5, sqlEndDate);
+            createUpdateOrderRoomDetail(orderRoomDetail, preparedStatement);
             preparedStatement.executeUpdate();
+
             ResultSet resultSetGetSeq = preparedStatementGetSeq.executeQuery();
 
             if (resultSetGetSeq.next())
@@ -78,23 +70,14 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
             orderRoomDetailList = new ArrayList<>();
 
             while (resultSet.next()) {
-                OrderRoomDetail orderRoomDetail = new OrderRoomDetail();
-                orderRoomDetail.setId(resultSet.getLong(ID));
-                orderRoomDetail.setRoomId(resultSet.getLong(ROOM_ID));
-                orderRoomDetail.setFacilityPackageId(resultSet.getLong(DAOConstant.FACILITY_PACKAGE_ID));
-                orderRoomDetail.setOrderMainId(resultSet.getLong(ORDER_MAIN_ID));
-                orderRoomDetail.setStartDate(resultSet.getString(START_DATE));
-                orderRoomDetail.setEndDate(resultSet.getString(END_DATE));
-
-                orderRoomDetailList.add(orderRoomDetail);
+                orderRoomDetailList.add(getOrderRoomDetail(resultSet));
             }
-
+            orderRoomDetailList.sort(Comparator.comparing(OrderRoomDetail::getId));
         } catch (SQLException exception) {
             LOGGER.error(exception, exception);
         } finally {
             connectionPool.releaseConnection(connection);
         }
-        orderRoomDetailList.sort(Comparator.comparing(OrderRoomDetail::getId));
         return orderRoomDetailList;
     }
 
@@ -109,23 +92,15 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
 
             orderRoomDetailList = new ArrayList<>();
             while (resultSet.next()) {
-                OrderRoomDetail orderRoomDetail = new OrderRoomDetail();
-                orderRoomDetail.setId(resultSet.getLong(ID));
-                orderRoomDetail.setRoomId(resultSet.getLong(ROOM_ID));
-                orderRoomDetail.setFacilityPackageId(resultSet.getLong(DAOConstant.FACILITY_PACKAGE_ID));
-                orderRoomDetail.setOrderMainId(resultSet.getLong(ORDER_MAIN_ID));
-                orderRoomDetail.setStartDate(resultSet.getString(START_DATE));
-                orderRoomDetail.setEndDate(resultSet.getString(END_DATE));
-                orderRoomDetailList.add(orderRoomDetail);
+                orderRoomDetailList.add(getOrderRoomDetail(resultSet));
             }
-
+            orderRoomDetailList.sort(Comparator.comparing(OrderRoomDetail::getId));
         } catch (SQLException exception) {
             LOGGER.error(exception, exception);
             exception.printStackTrace();
         } finally {
             connectionPool.releaseConnection(connection);
         }
-        orderRoomDetailList.sort(Comparator.comparing(OrderRoomDetail::getId));
         return orderRoomDetailList;
     }
 
@@ -139,13 +114,7 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                orderRoomDetail = new OrderRoomDetail();
-                orderRoomDetail.setId(resultSet.getLong(ID));
-                orderRoomDetail.setRoomId(resultSet.getLong(ROOM_ID));
-                orderRoomDetail.setFacilityPackageId(resultSet.getLong(DAOConstant.FACILITY_PACKAGE_ID));
-                orderRoomDetail.setOrderMainId(resultSet.getLong(ORDER_MAIN_ID));
-                orderRoomDetail.setStartDate(resultSet.getString(START_DATE));
-                orderRoomDetail.setEndDate(resultSet.getString(END_DATE));
+                orderRoomDetail = getOrderRoomDetail(resultSet);
             }
 
         } catch (SQLException exception) {
@@ -163,19 +132,8 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ONE_BY_ID)) {
 
-            SimpleDateFormat format = new SimpleDateFormat(DATE_PATTERN);
-            java.util.Date myStartDate = format.parse(orderRoomDetail.getStartDate());
-            java.util.Date myEndtDate = format.parse(orderRoomDetail.getEndDate());
-            Date sqlStartDate = new Date(myStartDate.getTime());
-            Date sqlEndDate = new Date(myEndtDate.getTime());
-
-            preparedStatement.setLong(1, orderRoomDetail.getRoomId());
-            preparedStatement.setLong(2, orderRoomDetail.getFacilityPackageId());
-            preparedStatement.setLong(3, orderRoomDetail.getOrderMainId());
-            preparedStatement.setDate(4, sqlStartDate);
-            preparedStatement.setDate(5, sqlEndDate);
+            createUpdateOrderRoomDetail(orderRoomDetail, preparedStatement);
             preparedStatement.setLong(6, id);
-
             preparedStatement.executeUpdate();
 
         } catch (SQLException | ParseException exception) {
@@ -199,5 +157,30 @@ public class OrderRoomDetailDAOImpl implements OrderRoomDetailDAO {
         } finally {
             connectionPool.releaseConnection(connection);
         }
+    }
+
+    private OrderRoomDetail getOrderRoomDetail(ResultSet resultSet) throws SQLException {
+        OrderRoomDetail orderRoomDetail = new OrderRoomDetail();
+        orderRoomDetail.setId(resultSet.getLong(ID));
+        orderRoomDetail.setRoomId(resultSet.getLong(ROOM_ID));
+        orderRoomDetail.setFacilityPackageId(resultSet.getLong(DAOConstant.FACILITY_PACKAGE_ID));
+        orderRoomDetail.setOrderMainId(resultSet.getLong(ORDER_MAIN_ID));
+        orderRoomDetail.setStartDate(resultSet.getString(START_DATE));
+        orderRoomDetail.setEndDate(resultSet.getString(END_DATE));
+        return orderRoomDetail;
+    }
+
+    private void createUpdateOrderRoomDetail(OrderRoomDetail orderRoomDetail, PreparedStatement preparedStatement) throws ParseException, SQLException {
+        SimpleDateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        java.util.Date myStartDate = format.parse(orderRoomDetail.getStartDate());
+        java.util.Date myEndDate = format.parse(orderRoomDetail.getEndDate());
+        Date sqlStartDate = new Date(myStartDate.getTime());
+        Date sqlEndDate = new Date(myEndDate.getTime());
+
+        preparedStatement.setLong(1, orderRoomDetail.getRoomId());
+        preparedStatement.setLong(2, orderRoomDetail.getFacilityPackageId());
+        preparedStatement.setLong(3, orderRoomDetail.getOrderMainId());
+        preparedStatement.setDate(4, sqlStartDate);
+        preparedStatement.setDate(5, sqlEndDate);
     }
 }

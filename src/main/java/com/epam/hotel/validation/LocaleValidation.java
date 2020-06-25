@@ -10,10 +10,6 @@ public class LocaleValidation {
         Pattern pattern = Pattern.compile(LOCALE_REGEX);
         Matcher matcher = pattern.matcher(locale);
 
-        if (matcher.find()) {
-            return true;
-        } else {
-            return false;
-        }
+        return matcher.find();
     }
 }

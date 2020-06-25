@@ -3,7 +3,7 @@ package com.epam.hotel.action.impl;
 import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.FacilityDAO;
 import com.epam.hotel.dao.LanguageDAO;
-import com.epam.hotel.dao.impl.DAOConstant;
+import com.epam.hotel.util.constant.DAOConstant;
 import com.epam.hotel.dao.impl.FacilityDAOImpl;
 import com.epam.hotel.dao.impl.LanguageDAOImpl;
 import com.epam.hotel.entity.Facility;
@@ -17,8 +17,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.epam.hotel.action.impl.ActionConstant.*;
-import static com.epam.hotel.action.impl.ErrorConstant.*;
+import static com.epam.hotel.util.constant.ActionConstant.*;
+import static com.epam.hotel.util.constant.ErrorConstant.*;
 
 public class CreateFacilityAction implements Action {
     @Override
@@ -27,44 +27,43 @@ public class CreateFacilityAction implements Action {
         LanguageDAO languageDAO = new LanguageDAOImpl();
         Map<Integer, String> languageMap = languageDAO.getLanguageMap();
 
-        if (!facilityFieldValidation(languageMap, request, response))
-            return;
+        if (facilityFieldValidation(languageMap, request, response)) {
+            Map<Integer, String> facilityNameMap = new HashMap<>();
+            Map<Integer, String> facilityDescriptionMap = new HashMap<>();
 
-        Map<Integer, String> facilityNameMap = new HashMap<>();
-        Map<Integer, String> facilityDescriptionMap = new HashMap<>();
+            for (Integer key : languageMap.keySet()) {
+                facilityNameMap.put(key, request.getParameter(FACILITY_NAME + key.toString()));
+                facilityDescriptionMap.put(key, request.getParameter(FACILITY_DESCRIPTION + key.toString()));
+            }
+            BigDecimal facilityPrice = BigDecimal.valueOf(Long.parseLong(request.getParameter(FACILITY_PRICE)));
+            FacilityDAO facilityDAO = new FacilityDAOImpl();
 
-        for (Integer key : languageMap.keySet()) {
-            facilityNameMap.put(key, request.getParameter(FACILITY_NAME + key.toString()));
-            facilityDescriptionMap.put(key, request.getParameter(FACILITY_DESCRIPTION + key.toString()));
+            if (facilityDAO.create(new Facility(facilityPrice, facilityNameMap, facilityDescriptionMap)) != DAOConstant.ERROR_ID) {
+                response.sendRedirect(SHOW_FACILITY_ADMIN_LIST_JSP);
+            } else {
+                request.setAttribute(MESSAGE, ERROR_FAILED_TO_CREATE_FACILITY);
+                request.getRequestDispatcher(ERROR_JSP).forward(request, response);
+            }
         }
-        BigDecimal facilityPrice = BigDecimal.valueOf(Long.parseLong(request.getParameter(FACILITY_PRICE)));
-        FacilityDAO facilityDAO = new FacilityDAOImpl();
-
-        if (facilityDAO.create(new Facility(facilityPrice, facilityNameMap, facilityDescriptionMap)) == DAOConstant.ERROR_ID) {
-            request.setAttribute(MESSAGE, ERROR_FAILED_TO_CREATE_FACILITY);
-            request.getRequestDispatcher(ERROR_URL).forward(request, response);
-            return;
-        }
-
-        response.sendRedirect(SHOW_FACILITY_ADMIN_LIST_URL);
     }
 
-    protected static boolean facilityFieldValidation(Map<Integer, String> languageMap, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected static boolean facilityFieldValidation(Map<Integer, String> languageMap, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        boolean result = true;
         if (EMPTY_STRING.equals(request.getParameter(FACILITY_PRICE))
                 || !NumericValidation.isNumeric(request.getParameter(FACILITY_PRICE))) {
-            request.setAttribute(MESSAGE, ERROR_INVALID_DATA);
-            request.getRequestDispatcher(ERROR_URL).forward(request, response);
-            return false;
+            request.getSession().setAttribute(MESSAGE, ERROR_INVALID_DATA);
+            response.sendRedirect(ERROR_JSP);
+            result = false;
         }
 
         for (Integer key : languageMap.keySet()) {
             if (EMPTY_STRING.equals(request.getParameter(FACILITY_NAME + key.toString()))
                     || EMPTY_STRING.equals(request.getParameter(FACILITY_DESCRIPTION + key.toString()))) {
-                request.setAttribute(MESSAGE, ERROR_INVALID_DATA);
-                request.getRequestDispatcher(ERROR_URL).forward(request, response);
-                return false;
+                request.getSession().setAttribute(MESSAGE, ERROR_INVALID_DATA);
+                response.sendRedirect(ERROR_JSP);
+                result = false;
             }
         }
-        return true;
+        return result;
     }
 }
