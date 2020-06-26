@@ -41,8 +41,9 @@
             <div class="col-lg-4">
                 <form action="show_rooms_by_class.jsp" >
                     <a class="btn btn-outline-dark" href="${pageContext.request.contextPath}/show_rooms_by_class.jsp?room_class_id=${roomClass.id}" role="button">
-                        <div class="wrapper"><img src="${imageEncoder.encode(roomDAO.getAllByRoomClassId(roomClass.id).get(0).imageList.get(0).image)}" class="rounded-circle" alt=""
-                                                  width="300" height="300"></div>
+                        <div class="wrapper">
+                            <img src="<c:if test="${roomDAO.getAllByRoomClassId(roomClass.id).get(0).imageList.size() > 0 && roomDAO.getAllByRoomClassId(roomClass.id).get(0).imageList.get(0).image != null}">${imageEncoder.encode(roomDAO.getAllByRoomClassId(roomClass.id).get(0).imageList.get(0).image)}</c:if>" class="rounded-circle" alt="image" width="300" height="300"/>
+                        </div>
                         <c:forEach items="${languageMap}" var="language">
                             <h2>
                                 <c:if test="${language.value.equals(sessionScope.locale)}">
