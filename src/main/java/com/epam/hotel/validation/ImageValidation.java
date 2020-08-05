@@ -6,6 +6,10 @@ public class ImageValidation {
     private static final String JPEG = "image/jpeg";
 
     public static boolean isImageValid(Part part) {
-        return part.getContentType().equals(JPEG);
+        boolean result = false;
+        if (part != null)
+            result = part.getContentType().equals(JPEG);
+
+        return result;
     }
 }

@@ -27,10 +27,11 @@
             <div class="col-md-6">
                 <p>
                         <fmt:message key="page.number"/>
-                    ID: ${room.id}</br>
-                    <fmt:message key="page.room_number"/> №${room.price} </br>
+                    ID: ${room.id}<br/>
+                    <fmt:message key="page.room_number"/> №${room.price} <br/>
                 </p>
-                <fmt:message key="page.add_photo"/>
+                <p><strong><fmt:message key="page.format_jpg"/><br/>
+                <fmt:message key="page.size_no_more_2mb"/>!</strong></p>
                 <div class="input-group mb-6">
                     <div class="custom-file">
                         <input type="file" name="image_file">
@@ -57,7 +58,7 @@
                                     <label for="${image.id}"><fmt:message key="page.check_replace"/></label>
                                     <input id="${image.id}" type="radio" value="${image.id}" name="room_image_id_radio"><br/>
                                     <input type="hidden" name="room_image_radio" value="${image.id}">
-                                <img width="200" height="200" src="${imageEncoder.encode(image.image)}"/><br/>
+                                <img width="200" height="200" src="${imageEncoder.encode(image.image)}" alt=""/><br/>
                                     <a href="${pageContext.request.contextPath}/controller/delete_room_image?image_id=${image.id}" type="button" style="width: 200px" class="btn btn-warning"><fmt:message key="page.delete"/></a>
                                 </p>
                             </li>
