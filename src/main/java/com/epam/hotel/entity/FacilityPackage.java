@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-public class FacilityPackage implements BaseEntityMarker {
-    private long id;
+public class FacilityPackage extends BaseEntity {
+
     private Map<Integer, String> facilityPackageNameMap;
     private BigDecimal discount;
     private List<Facility> facilityList;

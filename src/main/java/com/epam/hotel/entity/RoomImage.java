@@ -2,8 +2,8 @@ package com.epam.hotel.entity;
 
 import java.util.Arrays;
 
-public class RoomImage implements BaseEntityMarker {
-    private long id;
+public class RoomImage extends BaseEntity {
+
     private byte[] image;
     private long roomId;
 

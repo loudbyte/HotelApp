@@ -2,9 +2,8 @@ package com.epam.hotel.entity;
 
 import java.util.Map;
 
-public class RoomClass implements BaseEntityMarker {
+public class RoomClass extends BaseEntity {
 
-    private long id;
     private Map<Integer, String> roomClassNameMap;
     private Map<Integer, String> roomClassDescriptionMap;
 

@@ -1,8 +1,7 @@
 package com.epam.hotel.entity;
 
-public class Person implements BaseEntityMarker {
+public class Person extends BaseEntity {
 
-    private long id;
     private String firstName;
     private String lastName;
     private String birthday;

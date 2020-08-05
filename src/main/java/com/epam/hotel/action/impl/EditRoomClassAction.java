@@ -6,6 +6,7 @@ import com.epam.hotel.dao.RoomClassDAO;
 import com.epam.hotel.dao.impl.LanguageDAOImpl;
 import com.epam.hotel.dao.impl.RoomClassDAOImpl;
 import com.epam.hotel.entity.RoomClass;
+import com.epam.hotel.validation.ActionFieldValidation;
 import com.epam.hotel.validation.NumericValidation;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ public class EditRoomClassAction implements Action {
             LanguageDAO languageDAO = new LanguageDAOImpl();
             Map<Integer, String> languageMap = languageDAO.getLanguageMap();
 
-            if (CreateRoomClassAction.roomClassFieldValidation(languageMap, request, response)) {
+            if (ActionFieldValidation.isRoomClassFieldValid(languageMap, request, response)) {
 
                 long roomClassId = Long.parseLong(request.getParameter(ROOM_CLASS_ID));
 

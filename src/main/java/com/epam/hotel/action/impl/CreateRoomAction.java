@@ -7,7 +7,7 @@ import com.epam.hotel.dao.impl.RoomClassDAOImpl;
 import com.epam.hotel.util.constant.DAOConstant;
 import com.epam.hotel.dao.impl.RoomDAOImpl;
 import com.epam.hotel.entity.Room;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.ActionFieldValidation;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +22,7 @@ public class CreateRoomAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (roomFieldValidation(request, response)) {
+        if (ActionFieldValidation.isRoomFieldValid(request, response)) {
             int roomNumber = Integer.parseInt(request.getParameter(ROOM_NUMBER));
             int capacity = Integer.parseInt(request.getParameter(CAPACITY));
             long roomClassId = Long.parseLong(request.getParameter(ROOM_CLASS_ID));
@@ -71,16 +71,4 @@ public class CreateRoomAction implements Action {
         return room;
     }
 
-    protected static boolean roomFieldValidation(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        boolean result = true;
-        if (!NumericValidation.isNumeric(request.getParameter(ROOM_NUMBER))
-                || !NumericValidation.isNumeric(request.getParameter(CAPACITY))
-                || !NumericValidation.isNumeric(request.getParameter(ROOM_CLASS_ID))
-                || !NumericValidation.isNumeric(request.getParameter(PRICE))) {
-            request.getSession().setAttribute(MESSAGE, ERROR_INVALID_DATA);
-            response.sendRedirect(ERROR_JSP);
-            result = false;
-        }
-        return result;
-    }
 }

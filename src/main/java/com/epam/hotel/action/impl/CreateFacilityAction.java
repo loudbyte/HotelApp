@@ -7,7 +7,7 @@ import com.epam.hotel.util.constant.DAOConstant;
 import com.epam.hotel.dao.impl.FacilityDAOImpl;
 import com.epam.hotel.dao.impl.LanguageDAOImpl;
 import com.epam.hotel.entity.Facility;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.ActionFieldValidation;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class CreateFacilityAction implements Action {
         LanguageDAO languageDAO = new LanguageDAOImpl();
         Map<Integer, String> languageMap = languageDAO.getLanguageMap();
 
-        if (facilityFieldValidation(languageMap, request, response)) {
+        if (ActionFieldValidation.isFacilityFieldValid(languageMap, request, response)) {
             Map<Integer, String> facilityNameMap = new HashMap<>();
             Map<Integer, String> facilityDescriptionMap = new HashMap<>();
 
@@ -45,25 +45,5 @@ public class CreateFacilityAction implements Action {
                 request.getRequestDispatcher(ERROR_JSP).forward(request, response);
             }
         }
-    }
-
-    protected static boolean facilityFieldValidation(Map<Integer, String> languageMap, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        boolean result = true;
-        if (EMPTY_STRING.equals(request.getParameter(FACILITY_PRICE))
-                || !NumericValidation.isNumeric(request.getParameter(FACILITY_PRICE))) {
-            request.getSession().setAttribute(MESSAGE, ERROR_INVALID_DATA);
-            response.sendRedirect(ERROR_JSP);
-            result = false;
-        }
-
-        for (Integer key : languageMap.keySet()) {
-            if (EMPTY_STRING.equals(request.getParameter(FACILITY_NAME + key.toString()))
-                    || EMPTY_STRING.equals(request.getParameter(FACILITY_DESCRIPTION + key.toString()))) {
-                request.getSession().setAttribute(MESSAGE, ERROR_INVALID_DATA);
-                response.sendRedirect(ERROR_JSP);
-                result = false;
-            }
-        }
-        return result;
     }
 }

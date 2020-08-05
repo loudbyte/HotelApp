@@ -1,8 +1,7 @@
 package com.epam.hotel.entity;
 
-public class OrderMain implements BaseEntityMarker {
+public class OrderMain extends BaseEntity {
 
-    private long id;
     private long personId;
     private long orderStatusId;
     private String date;

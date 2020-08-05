@@ -2,8 +2,8 @@ package com.epam.hotel.entity;
 
 import java.util.Map;
 
-public class OrderStatus implements BaseEntityMarker {
-    private long id;
+public class OrderStatus extends BaseEntity {
+
     private Map<Integer, String> orderStatusNameMap;
 
     public OrderStatus() {

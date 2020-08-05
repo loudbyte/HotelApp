@@ -3,9 +3,8 @@ package com.epam.hotel.entity;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Room implements BaseEntityMarker {
+public class Room extends BaseEntity {
 
-    private long id;
     private int roomNumber;
     private int capacity;
     private long roomClassId;

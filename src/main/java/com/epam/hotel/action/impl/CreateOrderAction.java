@@ -48,8 +48,7 @@ public class CreateOrderAction implements Action {
 
                     for (OrderRoomDetail detail : cart.getOrderRoomDetailMap().values()) {
                         detail.setOrderMainId(orderMain.getId());
-                        if (orderRoomDetailDAO.create(detail) != ERROR_ID) {
-                        } else {
+                        if (orderRoomDetailDAO.create(detail) == ERROR_ID) {
                             request.getSession().setAttribute(MESSAGE, ERROR_FAILED_TO_CREATE_ORDER_DETAIL);
                             response.sendRedirect(ERROR_JSP);
                             return;

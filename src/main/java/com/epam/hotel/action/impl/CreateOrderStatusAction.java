@@ -6,6 +6,7 @@ import com.epam.hotel.dao.OrderStatusDAO;
 import com.epam.hotel.dao.impl.LanguageDAOImpl;
 import com.epam.hotel.dao.impl.OrderStatusDAOImpl;
 import com.epam.hotel.entity.OrderStatus;
+import com.epam.hotel.validation.ActionFieldValidation;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +17,6 @@ import java.util.Map;
 import static com.epam.hotel.util.constant.ActionConstant.*;
 import static com.epam.hotel.util.constant.DAOConstant.*;
 import static com.epam.hotel.util.constant.ErrorConstant.ERROR_FAILED_TO_CREATE_ORDER_STATUS;
-import static com.epam.hotel.util.constant.ErrorConstant.ERROR_INVALID_DATA;
 
 public class CreateOrderStatusAction implements Action {
     @Override
@@ -24,7 +24,7 @@ public class CreateOrderStatusAction implements Action {
         LanguageDAO languageDAO = new LanguageDAOImpl();
         Map<Integer, String> languageMap = languageDAO.getLanguageMap();
 
-        if (orderStatusFieldValidation(languageMap, request, response)) {
+        if (ActionFieldValidation.isOrderStatusFieldValid(languageMap, request, response)) {
 
             Map<Integer, String> orderStatusNameMap = new HashMap<>();
 
@@ -42,17 +42,5 @@ public class CreateOrderStatusAction implements Action {
                 response.sendRedirect(ERROR_JSP);
             }
         }
-    }
-
-    protected static boolean orderStatusFieldValidation(Map<Integer, String> languageMap, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        boolean result = true;
-        for (Integer key : languageMap.keySet()) {
-            if (EMPTY_STRING.equals(request.getParameter(ORDER_STATUS_NAME + key.toString()))) {
-                request.getSession().setAttribute(MESSAGE, ERROR_INVALID_DATA);
-                response.sendRedirect(ERROR_JSP);
-                result = false;
-            }
-        }
-        return result;
     }
 }

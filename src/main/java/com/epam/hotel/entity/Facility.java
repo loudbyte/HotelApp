@@ -3,9 +3,8 @@ package com.epam.hotel.entity;
 import java.math.BigDecimal;
 import java.util.Map;
 
-public class Facility implements BaseEntityMarker {
+public class Facility extends BaseEntity {
 
-    private long id;
     private BigDecimal price;
     private Map<Integer, String> facilityNameMap;
     private Map<Integer, String> facilityDescriptionMap;

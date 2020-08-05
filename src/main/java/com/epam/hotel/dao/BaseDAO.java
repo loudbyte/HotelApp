@@ -1,10 +1,10 @@
 package com.epam.hotel.dao;
 
-import com.epam.hotel.entity.BaseEntityMarker;
+import com.epam.hotel.entity.BaseEntity;
 
 import java.util.List;
 
-public interface BaseDAO<T extends BaseEntityMarker> {
+public interface BaseDAO<T extends BaseEntity> {
 
     long create(T entity);
 

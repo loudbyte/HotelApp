@@ -5,6 +5,7 @@ import com.epam.hotel.dao.RoomClassDAO;
 import com.epam.hotel.dao.RoomDAO;
 import com.epam.hotel.dao.impl.RoomClassDAOImpl;
 import com.epam.hotel.dao.impl.RoomDAOImpl;
+import com.epam.hotel.validation.ActionFieldValidation;
 import com.epam.hotel.validation.NumericValidation;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,32 +23,29 @@ public class EditRoomAction implements Action {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if (NumericValidation.isNumeric(request.getParameter(ROOM_ID))
-            && CreateRoomAction.roomFieldValidation(request,response)) {
+                && ActionFieldValidation.isRoomFieldValid(request, response)) {
 
-            if (CreateRoomAction.roomFieldValidation(request, response)) {
+            long roomId = Long.parseLong(request.getParameter(ROOM_ID));
+            int roomNumber = Integer.parseInt(request.getParameter(ROOM_NUMBER));
+            int capacity = Integer.parseInt(request.getParameter(CAPACITY));
+            long roomClassId = Long.parseLong(request.getParameter(ROOM_CLASS_ID));
+            BigDecimal price = BigDecimal.valueOf(Long.parseLong(request.getParameter(PRICE)));
+            String availability = request.getParameter(AVAILABILITY);
+            boolean isAvailable = false;
 
-                long roomId = Long.parseLong(request.getParameter(ROOM_ID));
-                int roomNumber = Integer.parseInt(request.getParameter(ROOM_NUMBER));
-                int capacity = Integer.parseInt(request.getParameter(CAPACITY));
-                long roomClassId = Long.parseLong(request.getParameter(ROOM_CLASS_ID));
-                BigDecimal price = BigDecimal.valueOf(Long.parseLong(request.getParameter(PRICE)));
-                String availability = request.getParameter(AVAILABILITY);
-                boolean isAvailable = false;
+            RoomClassDAO roomClassDAO = new RoomClassDAOImpl();
+            RoomDAO roomDAO = new RoomDAOImpl();
 
-                RoomClassDAO roomClassDAO = new RoomClassDAOImpl();
-                RoomDAO roomDAO = new RoomDAOImpl();
+            if (roomNumber != ZERO && capacity != ZERO && price != null
+                    && roomClassDAO.getOneById(roomClassId) != null) {
 
-                if (roomNumber != ZERO && capacity != ZERO && price != null
-                        && roomClassDAO.getOneById(roomClassId) != null) {
+                roomDAO.updateOneById(roomId,
+                        CreateRoomAction.defineRoomEntity(roomNumber, capacity, roomClassId, price, availability, isAvailable));
 
-                    roomDAO.updateOneById(roomId,
-                            CreateRoomAction.defineRoomEntity(roomNumber, capacity, roomClassId, price, availability, isAvailable));
-
-                    response.sendRedirect(SHOW_ROOM_ADMIN_LIST_JSP);
-                } else {
-                    request.getSession().setAttribute(MESSAGE, ERROR_INVALID_CLASS);
-                    response.sendRedirect(ERROR_JSP);
-                }
+                response.sendRedirect(SHOW_ROOM_ADMIN_LIST_JSP);
+            } else {
+                request.getSession().setAttribute(MESSAGE, ERROR_INVALID_CLASS);
+                response.sendRedirect(ERROR_JSP);
             }
         } else {
             request.getSession().setAttribute(MESSAGE, ERROR_ROOM_NOT_FOUND);

@@ -6,6 +6,7 @@ import com.epam.hotel.dao.LanguageDAO;
 import com.epam.hotel.dao.impl.FacilityDAOImpl;
 import com.epam.hotel.dao.impl.LanguageDAOImpl;
 import com.epam.hotel.entity.Facility;
+import com.epam.hotel.validation.ActionFieldValidation;
 import com.epam.hotel.validation.NumericValidation;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +27,7 @@ public class EditFacilityAction implements Action {
             LanguageDAO languageDAO = new LanguageDAOImpl();
             Map<Integer, String> languageMap = languageDAO.getLanguageMap();
 
-            if (CreateFacilityAction.facilityFieldValidation(languageMap, request, response)) {
+            if (ActionFieldValidation.isFacilityFieldValid(languageMap, request, response)) {
                 long facilityId = Long.parseLong(request.getParameter(FACILITY_ID));
 
                 Map<Integer, String> facilityNameMap = new HashMap<>();

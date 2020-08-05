@@ -1,8 +1,7 @@
 package com.epam.hotel.entity;
 
-public class OrderRoomDetail implements BaseEntityMarker {
+public class OrderRoomDetail extends BaseEntity {
 
-    private long id;
     private long roomId;
     private long facilityPackageId;
     private long orderMainId;

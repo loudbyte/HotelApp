@@ -9,7 +9,7 @@ import com.epam.hotel.dao.impl.FacilityPackageDAOImpl;
 import com.epam.hotel.dao.impl.LanguageDAOImpl;
 import com.epam.hotel.entity.Facility;
 import com.epam.hotel.entity.FacilityPackage;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.ActionFieldValidation;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +30,7 @@ public class CreateFacilityPackageAction implements Action {
         Map<Integer, String> languageMap = languageDAO.getLanguageMap();
         Map<Integer, String> facilityPackageNameMap = new HashMap<>();
 
-        if (facilityPackageFieldValidation(languageMap, request, response)) {
+        if (ActionFieldValidation.isFacilityPackageFieldValid(languageMap, request, response)) {
 
             for (Integer languageId : languageMap.keySet()) {
                 facilityPackageNameMap.put(languageId, request.getParameter(languageId.toString()));
@@ -62,24 +62,5 @@ public class CreateFacilityPackageAction implements Action {
                 response.sendRedirect(ERROR_JSP);
             }
         }
-    }
-
-    protected static boolean facilityPackageFieldValidation(Map<Integer, String> languageMap, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        boolean result = true;
-        if (request.getParameterValues(FACILITIES) == null
-                || !NumericValidation.isNumeric(request.getParameter(DISCOUNT))) {
-            request.getSession().setAttribute(MESSAGE, ERROR_INVALID_DATA);
-            response.sendRedirect(ERROR_JSP);
-            result = false;
-        }
-
-        for (Integer languageId : languageMap.keySet()) {
-            if (EMPTY_STRING.equals(request.getParameter(languageId.toString()))) {
-                request.getSession().setAttribute(MESSAGE, ERROR_EMPTY_FIELDS);
-                response.sendRedirect(ERROR_JSP);
-                result = false;
-            }
-        }
-        return result;
     }
 }
