@@ -7,8 +7,8 @@ import com.epam.hotel.entity.Cart;
 import com.epam.hotel.entity.Person;
 import com.epam.hotel.access.Role;
 import com.epam.hotel.password.EncodePassword;
-import com.epam.hotel.validation.EmailValidation;
-import com.epam.hotel.validation.PasswordValidation;
+import com.epam.hotel.validation.EmailValidator;
+import com.epam.hotel.validation.PasswordValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +27,7 @@ public class LoginAction implements Action {
         String email = request.getParameter(EMAIL);
         String password = request.getParameter(PASSWORD);
         if (!EMPTY_STRING.equals(email) && !EMPTY_STRING.equals(password)) {
-            if (EmailValidation.isEmailValid(email) && PasswordValidation.isPasswordValid(password)) {
+            if (EmailValidator.isEmailValid(email) && PasswordValidator.isPasswordValid(password)) {
 
                 password = encodePassword.getHashPassword(password);
                 PersonDAO personDAO = new PersonDAOImpl();

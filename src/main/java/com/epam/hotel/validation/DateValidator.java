@@ -11,9 +11,9 @@ import java.util.concurrent.TimeUnit;
 import static com.epam.hotel.util.constant.ActionConstant.*;
 import static com.epam.hotel.util.constant.DAOConstant.DATE_PATTERN;
 
-public class DateValidation {
+public class DateValidator {
 
-    private static final Logger LOGGER = Logger.getLogger(DateValidation.class);
+    private static final Logger LOGGER = Logger.getLogger(DateValidator.class);
 
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
     private static final int ZERO = 0;
@@ -36,10 +36,11 @@ public class DateValidation {
                 LOGGER.error(exception, exception);
             }
 
-            if ((endDate.getTime() - startDate.getTime()) > ZERO
-                    && (nowDate.getTime() - TimeUnit.DAYS.toMillis(ONE)) <= startDate.getTime()) {
-
-                result = true;
+            if (endDate != null && startDate != null) {
+                if ((endDate.getTime() - startDate.getTime()) > ZERO
+                        && (nowDate.getTime() - TimeUnit.DAYS.toMillis(ONE)) <= startDate.getTime()) {
+                    result = true;
+                }
             }
         }
         return result;

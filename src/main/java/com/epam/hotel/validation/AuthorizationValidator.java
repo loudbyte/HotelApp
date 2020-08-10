@@ -9,7 +9,7 @@ import java.io.IOException;
 import static com.epam.hotel.util.constant.ActionConstant.*;
 import static com.epam.hotel.util.constant.ErrorConstant.ERROR_NEED_TO_REGISTER;
 
-public class AuthorizationValidation {
+public class AuthorizationValidator {
     public static Person authorizationGetPerson(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Person person = null;
         if (request.getSession().getAttribute(PERSON) instanceof Person) {

@@ -4,7 +4,7 @@ import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.RoomDAO;
 import com.epam.hotel.dao.impl.RoomDAOImpl;
 import com.epam.hotel.entity.Room;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +24,7 @@ public class SetRoomAvailabilityAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (NumericValidation.isNumeric(String.valueOf(request.getParameter(ROOM_ID)))) {
+        if (NumericValidator.isNumeric(String.valueOf(request.getParameter(ROOM_ID)))) {
 
             long roomId = Long.parseLong(String.valueOf(request.getParameter(ROOM_ID)));
 

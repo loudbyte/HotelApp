@@ -3,8 +3,8 @@ package com.epam.hotel.action.impl;
 import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.LanguageDAO;
 import com.epam.hotel.dao.impl.LanguageDAOImpl;
-import com.epam.hotel.validation.LocaleValidation;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.LocaleValidator;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +16,8 @@ import static com.epam.hotel.util.constant.ErrorConstant.ERROR_INVALID_DATA;
 public class EditLanguageAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (NumericValidation.isNumeric(request.getParameter(LANGUAGE_ID))
-                && LocaleValidation.isValid(request.getParameter(LOCALE))) {
+        if (NumericValidator.isNumeric(request.getParameter(LANGUAGE_ID))
+                && LocaleValidator.isValid(request.getParameter(LOCALE))) {
             long languageId = Long.parseLong(request.getParameter(LANGUAGE_ID));
             String locale = request.getParameter(LOCALE);
 

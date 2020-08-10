@@ -6,8 +6,8 @@ import com.epam.hotel.dao.RoomClassDAO;
 import com.epam.hotel.dao.impl.LanguageDAOImpl;
 import com.epam.hotel.dao.impl.RoomClassDAOImpl;
 import com.epam.hotel.entity.RoomClass;
-import com.epam.hotel.validation.ActionFieldValidation;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.ActionFieldValidator;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,12 +23,12 @@ public class EditRoomClassAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (NumericValidation.isNumeric(request.getParameter(ROOM_CLASS_ID))) {
+        if (NumericValidator.isNumeric(request.getParameter(ROOM_CLASS_ID))) {
 
             LanguageDAO languageDAO = new LanguageDAOImpl();
             Map<Integer, String> languageMap = languageDAO.getLanguageMap();
 
-            if (ActionFieldValidation.isRoomClassFieldValid(languageMap, request, response)) {
+            if (ActionFieldValidator.isRoomClassFieldValid(languageMap, request, response)) {
 
                 long roomClassId = Long.parseLong(request.getParameter(ROOM_CLASS_ID));
 

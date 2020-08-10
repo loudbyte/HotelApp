@@ -3,7 +3,7 @@ package com.epam.hotel.action.impl;
 import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.FacilityDAO;
 import com.epam.hotel.dao.impl.FacilityDAOImpl;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +15,7 @@ import static com.epam.hotel.util.constant.ErrorConstant.*;
 public class DeleteFacilityAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (NumericValidation.isNumeric(request.getParameter(FACILITY_ID))) {
+        if (NumericValidator.isNumeric(request.getParameter(FACILITY_ID))) {
             long facilityId = Long.parseLong(request.getParameter(FACILITY_ID));
 
             FacilityDAO facilityDAO = new FacilityDAOImpl();

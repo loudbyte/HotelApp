@@ -6,8 +6,8 @@ import com.epam.hotel.dao.OrderStatusDAO;
 import com.epam.hotel.dao.impl.OrderMainDAOImpl;
 import com.epam.hotel.dao.impl.OrderStatusDAOImpl;
 import com.epam.hotel.entity.OrderMain;
-import com.epam.hotel.validation.DateValidation;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.DateValidator;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,12 +21,12 @@ public class EditOrderAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (NumericValidation.isNumeric(request.getParameter(ORDER_MAIN_ID))
-                && NumericValidation.isNumeric(request.getParameter(PERSON_ID))
-                && NumericValidation.isNumeric(request.getParameter(PERSON_ID))
-                && NumericValidation.isNumeric(request.getParameter(STATUS))) {
+        if (NumericValidator.isNumeric(request.getParameter(ORDER_MAIN_ID))
+                && NumericValidator.isNumeric(request.getParameter(PERSON_ID))
+                && NumericValidator.isNumeric(request.getParameter(PERSON_ID))
+                && NumericValidator.isNumeric(request.getParameter(STATUS))) {
 
-            if (DateValidation.isDate(request.getParameter(DATE))) {
+            if (DateValidator.isDate(request.getParameter(DATE))) {
 
                 long orderMainId = Long.parseLong(request.getParameter(ORDER_MAIN_ID));
                 long personId = Long.parseLong(request.getParameter(PERSON_ID));

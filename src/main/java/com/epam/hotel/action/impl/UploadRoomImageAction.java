@@ -4,7 +4,7 @@ import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.RoomImageDAO;
 import com.epam.hotel.dao.impl.RoomImageDAOImpl;
 import com.epam.hotel.entity.RoomImage;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,11 +19,11 @@ public class UploadRoomImageAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (NumericValidation.isNumeric(String.valueOf(request.getSession().getAttribute(ROOM_ID_FOR_UPLOAD)))) {
+        if (NumericValidator.isNumeric(String.valueOf(request.getSession().getAttribute(ROOM_ID_FOR_UPLOAD)))) {
             long roomId = Long.parseLong(String.valueOf(request.getSession().getAttribute(ROOM_ID_FOR_UPLOAD)));
             long imageId = ZERO;
 
-            if (NumericValidation.isNumeric(String.valueOf(request.getAttribute(ROOM_IMAGE_ID_RADIO)))) {
+            if (NumericValidator.isNumeric(String.valueOf(request.getAttribute(ROOM_IMAGE_ID_RADIO)))) {
                 imageId = Long.parseLong(String.valueOf(request.getAttribute(ROOM_IMAGE_ID_RADIO)));
             }
 

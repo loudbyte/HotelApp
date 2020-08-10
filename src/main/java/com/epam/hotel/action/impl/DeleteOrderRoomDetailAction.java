@@ -3,7 +3,7 @@ package com.epam.hotel.action.impl;
 import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.OrderRoomDetailDAO;
 import com.epam.hotel.dao.impl.OrderRoomDetailDAOImpl;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,8 +16,8 @@ public class DeleteOrderRoomDetailAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (NumericValidation.isNumeric(request.getParameter(ORDER_ROOM_DETAIL_ID))
-                && NumericValidation.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
+        if (NumericValidator.isNumeric(request.getParameter(ORDER_ROOM_DETAIL_ID))
+                && NumericValidator.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
 
             long orderDetailId = Long.parseLong(request.getParameter(ORDER_ROOM_DETAIL_ID));
             long orderMainId = Long.parseLong(request.getParameter(ORDER_MAIN_ID));

@@ -6,7 +6,7 @@ import com.epam.hotel.dao.OrderStatusDAO;
 import com.epam.hotel.dao.impl.LanguageDAOImpl;
 import com.epam.hotel.dao.impl.OrderStatusDAOImpl;
 import com.epam.hotel.entity.OrderStatus;
-import com.epam.hotel.validation.ActionFieldValidation;
+import com.epam.hotel.validation.ActionFieldValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +24,7 @@ public class CreateOrderStatusAction implements Action {
         LanguageDAO languageDAO = new LanguageDAOImpl();
         Map<Integer, String> languageMap = languageDAO.getLanguageMap();
 
-        if (ActionFieldValidation.isOrderStatusFieldValid(languageMap, request, response)) {
+        if (ActionFieldValidator.isOrderStatusFieldValid(languageMap, request, response)) {
 
             Map<Integer, String> orderStatusNameMap = new HashMap<>();
 

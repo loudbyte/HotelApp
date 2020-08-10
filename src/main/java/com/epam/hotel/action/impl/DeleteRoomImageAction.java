@@ -3,7 +3,7 @@ package com.epam.hotel.action.impl;
 import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.RoomImageDAO;
 import com.epam.hotel.dao.impl.RoomImageDAOImpl;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +16,7 @@ public class DeleteRoomImageAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (NumericValidation.isNumeric(request.getParameter(IMAGE_ID))) {
+        if (NumericValidator.isNumeric(request.getParameter(IMAGE_ID))) {
             long imageId = Long.parseLong(request.getParameter(IMAGE_ID));
 
             RoomImageDAO roomImageDAO = new RoomImageDAOImpl();

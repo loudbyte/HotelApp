@@ -3,7 +3,7 @@ package com.epam.hotel.validation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CardValidation {
+public class CardValidator {
     private static final String CARD_REGEX = "^[0-9]{16}$";
 
     public static boolean isValid(String cardNumber) {

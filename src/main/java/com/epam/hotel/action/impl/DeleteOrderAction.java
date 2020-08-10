@@ -3,7 +3,7 @@ package com.epam.hotel.action.impl;
 import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.OrderMainDAO;
 import com.epam.hotel.dao.impl.OrderMainDAOImpl;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +17,7 @@ public class DeleteOrderAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (NumericValidation.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
+        if (NumericValidator.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
 
             long orderMainId = Long.parseLong(request.getParameter(ORDER_MAIN_ID));
 

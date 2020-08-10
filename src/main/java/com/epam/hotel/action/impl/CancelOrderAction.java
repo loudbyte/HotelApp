@@ -4,8 +4,8 @@ import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.OrderMainDAO;
 import com.epam.hotel.dao.impl.OrderMainDAOImpl;
 import com.epam.hotel.entity.OrderMain;
-import com.epam.hotel.validation.AuthorizationValidation;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.AuthorizationValidator;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,8 +19,8 @@ public class CancelOrderAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (AuthorizationValidation.authorizationGetBoolean(request, response)) {
-            if (NumericValidation.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
+        if (AuthorizationValidator.authorizationGetBoolean(request, response)) {
+            if (NumericValidator.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
 
                 long orderMainId = Long.parseLong(request.getParameter(ORDER_MAIN_ID));
                 OrderMainDAO orderMainDAO = new OrderMainDAOImpl();

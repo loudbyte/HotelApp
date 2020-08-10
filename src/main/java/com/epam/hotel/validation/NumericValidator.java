@@ -1,6 +1,6 @@
 package com.epam.hotel.validation;
 
-public class NumericValidation {
+public class NumericValidator {
     public static boolean isNumeric(String stringNum) {
         boolean result = true;
         if (stringNum == null) {

@@ -3,7 +3,7 @@ package com.epam.hotel.validation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LocaleValidation {
+public class LocaleValidator {
     private static final String LOCALE_REGEX = "^[a-z]{2}_[A-Z]{2}$";
 
     public static boolean isValid(String locale) {

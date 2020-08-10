@@ -2,7 +2,7 @@ package com.epam.hotel.validation;
 
 import javax.servlet.http.Part;
 
-public class ImageValidation {
+public class ImageValidator {
     private static final String JPEG = "image/jpeg";
 
     public static boolean isImageValid(Part part) {

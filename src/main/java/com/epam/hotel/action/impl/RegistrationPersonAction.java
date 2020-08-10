@@ -31,10 +31,10 @@ public class RegistrationPersonAction implements Action {
         if (!EMPTY_STRING.equals(firstName) && !EMPTY_STRING.equals(lastName) && !EMPTY_STRING.equals(birthday) && !EMPTY_STRING.equals(phone)
                 && !EMPTY_STRING.equals(email) && !EMPTY_STRING.equals(password) && !EMPTY_STRING.equals(iin)) {
 
-            if (EmailValidation.isEmailValid(email) && PasswordValidation.isPasswordValid(password)
-                    && AgeValidation.isAgeValid(birthday) && NameValidation.isNameValid(firstName)
-                    && NameValidation.isNameValid(lastName) && PhoneValidation.isPhoneValid(phone)
-                    && IINValidation.isIINValid(iin)) {
+            if (EmailValidator.isEmailValid(email) && PasswordValidator.isPasswordValid(password)
+                    && AgeValidator.isAgeValid(birthday) && NameValidator.isNameValid(firstName)
+                    && NameValidator.isNameValid(lastName) && PhoneValidator.isPhoneValid(phone)
+                    && IINValidator.isIINValid(iin)) {
 
                 PersonDAO personDAO = new PersonDAOImpl();
 

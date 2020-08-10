@@ -9,7 +9,7 @@ import com.epam.hotel.entity.Cart;
 import com.epam.hotel.entity.OrderMain;
 import com.epam.hotel.entity.OrderRoomDetail;
 import com.epam.hotel.entity.Person;
-import com.epam.hotel.validation.AuthorizationValidation;
+import com.epam.hotel.validation.AuthorizationValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +25,7 @@ public class CreateOrderAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        Person person = AuthorizationValidation.authorizationGetPerson(request, response);
+        Person person = AuthorizationValidator.authorizationGetPerson(request, response);
         if (person != null) {
             if ((request.getSession().getAttribute(CART) instanceof Cart)) {
 

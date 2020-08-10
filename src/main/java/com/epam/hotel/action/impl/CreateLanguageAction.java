@@ -4,7 +4,7 @@ import com.epam.hotel.action.Action;
 import com.epam.hotel.dao.LanguageDAO;
 import com.epam.hotel.util.constant.DAOConstant;
 import com.epam.hotel.dao.impl.LanguageDAOImpl;
-import com.epam.hotel.validation.LocaleValidation;
+import com.epam.hotel.validation.LocaleValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +17,7 @@ public class CreateLanguageAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (LocaleValidation.isValid(request.getParameter(LOCALE))) {
+        if (LocaleValidator.isValid(request.getParameter(LOCALE))) {
 
             String language = request.getParameter(LOCALE);
 

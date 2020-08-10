@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 import static com.epam.hotel.util.constant.DAOConstant.DATE_PATTERN;
 
-public class AgeValidation {
+public class AgeValidator {
 
     private static final DateTimeFormatter DATE_FORMAT_VALIDATION = DateTimeFormatter.ofPattern(DATE_PATTERN);
     private static final int MIN_AGE = 18;

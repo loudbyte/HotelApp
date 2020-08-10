@@ -5,7 +5,7 @@ import com.epam.hotel.dao.RoomClassDAO;
 import com.epam.hotel.dao.RoomDAO;
 import com.epam.hotel.dao.impl.RoomClassDAOImpl;
 import com.epam.hotel.dao.impl.RoomDAOImpl;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +17,7 @@ import static com.epam.hotel.util.constant.ErrorConstant.*;
 public class DeleteRoomClassAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (NumericValidation.isNumeric(request.getParameter(ROOM_CLASS_ID))) {
+        if (NumericValidator.isNumeric(request.getParameter(ROOM_CLASS_ID))) {
             RoomDAO roomDAO = new RoomDAOImpl();
             long roomClassId = Long.parseLong(request.getParameter(ROOM_CLASS_ID));
 

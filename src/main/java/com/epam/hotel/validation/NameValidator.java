@@ -3,7 +3,7 @@ package com.epam.hotel.validation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NameValidation {
+public class NameValidator {
     private static final String REGEX_EN = "^[A-Z][a-z]+$";
     private static final String REGEX_RU = "^[А-Я][а-я]+$";
     private static final Pattern patternEn = Pattern.compile(REGEX_EN);

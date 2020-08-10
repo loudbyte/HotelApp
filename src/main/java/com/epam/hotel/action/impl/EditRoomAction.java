@@ -5,8 +5,8 @@ import com.epam.hotel.dao.RoomClassDAO;
 import com.epam.hotel.dao.RoomDAO;
 import com.epam.hotel.dao.impl.RoomClassDAOImpl;
 import com.epam.hotel.dao.impl.RoomDAOImpl;
-import com.epam.hotel.validation.ActionFieldValidation;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.ActionFieldValidator;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,8 +22,8 @@ public class EditRoomAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (NumericValidation.isNumeric(request.getParameter(ROOM_ID))
-                && ActionFieldValidation.isRoomFieldValid(request, response)) {
+        if (NumericValidator.isNumeric(request.getParameter(ROOM_ID))
+                && ActionFieldValidator.isRoomFieldValid(request, response)) {
 
             long roomId = Long.parseLong(request.getParameter(ROOM_ID));
             int roomNumber = Integer.parseInt(request.getParameter(ROOM_NUMBER));

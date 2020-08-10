@@ -9,8 +9,8 @@ import com.epam.hotel.dao.impl.FacilityPackageDAOImpl;
 import com.epam.hotel.dao.impl.LanguageDAOImpl;
 import com.epam.hotel.entity.Facility;
 import com.epam.hotel.entity.FacilityPackage;
-import com.epam.hotel.validation.ActionFieldValidation;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.ActionFieldValidator;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,12 +30,12 @@ public class EditFacilityPackageAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (NumericValidation.isNumeric(request.getParameter(FACILITY_PACKAGE_ID))) {
+        if (NumericValidator.isNumeric(request.getParameter(FACILITY_PACKAGE_ID))) {
             LanguageDAO languageDAO = new LanguageDAOImpl();
             Map<Integer, String> languageMap = languageDAO.getLanguageMap();
             Map<Integer, String> facilityPackageNameMap = new HashMap<>();
 
-            if (ActionFieldValidation.isFacilityPackageFieldValid(languageMap, request, response)) {
+            if (ActionFieldValidator.isFacilityPackageFieldValid(languageMap, request, response)) {
 
                 for (Integer languageId : languageMap.keySet()) {
                     facilityPackageNameMap.put(languageId, request.getParameter(languageId.toString()));

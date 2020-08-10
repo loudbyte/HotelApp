@@ -9,11 +9,11 @@ import static com.epam.hotel.util.constant.ActionConstant.*;
 import static com.epam.hotel.util.constant.ErrorConstant.ERROR_EMPTY_FIELDS;
 import static com.epam.hotel.util.constant.ErrorConstant.ERROR_INVALID_DATA;
 
-public class ActionFieldValidation {
+public class ActionFieldValidator {
     public static boolean isFacilityFieldValid(Map<Integer, String> languageMap, HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean result = true;
         if (EMPTY_STRING.equals(request.getParameter(FACILITY_PRICE))
-                || !NumericValidation.isNumeric(request.getParameter(FACILITY_PRICE))) {
+                || !NumericValidator.isNumeric(request.getParameter(FACILITY_PRICE))) {
             request.getSession().setAttribute(MESSAGE, ERROR_INVALID_DATA);
             response.sendRedirect(ERROR_JSP);
             result = false;
@@ -33,7 +33,7 @@ public class ActionFieldValidation {
     public static boolean isFacilityPackageFieldValid(Map<Integer, String> languageMap, HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean result = true;
         if (request.getParameterValues(FACILITIES) == null
-                || !NumericValidation.isNumeric(request.getParameter(DISCOUNT))) {
+                || !NumericValidator.isNumeric(request.getParameter(DISCOUNT))) {
             request.getSession().setAttribute(MESSAGE, ERROR_INVALID_DATA);
             response.sendRedirect(ERROR_JSP);
             result = false;
@@ -63,10 +63,10 @@ public class ActionFieldValidation {
 
     public static boolean isRoomFieldValid(HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean result = true;
-        if (!NumericValidation.isNumeric(request.getParameter(ROOM_NUMBER))
-                || !NumericValidation.isNumeric(request.getParameter(CAPACITY))
-                || !NumericValidation.isNumeric(request.getParameter(ROOM_CLASS_ID))
-                || !NumericValidation.isNumeric(request.getParameter(PRICE))) {
+        if (!NumericValidator.isNumeric(request.getParameter(ROOM_NUMBER))
+                || !NumericValidator.isNumeric(request.getParameter(CAPACITY))
+                || !NumericValidator.isNumeric(request.getParameter(ROOM_CLASS_ID))
+                || !NumericValidator.isNumeric(request.getParameter(PRICE))) {
             request.getSession().setAttribute(MESSAGE, ERROR_INVALID_DATA);
             response.sendRedirect(ERROR_JSP);
             result = false;

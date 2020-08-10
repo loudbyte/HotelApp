@@ -7,7 +7,7 @@ import com.epam.hotel.dao.impl.LanguageDAOImpl;
 import com.epam.hotel.dao.impl.RoomClassDAOImpl;
 import com.epam.hotel.entity.RoomClass;
 import com.epam.hotel.util.constant.DAOConstant;
-import com.epam.hotel.validation.ActionFieldValidation;
+import com.epam.hotel.validation.ActionFieldValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +24,7 @@ public class CreateRoomClassAction implements Action {
         LanguageDAO languageDAO = new LanguageDAOImpl();
         Map<Integer, String> languageMap = languageDAO.getLanguageMap();
 
-        if (ActionFieldValidation.isRoomClassFieldValid(languageMap, request, response)) {
+        if (ActionFieldValidator.isRoomClassFieldValid(languageMap, request, response)) {
 
             Map<Integer, String> roomClassNameMap = new HashMap<>();
             Map<Integer, String> roomClassDescriptionMap = new HashMap<>();

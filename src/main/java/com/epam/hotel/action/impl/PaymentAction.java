@@ -5,8 +5,8 @@ import com.epam.hotel.payment.PayOrder;
 import com.epam.hotel.dao.OrderMainDAO;
 import com.epam.hotel.dao.impl.OrderMainDAOImpl;
 import com.epam.hotel.entity.OrderMain;
-import com.epam.hotel.validation.CardValidation;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.CardValidator;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,8 +21,8 @@ public class PaymentAction implements Action {
 
         String cardNumber = request.getParameter(CARD_NUMBER);
 
-        if (CardValidation.isValid(cardNumber)) {
-            if (NumericValidation.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
+        if (CardValidator.isValid(cardNumber)) {
+            if (NumericValidator.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
 
                 long orderMainId = Long.parseLong(request.getParameter(ORDER_MAIN_ID));
 

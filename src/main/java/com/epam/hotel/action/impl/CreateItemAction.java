@@ -3,8 +3,8 @@ package com.epam.hotel.action.impl;
 import com.epam.hotel.action.Action;
 import com.epam.hotel.entity.Cart;
 import com.epam.hotel.entity.OrderRoomDetail;
-import com.epam.hotel.validation.DateValidation;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.DateValidator;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,10 +18,10 @@ public class CreateItemAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (NumericValidation.isNumeric(request.getParameter(ROOM_ID))
-                && NumericValidation.isNumeric(request.getParameter(DETAIL_ID))) {
+        if (NumericValidator.isNumeric(request.getParameter(ROOM_ID))
+                && NumericValidator.isNumeric(request.getParameter(DETAIL_ID))) {
 
-            if (DateValidation
+            if (DateValidator
                     .isStartEndDatesValid(request.getParameter(START_DATE), request.getParameter(END_DATE))) {
 
                 long roomId = Long.parseLong(request.getParameter(ROOM_ID));

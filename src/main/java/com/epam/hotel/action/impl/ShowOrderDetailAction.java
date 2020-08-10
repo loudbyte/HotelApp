@@ -1,8 +1,8 @@
 package com.epam.hotel.action.impl;
 
 import com.epam.hotel.action.Action;
-import com.epam.hotel.validation.AuthorizationValidation;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.AuthorizationValidator;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,8 +15,8 @@ public class ShowOrderDetailAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (AuthorizationValidation.authorizationGetBoolean(request, response)) {
-            if (NumericValidation.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
+        if (AuthorizationValidator.authorizationGetBoolean(request, response)) {
+            if (NumericValidator.isNumeric(request.getParameter(ORDER_MAIN_ID))) {
                 long orderMainId = Long.parseLong(request.getParameter(ORDER_MAIN_ID));
 
                 request.getSession().setAttribute(ORDER_MAIN_ID, orderMainId);

@@ -5,7 +5,7 @@ import com.epam.hotel.dao.FacilityPackageDAO;
 import com.epam.hotel.dao.OrderRoomDetailDAO;
 import com.epam.hotel.dao.impl.FacilityPackageDAOImpl;
 import com.epam.hotel.dao.impl.OrderRoomDetailDAOImpl;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +19,7 @@ public class DeleteFacilityPackageAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (NumericValidation.isNumeric(request.getParameter(FACILITY_PACKAGE_ID))) {
+        if (NumericValidator.isNumeric(request.getParameter(FACILITY_PACKAGE_ID))) {
             long packageId = Long.parseLong(request.getParameter(FACILITY_PACKAGE_ID));
 
             OrderRoomDetailDAO orderRoomDetailDAO = new OrderRoomDetailDAOImpl();

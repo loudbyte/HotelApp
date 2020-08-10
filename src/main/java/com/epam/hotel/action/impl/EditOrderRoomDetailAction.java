@@ -8,8 +8,8 @@ import com.epam.hotel.dao.impl.FacilityPackageDAOImpl;
 import com.epam.hotel.dao.impl.OrderRoomDetailDAOImpl;
 import com.epam.hotel.dao.impl.RoomDAOImpl;
 import com.epam.hotel.entity.OrderRoomDetail;
-import com.epam.hotel.validation.DateValidation;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.DateValidator;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,12 +23,12 @@ public class EditOrderRoomDetailAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (NumericValidation.isNumeric(request.getParameter(ORDER_ROOM_DETAIL_ID))
-            && NumericValidation.isNumeric(request.getParameter(ORDER_MAIN_ID))
-            && NumericValidation.isNumeric(request.getParameter(ROOM_ID))
-            && NumericValidation.isNumeric(request.getParameter(FACILITY_PACKAGE_ID))
-            && DateValidation.isDate(request.getParameter(START_DATE))
-            && DateValidation.isDate(request.getParameter(END_DATE))) {
+        if (NumericValidator.isNumeric(request.getParameter(ORDER_ROOM_DETAIL_ID))
+            && NumericValidator.isNumeric(request.getParameter(ORDER_MAIN_ID))
+            && NumericValidator.isNumeric(request.getParameter(ROOM_ID))
+            && NumericValidator.isNumeric(request.getParameter(FACILITY_PACKAGE_ID))
+            && DateValidator.isDate(request.getParameter(START_DATE))
+            && DateValidator.isDate(request.getParameter(END_DATE))) {
 
             long orderDetailId = Long.parseLong(request.getParameter(ORDER_ROOM_DETAIL_ID));
             long orderMainId = Long.parseLong(request.getParameter(ORDER_MAIN_ID));

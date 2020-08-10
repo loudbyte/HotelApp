@@ -1,6 +1,6 @@
 package com.epam.hotel.controller;
 
-import com.epam.hotel.validation.ImageValidation;
+import com.epam.hotel.validation.ImageValidator;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -31,7 +31,7 @@ public class UploadImageServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Part part = request.getPart(IMAGE_FILE);
-        if (ImageValidation.isImageValid(part)) {
+        if (ImageValidator.isImageValid(part)) {
             BufferedImage bufferedImage = ImageIO.read(part.getInputStream());
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, JPG, byteArrayOutputStream);

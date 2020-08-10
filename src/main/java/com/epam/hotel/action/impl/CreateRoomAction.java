@@ -7,7 +7,7 @@ import com.epam.hotel.dao.impl.RoomClassDAOImpl;
 import com.epam.hotel.util.constant.DAOConstant;
 import com.epam.hotel.dao.impl.RoomDAOImpl;
 import com.epam.hotel.entity.Room;
-import com.epam.hotel.validation.ActionFieldValidation;
+import com.epam.hotel.validation.ActionFieldValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +22,7 @@ public class CreateRoomAction implements Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if (ActionFieldValidation.isRoomFieldValid(request, response)) {
+        if (ActionFieldValidator.isRoomFieldValid(request, response)) {
             int roomNumber = Integer.parseInt(request.getParameter(ROOM_NUMBER));
             int capacity = Integer.parseInt(request.getParameter(CAPACITY));
             long roomClassId = Long.parseLong(request.getParameter(ROOM_CLASS_ID));

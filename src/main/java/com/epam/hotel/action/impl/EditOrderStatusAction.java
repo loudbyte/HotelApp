@@ -6,8 +6,8 @@ import com.epam.hotel.dao.OrderStatusDAO;
 import com.epam.hotel.dao.impl.LanguageDAOImpl;
 import com.epam.hotel.dao.impl.OrderStatusDAOImpl;
 import com.epam.hotel.entity.OrderStatus;
-import com.epam.hotel.validation.ActionFieldValidation;
-import com.epam.hotel.validation.NumericValidation;
+import com.epam.hotel.validation.ActionFieldValidator;
+import com.epam.hotel.validation.NumericValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,12 +22,12 @@ public class EditOrderStatusAction implements Action {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (NumericValidation.isNumeric(request.getParameter(ORDER_STATUS_ID))) {
+        if (NumericValidator.isNumeric(request.getParameter(ORDER_STATUS_ID))) {
 
             LanguageDAO languageDAO = new LanguageDAOImpl();
             Map<Integer, String> languageMap = languageDAO.getLanguageMap();
 
-            if (ActionFieldValidation.isOrderStatusFieldValid(languageMap, request, response)) {
+            if (ActionFieldValidator.isOrderStatusFieldValid(languageMap, request, response)) {
 
                 long orderStatusId = Long.parseLong(request.getParameter(ORDER_STATUS_ID));
 
