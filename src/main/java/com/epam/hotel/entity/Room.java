@@ -2,6 +2,7 @@ package com.epam.hotel.entity;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 public class Room extends BaseEntity {
 
@@ -79,5 +80,23 @@ public class Room extends BaseEntity {
                 ", availability=" + availability +
                 ", imageList=" + imageList +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return roomNumber == room.roomNumber &&
+                capacity == room.capacity &&
+                roomClassId == room.roomClassId &&
+                availability == room.availability &&
+                Objects.equals(price, room.price) &&
+                Objects.equals(imageList, room.imageList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roomNumber, capacity, roomClassId, price, availability, imageList);
     }
 }

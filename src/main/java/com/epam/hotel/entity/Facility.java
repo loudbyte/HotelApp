@@ -2,6 +2,7 @@ package com.epam.hotel.entity;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Objects;
 
 public class Facility extends BaseEntity {
 
@@ -58,5 +59,20 @@ public class Facility extends BaseEntity {
                 ", facilityNameMap=" + facilityNameMap +
                 ", facilityDescriptionMap=" + facilityDescriptionMap +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Facility facility = (Facility) o;
+        return Objects.equals(price, facility.price) &&
+                Objects.equals(facilityNameMap, facility.facilityNameMap) &&
+                Objects.equals(facilityDescriptionMap, facility.facilityDescriptionMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(price, facilityNameMap, facilityDescriptionMap);
     }
 }

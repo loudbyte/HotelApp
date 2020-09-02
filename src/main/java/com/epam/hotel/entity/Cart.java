@@ -2,6 +2,7 @@ package com.epam.hotel.entity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Cart {
 
@@ -31,5 +32,19 @@ public class Cart {
     public void addElementByKeyToOrderRoomDetailMap(OrderRoomDetail orderRoomDetail) {
         this.orderRoomDetailMap.put(orderRoomDetailCounter, orderRoomDetail);
         orderRoomDetailCounter++;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cart cart = (Cart) o;
+        return orderRoomDetailCounter == cart.orderRoomDetailCounter &&
+                Objects.equals(orderRoomDetailMap, cart.orderRoomDetailMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderRoomDetailCounter, orderRoomDetailMap);
     }
 }

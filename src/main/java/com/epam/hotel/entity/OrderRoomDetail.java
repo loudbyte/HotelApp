@@ -1,5 +1,7 @@
 package com.epam.hotel.entity;
 
+import java.util.Objects;
+
 public class OrderRoomDetail extends BaseEntity {
 
     private long roomId;
@@ -78,5 +80,22 @@ public class OrderRoomDetail extends BaseEntity {
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderRoomDetail that = (OrderRoomDetail) o;
+        return roomId == that.roomId &&
+                facilityPackageId == that.facilityPackageId &&
+                orderMainId == that.orderMainId &&
+                Objects.equals(startDate, that.startDate) &&
+                Objects.equals(endDate, that.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roomId, facilityPackageId, orderMainId, startDate, endDate);
     }
 }

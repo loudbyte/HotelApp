@@ -1,6 +1,7 @@
 package com.epam.hotel.entity;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class OrderStatus extends BaseEntity {
 
@@ -35,5 +36,18 @@ public class OrderStatus extends BaseEntity {
                 "id=" + id +
                 ", orderStatusNameMap=" + orderStatusNameMap +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderStatus that = (OrderStatus) o;
+        return Objects.equals(orderStatusNameMap, that.orderStatusNameMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderStatusNameMap);
     }
 }

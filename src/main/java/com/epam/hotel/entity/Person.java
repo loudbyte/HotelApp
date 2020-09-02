@@ -1,5 +1,7 @@
 package com.epam.hotel.entity;
 
+import java.util.Objects;
+
 public class Person extends BaseEntity {
 
     private String firstName;
@@ -109,5 +111,26 @@ public class Person extends BaseEntity {
                 ", isAdmin=" + isAdmin +
                 ", isBan=" + isBan +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return isAdmin == person.isAdmin &&
+                isBan == person.isBan &&
+                Objects.equals(firstName, person.firstName) &&
+                Objects.equals(lastName, person.lastName) &&
+                Objects.equals(birthday, person.birthday) &&
+                Objects.equals(phone, person.phone) &&
+                Objects.equals(email, person.email) &&
+                Objects.equals(iin, person.iin) &&
+                Objects.equals(password, person.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, birthday, phone, email, iin, password, isAdmin, isBan);
     }
 }

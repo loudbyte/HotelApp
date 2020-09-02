@@ -3,6 +3,7 @@ package com.epam.hotel.entity;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class FacilityPackage extends BaseEntity {
 
@@ -59,5 +60,20 @@ public class FacilityPackage extends BaseEntity {
                 ", discount=" + discount +
                 ", facilityList=" + facilityList +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FacilityPackage that = (FacilityPackage) o;
+        return Objects.equals(facilityPackageNameMap, that.facilityPackageNameMap) &&
+                Objects.equals(discount, that.discount) &&
+                Objects.equals(facilityList, that.facilityList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(facilityPackageNameMap, discount, facilityList);
     }
 }

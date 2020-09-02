@@ -1,5 +1,7 @@
 package com.epam.hotel.entity;
 
+import java.util.Objects;
+
 public class OrderMain extends BaseEntity {
 
     private long personId;
@@ -56,5 +58,20 @@ public class OrderMain extends BaseEntity {
                 ", status=" + orderStatusId +
                 ", date='" + date + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderMain orderMain = (OrderMain) o;
+        return personId == orderMain.personId &&
+                orderStatusId == orderMain.orderStatusId &&
+                Objects.equals(date, orderMain.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(personId, orderStatusId, date);
     }
 }
